@@ -1,11 +1,20 @@
 export const fetchRequest = (url, method, data = null) => {
+  let token = localStorage.getItem('token');
   if (method === "get") {
-    return fetch(url).then((response) => response.json());
+    return fetch(url, {
+      headers: {
+        'Accept': "application/json",
+        "Content-Type": "application/json",
+        'Authorization': "Bearer "+token,
+        
+      },
+    }).then((response) => response.json());
   } else {
     return fetch(url, {
       headers: {
-        Accept: "application/json",
+        'Accept': "application/json",
         "Content-Type": "application/json",
+        'Authorization': "Bearer "+token,
       },
       method: "POST",
       body: JSON.stringify(data),

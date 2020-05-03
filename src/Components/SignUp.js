@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     "& > * + *": {
       marginTop: theme.spacing(2),
     },
-    marginBottom:'10px'
+    marginBottom: '10px'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -81,10 +81,10 @@ export default function SignUp() {
           setRegisterSuccess(1);
           setIsLoading('')
         } else if (response["Validation errors"]["email"]) {
-          
+
           setEmailError(response["Validation errors"]["email"]);
           setIsLoading('')
-          
+
         }
       }
     );
@@ -206,20 +206,20 @@ export default function SignUp() {
                   autoComplete="email"
                 />
               ) : (
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  required={true}
-                  value={email}
-                  required
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  onChange={handleChangeEmail}
-                  autoComplete="email"
-                />
-              )}
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    required={true}
+                    value={email}
+                    required
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    onChange={handleChangeEmail}
+                    autoComplete="email"
+                  />
+                )}
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -254,6 +254,8 @@ export default function SignUp() {
             </MuiPickersUtilsProvider>
           </Grid>
 
+
+
           <FormControl component="fieldset">
             <RadioGroup
               aria-label="gender"
@@ -262,9 +264,9 @@ export default function SignUp() {
               value={gender}
               onChange={handleGenderChange}
             >
-              <div className="container ml-4 mt-2 justify-content-center">
+              <div style={{width:'100%'}} className="container ml-4 mt-2 justify-content-center">
                 <div className="row">
-                  <div style={{ marginTop: 12 }} className="col">
+                  <div style={{ marginTop: 12 }} className=" col">
                     <FormLabel component="legend">Gender</FormLabel>
                   </div>
                   <div className="col">
@@ -278,7 +280,7 @@ export default function SignUp() {
                   <div className="col">
                     <FormControlLabel
                       value="male"
-                      control={<Radio required={true}/>}
+                      control={<Radio required={true} />}
                       label="Male"
                     />
                   </div>
@@ -287,19 +289,21 @@ export default function SignUp() {
             </RadioGroup>
           </FormControl>
 
-          {isLoading==='' ? <Button
+
+
+          {isLoading === '' ? <Button
             type="submit"
-            style={{width:'100%'}}
+            style={{ width: '100%' }}
             variant="contained"
             color="primary"
             className={classes.submit}
           >
             Sign Up
-          </Button> : 
-          <div className={classes.root}>
-            <LinearProgress variant="query" />
-            <LinearProgress variant="query" color="secondary" />
-          </div>}
+          </Button> :
+            <div className={classes.root}>
+              <LinearProgress variant="query" />
+              <LinearProgress variant="query" color="secondary" />
+            </div>}
 
           <Grid container justify="center">
             <Grid item>
@@ -311,6 +315,6 @@ export default function SignUp() {
       <Box mt={1}>
         <Copyright />
       </Box>
-    </Container>
+    </Container >
   );
 }
