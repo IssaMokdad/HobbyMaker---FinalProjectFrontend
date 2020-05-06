@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function TransitionModal(props) {
+export default function CommentsShowModal(props) {
   const classes = useStyles();
   // const [open, setOpen] = React.useState(false);
 
@@ -34,7 +34,10 @@ export default function TransitionModal(props) {
   // const handleClose = () => {
   //   setOpen(false);
   // };
-  console.log(props.content)
+  useEffect(()=>{
+
+  },[props.content])
+
   return (
     <div>
 

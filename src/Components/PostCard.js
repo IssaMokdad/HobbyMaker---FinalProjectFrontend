@@ -8,7 +8,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -32,12 +31,14 @@ import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import TransitionModal from "./TransitionModal";
+import CommentsShowModal from "./CommentsShowModal";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import IconButton from "@material-ui/core/IconButton";
 import swal from "sweetalert";
+import EditPostModal from './EditPostModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,7 +81,17 @@ export default function PostCard(props) {
 
   const [openCommentModal, setOpenCommentModal] = useState(false);
 
+  const [openPostModal, setOpenPostModal] = useState(false);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const getPostAfterDeleteComment = (post)=>{
+    setPost(post)
+    let commentsDetails = Array.from(post).map((comment) => (
+      <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
+    ));
+    setComments(commentsDetails);
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -126,6 +137,7 @@ export default function PostCard(props) {
     setAnchorEl(null);
   };
 
+  const handleOpenPostModal = ()=>{ setAnchorEl(null); setOpenPostModal(true);}
   const handleOpenCommentModal = (event) => {
     event.preventDefault();
 
@@ -134,7 +146,7 @@ export default function PostCard(props) {
       "get"
     ).then((response) => {
       let commentsDetails = response.data.map((comment) => (
-        <Card2 content={comment} />
+        <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
       ));
       setComments(commentsDetails);
       setOpenCommentModal(true);
@@ -143,6 +155,9 @@ export default function PostCard(props) {
 
   const handleCloseCommentModal = () => {
     setOpenCommentModal(false);
+  };
+  const handleClosePostModal = () => {
+    setOpenPostModal(false);
   };
 
   const handleLikeButtonOnclick = (event) => {
@@ -175,7 +190,7 @@ export default function PostCard(props) {
 
   useEffect(() => {
     setPost(props.post);
-  }, []);
+  }, [props.post]);
 
   let date = moment(post.created_at).format("LL");
   let url = api + "images/" + post.image;
@@ -242,10 +257,19 @@ export default function PostCard(props) {
     <div>
       <Paper elevation={3}>
         <Card className={classes.root}>
-          <TransitionModal
+          <CommentsShowModal
             handleClose={handleCloseCommentModal}
             open={openCommentModal}
             content={comments}
+          />
+          <EditPostModal
+            url={url}
+            setOpenPostModal={setOpenPostModal}
+            getPosts={props.getPosts}
+            userAuthenticatedId={props.userAuthenticatedId}
+            handleClose={handleClosePostModal}
+            open={openPostModal}
+            post={post}
           />
           <Grid container xs={12}>
             <Grid item xs={9}>
@@ -381,13 +405,11 @@ export default function PostCard(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
+        <MenuItem id={post.id} onClick={handlePostDelete}>
+          Delete
+        </MenuItem>
 
-          
-            <MenuItem id={post.id} onClick={handlePostDelete}>Delete</MenuItem>
-          
-
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem  onClick={handleOpenPostModal}>Edit</MenuItem>
       </Menu>
       {/* <Card2 /> */}
     </div>

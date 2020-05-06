@@ -7,6 +7,7 @@ import ForgotPassword from './Components/ForgotPassword'
 import { BrowserRouter as Router, Redirect, Switch, Route, Link } from "react-router-dom";
 import PasswordReset from './Components/PasswordReset';
 import ConfirmRegistration from './Components/ConfirmRegistration'
+ 
 // import Map from './Components/Map'
 function App() {
 
@@ -16,9 +17,10 @@ function App() {
     userId:''
   });
   const [token, setToken] = useState('')
-  const logout = ()=>{
-    localStorage.setItem('token', '')
+  const logout = ()=>{ 
+    localStorage.clear()
     setToken('')
+    window.location.reload();
   }
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -30,14 +32,17 @@ function App() {
       })
     }
 
-  }, [])
+  }, [token])//render again to assign user data if login successful
 
+
+  
+//this method is passed to login component called from it
   const handleChangeToken = (event) => {
     localStorage.setItem('token', event.access_token)
     localStorage.setItem('firstName', event.first_name)
     localStorage.setItem('lastName', event.first_name)
     localStorage.setItem('userId', event.user_id)
-    setToken(1)
+    setToken(1)//this renders the component, but let useEffect render again on token change to assign the data to the user and avoid writing it in a separate method to avoid repeated code it
 
     
   }

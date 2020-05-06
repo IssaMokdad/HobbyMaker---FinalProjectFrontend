@@ -1,20 +1,9 @@
 import React, { useEffect, Fragment, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchRequest, api } from "./Apis";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Copyright from "./Copyright";
 import { Alert } from "@material-ui/lab";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
@@ -30,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%", 
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -47,6 +36,9 @@ export default function ConfirmRegistration() {
       (response) => {
         if (response.email) {
           setRegisterConfirm(true);
+        }
+        else{
+          setRegisterConfirm(false);
         }
       }
     );

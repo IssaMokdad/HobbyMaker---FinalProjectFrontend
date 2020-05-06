@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PostForm(props) {
+export default function EditPostModal(props) {
   const classes = useStyles();
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files[0]) {

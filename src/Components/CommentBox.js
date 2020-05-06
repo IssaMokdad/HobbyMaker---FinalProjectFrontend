@@ -57,6 +57,7 @@ export default function CommentBox(props) {
         variant="filled"
         fullWidth
         required={true}
+        multiline
         onChange={handleCommentChange}
         value={comment}
         placeholder="Write a comment"
@@ -73,7 +74,7 @@ export default function CommentBox(props) {
                 variant="filled"
                 color="primary"
                 style={{
-                  marginTop: "4px",
+                  marginBottom: "15px",
                   transform: "scale(2)",
                 }}
                 type="submit"
