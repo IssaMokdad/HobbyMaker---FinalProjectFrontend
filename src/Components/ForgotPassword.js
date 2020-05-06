@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { fetchRequest } from "./Apis";
+import { fetchRequest,api } from "./Apis";
 import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
 import Box from "@material-ui/core/Box";
@@ -57,7 +57,7 @@ export default function ForgotPassword(props) {
       email,
     };
 
-    fetchRequest("http://localhost:8000/api/password/create", "post", data).then(
+    fetchRequest(api+"api/password/create", "post", data).then(
       (response) => {
         if(response.message==="We have e-mailed your password reset link!"){
           setEmailMessageSuccess(1)

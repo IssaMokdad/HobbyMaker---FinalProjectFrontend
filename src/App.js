@@ -6,6 +6,7 @@ import SignUp from './Components/SignUp'
 import ForgotPassword from './Components/ForgotPassword'
 import { BrowserRouter as Router, Redirect, Switch, Route, Link } from "react-router-dom";
 import PasswordReset from './Components/PasswordReset';
+import ConfirmRegistration from './Components/ConfirmRegistration'
 // import Map from './Components/Map'
 function App() {
 
@@ -15,7 +16,10 @@ function App() {
     userId:''
   });
   const [token, setToken] = useState('')
-  
+  const logout = ()=>{
+    localStorage.setItem('token', '')
+    setToken('')
+  }
   useEffect(() => {
     if (localStorage.getItem('token')) {
       setToken(1)
@@ -42,10 +46,12 @@ function App() {
     <Router>
       <Switch>
         <Route path='/home'>
-          {token !== '' ? <Home userAuthenticated={userAuthenticated} />
+          {token !== '' ? <Home logout={logout} userAuthenticated={userAuthenticated} />
             : <Redirect to='/' />
           }
-
+        </Route>
+        <Route path="/confirm-registration/:token">
+          <ConfirmRegistration />
         </Route>
         <Route exact path='/'>
         {/* <Map /> */}

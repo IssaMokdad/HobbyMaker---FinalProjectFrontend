@@ -16,7 +16,7 @@ const StyledBadge = withStyles((theme) => ({
 export default function CustomizedBadges(props) {
   return (
     <IconButton aria-label="cart">
-      <Badge badgeContent={props.likeCount} color="secondary" overlap="circle" >
+      <Badge badgeContent={props.count} color="secondary" overlap="circle" >
         
       </Badge>
     </IconButton>

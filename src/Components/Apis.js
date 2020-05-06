@@ -1,3 +1,4 @@
+export const api = "http://localhost:8000/"
 export const fetchRequest = (url, method, data = null) => {
   let token = localStorage.getItem('token');
   if (method === "get") {
@@ -21,3 +22,5 @@ export const fetchRequest = (url, method, data = null) => {
     }).then((response) => response.json());
   }
 };
+
+export const token = { 'Authorization': "Bearer "+localStorage.getItem('token')}

@@ -17,7 +17,7 @@ import Container from "@material-ui/core/Container";
 import Copyright from "./Copyright";
 import { Link } from "react-router-dom";
 import DateFnsUtils from "@date-io/date-fns";
-import { fetchRequest } from "./Apis";
+import { fetchRequest, api } from "./Apis";
 import moment from "moment";
 import { Alert } from "@material-ui/lab";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -70,7 +70,7 @@ export default function SignUp() {
       last_name: lastName,
     };
 
-    fetchRequest("http://localhost:8000/api/auth/signup", "post", data).then(
+    fetchRequest(api+"api/auth/signup", "post", data).then(
       (response) => {
         if (response.message === "Successfully created user!") {
           setPassword("");

@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useParams } from "react-router-dom";
-import { fetchRequest } from "./Apis";
+import { fetchRequest,api } from "./Apis";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -72,7 +72,7 @@ export default function PasswordReset() {
             password_confirmation: passwordConfirm,
             'token': token
         }
-        fetchRequest('http://localhost:8000/api/password/reset', 'post', data).then(response => {
+        fetchRequest(api+'api/password/reset', 'post', data).then(response => {
             if (response.email) {
                 setResetSuccess(1)
             }
@@ -81,7 +81,7 @@ export default function PasswordReset() {
     const handleChangePasswordConfirm = (event) => setPasswordConfirm(event.target.value)
 
     useEffect(() => {
-        fetchRequest(`http://localhost:8000/api/password/find/${token}`, 'get').then(response => {
+        fetchRequest(api+`api/password/find/${token}`, 'get').then(response => {
             if (response.email) {
                 setIsTokenRight(1)
             }

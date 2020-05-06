@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import ImageCard from "./PostCard";
 import Carousel from "./CarouselForm";
-import { fetchRequest } from "./Apis";
+import { fetchRequest, api } from "./Apis";
 import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
 import Box from "@material-ui/core/Box";
@@ -69,7 +69,7 @@ export default function SignIn(props) {
       password,
     };
 
-    fetchRequest("http://localhost:8000/api/auth/login", "post", data).then(
+    fetchRequest(api+"api/auth/login", "post", data).then(
       (response) => {
         if (response.message === "Authorized") {
           setLoginError("");

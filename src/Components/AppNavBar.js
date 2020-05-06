@@ -24,6 +24,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 
+
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -91,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AppNavBar() {
+export default function AppNavBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -153,7 +154,7 @@ export default function AppNavBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={props.logout}>Logout</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );

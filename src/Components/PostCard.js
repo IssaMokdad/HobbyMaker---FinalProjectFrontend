@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment,  useState } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -14,16 +14,30 @@ import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
-import { fetchRequest } from "./Apis";
+import { fetchRequest, api } from "./Apis";
 import moment from "moment";
 import Badge from "./Badge";
-import ModeCommentOutlinedIcon from '@material-ui/icons/ModeCommentOutlined';
+import ModeCommentOutlinedIcon from "@material-ui/icons/ModeCommentOutlined";
+import TextField from "@material-ui/core/TextField";
+import Card2 from "./Card2";
+import SendIcon from "@material-ui/icons/Send";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import CommentBox from "./CommentBox";
+import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import TransitionModal from "./TransitionModal";
+import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +57,17 @@ const useStyles = makeStyles((theme) => ({
   expandOpen: {
     transform: "rotate(180deg)",
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
   avatar: {
     backgroundColor: red[500],
   },
@@ -50,28 +75,102 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PostCard(props) {
   const [post, setPost] = useState("");
-  const handleLikeButtonOnclick = (event) => {
-    event.preventDefault()
-    let data={
-      user_id : props.userAuthenticatedId,
-      post_id : event.target.id
-    }
 
-    fetchRequest("http://localhost:8000/api/like/create", "post", data).then(response=>{
-      setPost(response.data)
-    })
+  const [comments, setComments] = useState("");
+
+  const [openCommentModal, setOpenCommentModal] = useState(false);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
-  const handleDislikeButtonOnclick = (event) => {
-    event.preventDefault()
-    console.log(event.target.id)
-    let data={
-      user_id : props.userAuthenticatedId,
-      post_id : event.target.id
-    }
 
-    fetchRequest("http://localhost:8000/api/like/remove", "post", data).then(response=>{
-      setPost(response.data)
-    })
+  const handlePostDelete = (event) => {
+    setAnchorEl(null);
+    let id = event.target.id;
+
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this post!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        let data = {
+          post_id: id,
+          user_id: props.userAuthenticatedId,
+        };
+        fetchRequest(api + "api/post/delete", "POST", data).then((data) => {
+          if (data.message == "success") {
+            swal({
+              title: "Deleted Successfully!",
+              icon: "success",
+            });
+
+            props.getPosts();
+          } else {
+            swal({
+              title: "Something went wrong, try again!",
+            });
+          }
+        });
+      } else {
+        swal("Your post is safe!");
+      }
+    });
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpenCommentModal = (event) => {
+    event.preventDefault();
+
+    fetchRequest(
+      api + "api/comment/show/" + "?post-id=" + event.target.id,
+      "get"
+    ).then((response) => {
+      let commentsDetails = response.data.map((comment) => (
+        <Card2 content={comment} />
+      ));
+      setComments(commentsDetails);
+      setOpenCommentModal(true);
+    });
+  };
+
+  const handleCloseCommentModal = () => {
+    setOpenCommentModal(false);
+  };
+
+  const handleLikeButtonOnclick = (event) => {
+    event.preventDefault();
+    let data = {
+      user_id: props.userAuthenticatedId,
+      post_id: event.target.id,
+    };
+
+    fetchRequest(api + "api/like/create", "post", data).then((response) => {
+      setPost(response.data);
+    });
+  };
+
+  const handleChangePost = (post) => {
+    setPost(post);
+  };
+
+  const handleDislikeButtonOnclick = (event) => {
+    event.preventDefault();
+    let data = {
+      user_id: props.userAuthenticatedId,
+      post_id: event.target.id,
+    };
+
+    fetchRequest(api + "api/like/remove", "post", data).then((response) => {
+      setPost(response.data);
+    });
   };
 
   useEffect(() => {
@@ -79,99 +178,162 @@ export default function PostCard(props) {
   }, []);
 
   let date = moment(post.created_at).format("LL");
-  let url = "http://127.0.0.1:8000/images/" + post.image;
+  let url = api + "images/" + post.image;
 
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  let handleLike
-  let commentCount
-  let likeCount
+  let handleLike;
+  let commentCount;
+  let likeCount;
   if (post.likes) {
-    
-    let result = post.likes.map((like) => like.user_id)
-    likeCount=post.likes.length
-    console.log(likeCount)
-    if(result.indexOf(parseInt(props.userAuthenticatedId)) !== -1) {
+    let result = post.likes.map((like) => like.user_id);
+    likeCount = post.likes.length;
+    if (result.indexOf(parseInt(props.userAuthenticatedId)) !== -1) {
       handleLike = (
-        <Fragment>
-        <div className='row'>
-          <div className='col-6'>
-        <form className='form-inline' id={post.id} onSubmit={handleDislikeButtonOnclick}>
-         <IconButton type='submit'
-          aria-label="add to favorites"
-        >
-         <Badge likeCount={likeCount}/>    <ThumbUpAltIcon color="primary" />
-        </IconButton> 
-        
-        </form></div><div className='col-6'>        <form className='form-inline' id={post.id} onSubmit={handleDislikeButtonOnclick}>
-         <IconButton type='submit'
-          aria-label="add to favorites"
-        ><ModeCommentOutlinedIcon /></IconButton> </form></div></div>
-        
-        </Fragment>
+        <form id={post.id} onSubmit={handleDislikeButtonOnclick}>
+          <IconButton type="submit" aria-label="add to favorites">
+            <Badge count={likeCount} /> <ThumbUpAltIcon color="primary" />
+          </IconButton>
+        </form>
       );
     } else {
-      likeCount=post.likes.length
+      likeCount = post.likes.length;
       handleLike = (
         <form id={post.id} onSubmit={handleLikeButtonOnclick}>
-        <IconButton type='submit'
-          aria-label="add to favorites"
-        >
-          <Badge likeCount={likeCount}/>   <ThumbUpAltOutlinedIcon />
-        </IconButton>
-        
+          <IconButton type="submit" aria-label="add to favorites">
+            <Badge count={likeCount} /> <ThumbUpAltOutlinedIcon />
+          </IconButton>
         </form>
       );
     }
   } else {
     handleLike = (
       <form id={post.id} onSubmit={handleLikeButtonOnclick}>
-      <IconButton type='submit'
-        
-        aria-label="add to favorites"
-      >
-        <Badge likeCount={likeCount}/><ThumbUpAltOutlinedIcon />
-      </IconButton>
+        <IconButton type="submit" aria-label="add to favorites">
+          <Badge likeCount={likeCount} />
+          <ThumbUpAltOutlinedIcon />
+        </IconButton>
       </form>
     );
+  }
+  let handleComment;
+  if (post.comments) {
+    commentCount = post.comments.length;
+
+    if (commentCount) {
+      handleComment = (
+        <form onSubmit={handleOpenCommentModal} id={post.id}>
+          <IconButton type="submit" aria-label="add to favorites">
+            <Badge count={commentCount} />
+            <ChatBubbleIcon color="primary" />
+          </IconButton>
+        </form>
+      );
+    }
   }
 
   // const handleExpandClick = () => {
   //   setExpanded(!expanded);
   // };
-
+  let title;
+  if (post.user !== undefined) {
+    title = post.user.first_name + " " + post.user.last_name;
+  }
   return (
-    <Paper elevation={3}>
-      <Card className={classes.root}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          }
-          // action={
-          //   <IconButton aria-label="settings">
-          //     <MoreVertIcon />
-          //   </IconButton>
-          // }
-          title={post.title}
-          subheader={date} // June 9 2014
-        />
-        <CardMedia className={classes.media} image={url} title="Paella dish" />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {post.content}
-          </Typography>
-          
-        </CardContent>
-        {handleLike}
+    <div>
+      <Paper elevation={3}>
+        <Card className={classes.root}>
+          <TransitionModal
+            handleClose={handleCloseCommentModal}
+            open={openCommentModal}
+            content={comments}
+          />
+          <Grid container xs={12}>
+            <Grid item xs={9}>
+              <CardHeader
+                avatar={
+                  <Avatar aria-label="recipe" className={classes.avatar}>
+                    R
+                  </Avatar>
+                }
+                // action={
+                //   <IconButton aria-label="settings">
+                //     <MoreVertIcon />
+                //   </IconButton>
+                // }
 
-        {/* <CardActions disableSpacing> */}
+                title={title}
+                subheader={date} // June 9 2014
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <IconButton
+                color="primary"
+                style={{
+                  marginLeft: "60px",
+                  marginTop: "15px",
+                  transform: "scale(2)",
+                }}
+                onClick={handleClick}
+                aria-label="add to favorites"
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+          <CardMedia
+            className={classes.media}
+            image={url}
+            title="Paella dish"
+          />
+          <CardContent>
+            <TextField
+              margin="normal"
+              required={true}
+              fullWidth
+              disabled={true}
+              color="primary"
+              // variant='filled'
+              fullWidth={true}
+              multiline
+              // size='small'
+              autoComplete="email"
+              value={post.content}
+              autoFocus
+            />
 
-        {/* <IconButton aria-label="share">
+            {/* <Typography paragraph={true} variant="body2" color="textSecondary" classes={{width:'100%', display:'block'}} >
+              {post.content}
+            </Typography> */}
+          </CardContent>
+          <div className="ml-3 row">
+            {handleLike}
+            {handleComment}
+          </div>
+          <CommentBox
+            handleChange={handleChangePost}
+            userAuthenticatedId={props.userAuthenticatedId}
+            post={post}
+          />
+
+          {/* <TextField
+    variant="filled"
+    width='100%'
+    fullWidth
+    placeholder="Write a comment"
+    color="secondary"
+  /> */}
+          {/* <TextField
+    variant="filled"
+    width='100%'
+    fullWidth
+    placeholder="Write a comment"
+    color="secondary"
+  /> */}
+          {/* <CardActions disableSpacing> */}
+          {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}
-        {/* <IconButton
+          {/* <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
           })}
@@ -181,8 +343,8 @@ export default function PostCard(props) {
         >
           <ExpandMoreIcon />
         </IconButton> */}
-        {/* </CardActions> */}
-        {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
+          {/* </CardActions> */}
+          {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
@@ -209,7 +371,25 @@ export default function PostCard(props) {
           </Typography>
         </CardContent>
       </Collapse> */}
-      </Card>
-    </Paper>
+        </Card>
+      </Paper>
+
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+
+          
+            <MenuItem id={post.id} onClick={handlePostDelete}>Delete</MenuItem>
+          
+
+        <MenuItem onClick={handleClose}>Edit</MenuItem>
+        <MenuItem onClick={handleClose}>Logout</MenuItem>
+      </Menu>
+      {/* <Card2 /> */}
+    </div>
   );
 }
