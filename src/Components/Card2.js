@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import cx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -20,7 +20,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import swal from "sweetalert";
-import {fetchRequest, api} from './Apis';
+import { fetchRequest, api } from "./Apis";
+import EditIcon from "@material-ui/icons/Edit";
+import Input from "@material-ui/core/Input";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
   card: {
@@ -76,12 +79,44 @@ const Card2 = (props) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const [comment, setComment] = useState('')
+
   const flexStyles = useRowFlexStyles();
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const [editComment, setEditComment] = useState("");
+
+  const makeTheCommentEditable = () => {
+    setAnchorEl(null);
+    setComment(props.content.comment)
+    setEditComment(1);
+  };
+  const handleCommentChange = (event)=>{
+    setComment(event.target.value)
+  }
+  const handleEditComment = ()=>{
+    let data = {
+      id:props.content.id,
+      post_id:props.content.post_id,
+      'comment':comment,
+      user_id: props.userAuthenticatedId,
+
+    }
+
+    fetchRequest(api + "api/comment/edit", "POST", data).then(
+      (response) => {
+        if(response.data){
+          setEditComment('')
+          props.getPostAfterDeleteComment(props.content.post_id);//here this method is used after a delete or edit has happened to the comment
+        }
+        else{
+          swal('something went wrong!')
+        }
+
+  })}
   const handleCommentDelete = (event) => {
     setAnchorEl(null);
     let id = event.target.id;
@@ -95,25 +130,25 @@ const Card2 = (props) => {
     }).then((willDelete) => {
       if (willDelete) {
         let data = {
-          post_id : props.content.post_id,
+          post_id: props.content.post_id,
           id: id,
           user_id: props.userAuthenticatedId,
         };
-        fetchRequest(api + "api/comment/remove", "POST", data).then((response) => {
-          if (response.data) {
-            props.getPostAfterDeleteComment(response.data)
-            swal({
-              title: "Deleted Successfully!",
-              icon: "success",
-            });
-
-            
-          } else {
-            swal({
-              title: "Something went wrong, try again!",
-            });
+        fetchRequest(api + "api/comment/remove", "POST", data).then(
+          (response) => {
+            if (response.data) {
+              props.getPostAfterDeleteComment(props.content.post_id);
+              swal({
+                title: "Deleted Successfully!",
+                icon: "success",
+              });
+            } else {
+              swal({
+                title: "Something went wrong, try again!",
+              });
+            }
           }
-        });
+        );
       } else {
         swal("Your post is safe!");
       }
@@ -129,28 +164,26 @@ const Card2 = (props) => {
       <Grid container xs={12}>
         <Grid xs={9} item>
           <CardContent className={styles.content}>
-            
             <Box mb={1}>
               <Grid xs={12} container>
-                <Grid item xs={10} >
-              <h3 className={styles.heading}>
-                {props.content.user.first_name +
-                  " " +
-                  props.content.user.last_name}{" "}
-              </h3>
+                <Grid item xs={10}>
+                  <h3 className={styles.heading}>
+                    {props.content.user.first_name +
+                      " " +
+                      props.content.user.last_name}{" "}
+                  </h3>
+                </Grid>
+                <Grid xs={2} item>
+                  <IconButton
+                    color="primary"
+                    onClick={handleClick}
+                    aria-label="add to favorites"
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid xs={2} item>
-              <IconButton
-          color="primary"
-
-          onClick={handleClick}
-          aria-label="add to favorites"
-        >
-          <MoreVertIcon />
-        </IconButton>
-              </Grid>
-              </Grid>
-              <Grid/>
+              <Grid />
               {/* <Rating
             name={'rating'}
             value={2}
@@ -159,7 +192,25 @@ const Card2 = (props) => {
           /> */}
             </Box>
 
-            <p className={styles.body}>{props.content.comment}</p>
+            {editComment === "" ? (
+              <p className={styles.body}>{props.content.comment}</p>
+            ) : (
+              <Grid container>
+                <Grid xs={11} item>
+                  <TextField
+                    fullWidth
+                    multiline
+                    value={comment}
+                    onChange={handleCommentChange}
+                    id="standard-basic"
+                    label="Standard"
+                  />
+                </Grid>
+                <Grid xs={1} item>
+                  <IconButton onClick={handleEditComment}><EditIcon style={{ marginTop: "20px" }} color="primary" /></IconButton>
+                </Grid>
+              </Grid>
+            )}
 
             <Divider className={styles.divider} light />
 
@@ -186,11 +237,9 @@ const Card2 = (props) => {
             </button>
           </div> */}
             {/* </div> */}
-
           </CardContent>
         </Grid>
         {/* <Grid item xs={3}> */}
-        
 
         <CardMedia
           className={styles.media}
@@ -199,23 +248,21 @@ const Card2 = (props) => {
           }
         />
         {/* </Grid> */}
-        
       </Grid>
       <Menu
-      id="simple-menu"
-      anchorEl={anchorEl}
-      keepMounted
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-    >
-      <MenuItem onClick={handleCommentDelete} id={props.content.id} >
-        Delete
-      </MenuItem>
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleCommentDelete} id={props.content.id}>
+          Delete
+        </MenuItem>
 
-      <MenuItem >Edit</MenuItem>
-    </Menu>
+        <MenuItem onClick={makeTheCommentEditable}>Edit</MenuItem>
+      </Menu>
     </Card>
-
   );
 };
 

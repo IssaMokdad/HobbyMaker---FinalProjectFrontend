@@ -85,12 +85,23 @@ export default function PostCard(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const getPostAfterDeleteComment = (post)=>{
-    setPost(post)
-    let commentsDetails = Array.from(post).map((comment) => (
-      <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
-    ));
-    setComments(commentsDetails);
+  const getPostAfterDeleteComment = (id)=>{
+    // setPost(post)
+    // let commentsDetails = Array.from(post).map((comment) => (
+    //   <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
+    // ));
+    // setComments(commentsDetails);
+
+    fetchRequest(
+      api + "api/comment/show/" + "?post-id=" + id,
+      "get"
+    ).then((response) => {
+      let commentsDetails = response.data.map((comment) => (
+        <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
+      ));
+      setComments(commentsDetails);
+      setOpenCommentModal(true);
+    });
   }
 
   const handleClick = (event) => {
