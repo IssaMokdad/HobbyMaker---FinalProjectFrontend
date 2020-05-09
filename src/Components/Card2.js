@@ -249,7 +249,7 @@ const Card2 = (props) => {
         />
         {/* </Grid> */}
       </Grid>
-      <Menu
+      {props.userAuthenticatedId==props.content.user_id ? <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -261,7 +261,7 @@ const Card2 = (props) => {
         </MenuItem>
 
         <MenuItem onClick={makeTheCommentEditable}>Edit</MenuItem>
-      </Menu>
+      </Menu> : ""}
     </Card>
   );
 };

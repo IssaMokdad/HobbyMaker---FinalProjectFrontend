@@ -155,7 +155,7 @@ export default function AppNavBar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={props.logout}>Logout</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}><Link to={'/profile/'+props.userAuthenticatedId}>My account</Link></MenuItem>
     </Menu>
   );
 
@@ -230,7 +230,7 @@ export default function AppNavBar(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            <Link color='white' to='/home'>Home</Link>
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>

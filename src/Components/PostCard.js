@@ -91,7 +91,6 @@ export default function PostCard(props) {
     //   <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
     // ));
     // setComments(commentsDetails);
-
     fetchRequest(
       api + "api/comment/show/" + "?post-id=" + id,
       "get"
@@ -100,6 +99,8 @@ export default function PostCard(props) {
         <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
       ));
       setComments(commentsDetails);
+      post.comments = response.data
+      setPost(post)
       setOpenCommentModal(true);
     });
   }
@@ -409,7 +410,7 @@ export default function PostCard(props) {
         </Card>
       </Paper>
 
-      <Menu
+     {props.userAuthenticatedId==props.post.user_id ? <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -421,7 +422,7 @@ export default function PostCard(props) {
         </MenuItem>
 
         <MenuItem  onClick={handleOpenPostModal}>Edit</MenuItem>
-      </Menu>
+      </Menu> : "" }
       {/* <Card2 /> */}
     </div>
   );

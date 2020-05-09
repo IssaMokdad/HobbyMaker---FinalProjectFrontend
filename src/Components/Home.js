@@ -10,11 +10,11 @@ import {
 } from "react-router-dom";
 import AppNavBar from "./AppNavBar";
 import PostCard from "./PostCard";
+import PostForm from "./PostForm";
 import { fetchRequest, api } from "./Apis";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Card2 from "./Card2";
-import PostForm from "./PostForm";
 import FriendSuggestionCard from "./FriendSuggestionCard";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -31,7 +31,6 @@ function Home(props) {
   //this method is called when we hit the bottom page
   const handleScroll = (event) => {
     setPage(page + 1);
-
     getPosts();
   };
   //getting friend recommendations to show
@@ -47,7 +46,9 @@ function Home(props) {
       }
     });
   };
+
   //getting posts, initial page is 1 and is icremented on every bottom scroll event
+
   const getPosts = () =>
     fetchRequest(
       api +
@@ -59,6 +60,7 @@ function Home(props) {
     ).then((response) => {
       if (response.data !== undefined) setPosts(response.data);
     });
+
   const [randomQuote, setRandomQuote] = useState("");
 
   const [hobbyVideos, setHobbyVideos] = useState("");
@@ -104,7 +106,7 @@ function Home(props) {
   //https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=cycling&type=video&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M
   return (
     <Fragment>
-      <AppNavBar logout={props.logout} />
+      <AppNavBar userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} />
       <h3
         style={{
           textAlign: "center",
