@@ -1,45 +1,28 @@
-import React, { useEffect, Fragment, useState, useRef } from "react";
+import React, { useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Paper from "@material-ui/core/Paper";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
 import { fetchRequest, api } from "./Apis";
 import moment from "moment";
 import Badge from "./Badge";
-import ModeCommentOutlinedIcon from "@material-ui/icons/ModeCommentOutlined";
 import TextField from "@material-ui/core/TextField";
 import Card2 from "./Card2";
-import SendIcon from "@material-ui/icons/Send";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import CommentBox from "./CommentBox";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
 import CommentsShowModal from "./CommentsShowModal";
-import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
 import swal from "sweetalert";
 import EditPostModal from './EditPostModal';
-import RootRef from '@material-ui/core/RootRef';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,7 +77,7 @@ export default function PostCard(props) {
     // ));
     // setComments(commentsDetails);
     fetchRequest(
-      api + "api/comment/show/" + "?post-id=" + id,
+      api + "api/comment/show/?post-id=" + id,
       "get"
     ).then((response) => {
       let commentsDetails = response.data.map((comment) => (
@@ -129,7 +112,7 @@ export default function PostCard(props) {
           user_id: props.userAuthenticatedId,
         };
         fetchRequest(api + "api/post/delete", "POST", data).then((data) => {
-          if (data.message == "success") {
+          if (data.message === "success") {
             swal({
               title: "Deleted Successfully!",
               icon: "success",
@@ -157,7 +140,7 @@ export default function PostCard(props) {
     event.preventDefault();
 
     fetchRequest(
-      api + "api/comment/show/" + "?post-id=" + event.target.id,
+      api + "api/comment/show/?post-id=" + event.target.id,
       "get"
     ).then((response) => {
       let commentsDetails = response.data.map((comment) => (
@@ -269,7 +252,7 @@ export default function PostCard(props) {
     title = post.user.first_name + " " + post.user.last_name;
   }
   return (
-    
+   
       <Paper elevation={3}>
         <Card className={classes.root}>
           <CommentsShowModal
@@ -326,7 +309,6 @@ export default function PostCard(props) {
             <TextField
               margin="normal"
               required={true}
-              fullWidth
               disabled={true}
               color="primary"
               // variant='filled'
@@ -410,7 +392,7 @@ export default function PostCard(props) {
       </Collapse> */}
         </Card>
        
-        {props.userAuthenticatedId==props.post.user_id ? <Menu
+        {parseInt(props.userAuthenticatedId)===props.post.user_id ? <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -425,6 +407,7 @@ export default function PostCard(props) {
       </Menu> : "" }
       
       </Paper>
+     
       
 
       // {/* <Card2 /> */}

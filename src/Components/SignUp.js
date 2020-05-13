@@ -195,11 +195,9 @@ export default function SignUp() {
                   error
                   helperText={emailError}
                   variant="outlined"
-                  required
                   required={true}
                   fullWidth
                   value={email}
-                  required
                   id="email"
                   label="Email Address"
                   name="email"
@@ -209,11 +207,9 @@ export default function SignUp() {
               ) : (
                   <TextField
                     variant="outlined"
-                    required
                     fullWidth
                     required={true}
                     value={email}
-                    required
                     id="email"
                     label="Email Address"
                     name="email"
@@ -225,7 +221,6 @@ export default function SignUp() {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                required
                 fullWidth
                 required={true}
                 name="password"
@@ -260,7 +255,6 @@ export default function SignUp() {
           <FormControl component="fieldset">
             <RadioGroup
               aria-label="gender"
-              name="gender1"
               name="gender"
               value={gender}
               onChange={handleGenderChange}

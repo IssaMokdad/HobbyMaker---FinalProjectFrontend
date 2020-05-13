@@ -1,10 +1,10 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Home from './Components/Home'
 import Login from './Components/Login'
 import SignUp from './Components/SignUp'
 import ForgotPassword from './Components/ForgotPassword'
-import { BrowserRouter as Router, Redirect, useLocation , Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Redirect,  Switch, Route } from "react-router-dom";
 import PasswordReset from './Components/PasswordReset';
 import ConfirmRegistration from './Components/ConfirmRegistration'
 import ProfilePage from './Components/ProfilePage';

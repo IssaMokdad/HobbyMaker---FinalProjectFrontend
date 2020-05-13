@@ -1,27 +1,13 @@
-import React, { Fragment, useState, useRef, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import BottomScrollListener from "react-bottom-scroll-listener";
-import FormatQuoteIcon from "@material-ui/icons/FormatQuote";
 import { makeStyles } from "@material-ui/core/styles";
 import swal from "sweetalert";
-import Demo from "./Geolocated";
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
 import AppNavBar from "./AppNavBar";
 import PostCard from "./PostCard";
 import PostForm from "./PostForm";
 import { fetchRequest, api } from "./Apis";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Card2 from "./Card2";
 import FriendSuggestionCard from "./FriendSuggestionCard";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Paper from "@material-ui/core/Paper";
 
 
@@ -72,7 +58,7 @@ function Home(props) {
   const [userAuthenticated, setUserAuthenticated] = useState('')
 
   const getUserInfo = () => {
-    fetchRequest(api + "api/user/get-info/" + "?user-id=" + props.userAuthenticated.userId, "get").then(
+    fetchRequest(api + "api/user/get-info/?user-id=" + props.userAuthenticated.userId, "get").then(
       (response) => {
         if (response.data) {
           setUserAuthenticated(response.data);
@@ -117,7 +103,7 @@ function Home(props) {
     });
 
   const [randomQuote, setRandomQuote] = useState("");
-
+  // eslint-disable-next-line
   const [hobbyVideos, setHobbyVideos] = useState("");
 
   //getting a random quote by the following api
@@ -149,7 +135,7 @@ function Home(props) {
     navigator.geolocation.getCurrentPosition(success, error, options);
     // getHobbyVideos()
    
-    
+  // eslint-disable-next-line  
   }, []);
   
   //making an array of posts and passing getPosts method, post and userid as props
@@ -208,6 +194,7 @@ function Home(props) {
               <Paper elevation={3}>
                 <iframe
                   width="321"
+                  title='newest videos'
                   height="315"
                   src={"https://www.youtube.com/embed/" + item.id["videoId"]}
                 ></iframe>

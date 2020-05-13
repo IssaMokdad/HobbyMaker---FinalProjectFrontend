@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchRequest, api } from "./Apis";
 import { Link } from "react-router-dom";
@@ -42,6 +42,7 @@ export default function ConfirmRegistration() {
         }
       }
     );
+  // eslint-disable-next-line
   }, []);
   if (registerConfirm === null) {
     return (

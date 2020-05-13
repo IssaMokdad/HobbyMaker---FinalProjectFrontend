@@ -1,35 +1,17 @@
-import React, { useEffect, Fragment, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Paper from "@material-ui/core/Paper";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
-import { fetchRequest, api, token } from "./Apis";
-import moment from "moment";
-import Badge from "./Badge";
-import ModeCommentOutlinedIcon from "@material-ui/icons/ModeCommentOutlined";
+import { api, token } from "./Apis";
 import TextField from "@material-ui/core/TextField";
-import Card2 from "./Card2";
 import SendIcon from "@material-ui/icons/Send";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PhotoCameraTwoToneIcon from "@material-ui/icons/PhotoCameraTwoTone";
-import Input from "@material-ui/core/Input";
 import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +85,6 @@ export default function EditPostModal(props) {
         setPostContent("");
         setFileInput("");
         props.handlePostsAdd()
-        console.log(response.json);
       });
   };
 
@@ -177,6 +158,7 @@ export default function EditPostModal(props) {
                   <img
                     width="100px"
                     height="60px"
+                    alt='post'
                     className={classes.media}
                     src={fileInput}
                   />
@@ -184,7 +166,6 @@ export default function EditPostModal(props) {
               </Grid>
               <Grid item className={classes.grid} xs={4}>
                 <IconButton
-                  type="submit"
                   style={{
                     marginLeft: "40px",
                     transform: "scale(2)",

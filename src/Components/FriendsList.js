@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import Avatar from "@material-ui/core/Avatar";
-import Slider from "@material-ui/core/Slider";
 import IconButton from "@material-ui/core/IconButton";
 import { fetchRequest, api } from "./Apis";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -50,28 +49,9 @@ const useStyles = makeStyles(({ spacing, palette }) => {
   };
 });
 
-const useSliderStyles = makeStyles(() => ({
-  root: {
-    height: 4,
-  },
-  rail: {
-    borderRadius: 10,
-    height: 4,
-    backgroundColor: "rgb(202,211,216)",
-  },
-  track: {
-    borderRadius: 10,
-    height: 4,
-    backgroundColor: "rgb(117,156,250)",
-  },
-  thumb: {
-    display: "none",
-  },
-}));
 
 const FriendsList = (props) => {
   const styles = useStyles();
-  const sliderStyles = useSliderStyles();
 
   const [age, setAge] = useState("");
 
@@ -124,6 +104,7 @@ const FriendsList = (props) => {
 
   useEffect(() => {
     calculateAge();
+    // eslint-disable-next-line
   }, []);
 
   return (

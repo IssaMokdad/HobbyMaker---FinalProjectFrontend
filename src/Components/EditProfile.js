@@ -1,9 +1,8 @@
-import React, { useEffect, Fragment, useState, useRef } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import "react-flags-select/css/react-flags-select.css";
-import ReactFlagsSelect from "react-flags-select";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import Select from "react-select";
 import Button from "@material-ui/core/Button";
@@ -64,7 +63,7 @@ export default function EditProfile(props) {
     };
     fetchRequest(api + "api/user/password-change", "post", data).then(
       (response) => {
-        if (response.message == "success") {
+        if (response.message === "success") {
           setPassword("");
           setPasswordConfirm("");
           swal({
@@ -118,6 +117,7 @@ export default function EditProfile(props) {
       }));
     }
     setMultiValue(hobbies);
+    // eslint-disable-next-line
   }, []);
 
   const [multiValue, setMultiValue] = useState([]);
@@ -126,7 +126,6 @@ export default function EditProfile(props) {
   const [birthday, setBirthday] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [hobby, setHobby] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -182,7 +181,7 @@ export default function EditProfile(props) {
     };
     fetchRequest(api + "api/user/info-change", "post", data).then(
       (response) => {
-        if (response.message == "success") {
+        if (response.message === "success") {
           props.getUserInfo();
           swal({
             title: "Changed Successfully!",

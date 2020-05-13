@@ -15,12 +15,6 @@ import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Popover from "@material-ui/core/Popover";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 

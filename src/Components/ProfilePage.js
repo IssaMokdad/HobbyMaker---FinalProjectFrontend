@@ -13,7 +13,6 @@ import Grid from "@material-ui/core/Grid";
 import { useParams } from "react-router-dom";
 import swal from "sweetalert";
 import PostCard from "./PostCard";
-import PostForm from "./PostForm";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import EditProfile from "./EditProfile";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
@@ -48,6 +47,7 @@ export default function ProfilePage(props) {
   const [friendRequests, setFriendRequests] = useState("");
   const [pendingRequests, setPendingRequests] = useState('')
   const [timelineComponent, setTimelineComponent] = useState(1);
+  // eslint-disable-next-line
   const [aboutComponent, setAboutComponent] = useState("");
   const [friendsComponent, setFriendsComponent] = useState("");
   const [findFriendsComponent, setFindFriendsComponent] = useState("");
@@ -136,7 +136,6 @@ export default function ProfilePage(props) {
   };
 
   const handleComponentChange = (event) => {
-    console.log(event.target.id);
     event.preventDefault();
 
     if (event.target.id === "timelineComponent") {
@@ -208,14 +207,13 @@ export default function ProfilePage(props) {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message == "success") {
+        if (response.message === "success") {
           swal({
             title: "Changed Successfully!",
             icon: "success",
           });
           setCoverPhoto("");
           getUserInfo();
-          console.log(response.json);
         } else {
           swal("Something went wrong!");
         }
@@ -234,7 +232,7 @@ export default function ProfilePage(props) {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response.message == "success") {
+        if (response.message === "success") {
           swal({
             title: "Changed Successfully!",
             icon: "success",
@@ -248,7 +246,7 @@ export default function ProfilePage(props) {
   };
 
   const getUserInfo = () => {
-    fetchRequest(api + "api/user/get-info/" + "?user-id=" + userId, "get").then(
+    fetchRequest(api + "api/user/get-info/?user-id=" + userId, "get").then(
       (response) => {
         if (response.data) {
           setUser(response.data);
@@ -268,7 +266,6 @@ export default function ProfilePage(props) {
 
   const [page, setPage] = useState(1);
 
-  const [usersRecommendation, setUsersRecommendations] = useState("");
 
   //this method is called when we hit the bottom page
 
@@ -309,6 +306,7 @@ export default function ProfilePage(props) {
     getUserFriends();
     getFriendRequests();
     getPendingRequests();
+    // eslint-disable-next-line
   }, [userId]);
 
   return (
@@ -323,6 +321,7 @@ export default function ProfilePage(props) {
             <CardMedia
               className={classes.media}
               image={coverPhoto}
+              alt='profile'
               title="Contemplative Reptile"
             />
           ) : (
@@ -348,6 +347,7 @@ export default function ProfilePage(props) {
               <img
                 width="150"
                 height="150"
+                alt='profile'
                 style={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -362,6 +362,7 @@ export default function ProfilePage(props) {
               <img
                 width="150"
                 height="150"
+                alt='cover'
                 style={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -405,7 +406,6 @@ export default function ProfilePage(props) {
             {props.userAuthenticated.userId === userId ? (
               <label htmlFor="icon-button-file">
                 <IconButton
-                  color="filled"
                   aria-label="upload picture"
                   component="span"
                 >
@@ -450,7 +450,6 @@ export default function ProfilePage(props) {
               justifyContent: "center",
               alignContent: "center",
             }}
-            xs={12}
             container
           >
             {profilePhoto !== "" ? (
@@ -542,7 +541,7 @@ export default function ProfilePage(props) {
           </Grid>
         </CardActions>
       </Card>
-      <Grid container style={{ marginTop: "30px" }} xs={12}>
+      <Grid container style={{ marginTop: "30px" }}>
         {timelineComponent && (
           <Fragment>
             <Grid xs={3} item></Grid>
@@ -559,7 +558,7 @@ export default function ProfilePage(props) {
             <Grid xs={3} item></Grid>
           </Fragment>
         )}
-        <Grid className={classes.root} xs={12} item cotainer>
+        <Grid className={classes.root} xs={12} item >
           {editProfileComponent && (
             <Card style={{ height: "600px" }}>
               <EditProfile
@@ -570,7 +569,7 @@ export default function ProfilePage(props) {
             </Card>
           )}
         </Grid>
-        <Grid className={classes.root} xs={12} item cotainer>
+        <Grid className={classes.root} xs={12} item >
           {findFriendsComponent && (
             <Card style={{ height: "600px" }}>
               <FindFriends
@@ -582,7 +581,7 @@ export default function ProfilePage(props) {
           )}
         </Grid>
         {(friendsComponent &&
-            props.userAuthenticated.userId === userId) && <Grid style={{display:'flex', minHeight:'600px'}} xs={12} item cotainer>
+            props.userAuthenticated.userId === userId) && <Grid style={{display:'flex', minHeight:'600px'}} xs={12} item >
           <Grid item xs={4}>
           <h3 style={{marginLeft:'130px'}}>Pending Requests</h3>
           { 

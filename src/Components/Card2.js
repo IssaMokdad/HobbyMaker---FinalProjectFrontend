@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import cx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Divider from "@material-ui/core/Divider";
-import Rating from "@material-ui/lab/Rating";
-import ArrowForwardIos from "@material-ui/icons/ArrowForwardIos";
-import ModeComment from "@material-ui/icons/ModeComment";
-import Favorite from "@material-ui/icons/Favorite";
-import { usePushingGutterStyles } from "@mui-treasury/styles/gutter/pushing";
-import { useLabelIconStyles } from "@mui-treasury/styles/icon/label";
-import { useRowFlexStyles } from "@mui-treasury/styles/flex/row";
 import Grid from "@material-ui/core/Grid";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,7 +13,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import swal from "sweetalert";
 import { fetchRequest, api } from "./Apis";
 import EditIcon from "@material-ui/icons/Edit";
-import Input from "@material-ui/core/Input";
 import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
@@ -77,15 +67,9 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 const Card2 = (props) => {
   const styles = useStyles();
 
-  const gutterStyles = usePushingGutterStyles({ space: 1.5 });
-
-  const labelStyles = useLabelIconStyles({ linked: true });
-
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [comment, setComment] = useState('')
-
-  const flexStyles = useRowFlexStyles();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -253,7 +237,7 @@ const Card2 = (props) => {
         />
         {/* </Grid> */}
       </Grid>
-      {props.userAuthenticatedId==props.content.user_id ? <Menu
+      {parseInt(props.userAuthenticatedId)===props.content.user_id ? <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted

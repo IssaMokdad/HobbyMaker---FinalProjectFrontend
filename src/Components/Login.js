@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -90,6 +90,7 @@ export default function SignIn(props) {
         >
           <div className={classes.paper}>
             <img
+              alt='logo'
               width="238.5"
               height="226.35"
               src="/images/twitter_login_sidebar_illustration.png"

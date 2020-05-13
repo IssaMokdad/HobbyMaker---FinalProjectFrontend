@@ -3,13 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import { fetchRequest, api, token } from "./Apis";
+import { api, token } from "./Apis";
 import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PhotoCameraTwoToneIcon from "@material-ui/icons/PhotoCameraTwoTone";
 import IconButton from "@material-ui/core/IconButton";
-import Grid from "@material-ui/core/Grid";
 import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +38,6 @@ export default function EditPostModal(props) {
   const fileInputs = useRef(null);
 
   const [postContent, setPostContent] = useState("");
-  console.log(postContent);
   const handlePostChange = (event) => {
     setPostContent(event.target.value);
   };
@@ -120,14 +118,12 @@ export default function EditPostModal(props) {
                     <InputAdornment position="end">
                       <IconButton
                         type="submit"
-                        backgroundColor="secondary"
                         variant="filled"
                         color="primary"
                         style={{
                           marginBottom: "15px",
                           transform: "scale(2)",
                         }}
-                        type="submit"
                         aria-label="add to favorites"
                       >
                         <SendIcon />
@@ -159,6 +155,7 @@ export default function EditPostModal(props) {
                   <img
                     width="490px"
                     height="276px"
+                    alt='post'
                     className={classes.media}
                     src={fileInput}
                   />
