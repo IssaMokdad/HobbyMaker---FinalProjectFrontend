@@ -70,7 +70,6 @@ export default function CommentBox(props) {
             <InputAdornment position="end">
               <IconButton
                 type="submit"
-                backgroundColor="secondary"
                 variant="filled"
                 color="primary"
                 style={{

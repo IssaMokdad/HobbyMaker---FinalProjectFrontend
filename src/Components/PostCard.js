@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState } from "react";
+import React, { useEffect, Fragment, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -39,6 +39,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
 import swal from "sweetalert";
 import EditPostModal from './EditPostModal';
+import RootRef from '@material-ui/core/RootRef';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,9 +70,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  avatar: {
-    backgroundColor: red[500],
-  },
+
+
 }));
 
 export default function PostCard(props) {
@@ -84,6 +84,8 @@ export default function PostCard(props) {
   const [openPostModal, setOpenPostModal] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  
 
   const getPostAfterDeleteComment = (id)=>{
     // setPost(post)
@@ -106,6 +108,7 @@ export default function PostCard(props) {
   }
 
   const handleClick = (event) => {
+
     setAnchorEl(event.currentTarget);
   };
 
@@ -266,7 +269,7 @@ export default function PostCard(props) {
     title = post.user.first_name + " " + post.user.last_name;
   }
   return (
-    <div>
+    
       <Paper elevation={3}>
         <Card className={classes.root}>
           <CommentsShowModal
@@ -283,13 +286,11 @@ export default function PostCard(props) {
             open={openPostModal}
             post={post}
           />
-          <Grid container xs={12}>
+          <Grid container>
             <Grid item xs={9}>
               <CardHeader
                 avatar={
-                  <Avatar aria-label="recipe" className={classes.avatar}>
-                    R
-                  </Avatar>
+                  <Avatar alt="Remy Sharp" src={api + 'images/' + props.post.user.image} />
                 }
                 // action={
                 //   <IconButton aria-label="settings">
@@ -408,9 +409,8 @@ export default function PostCard(props) {
         </CardContent>
       </Collapse> */}
         </Card>
-      </Paper>
-
-     {props.userAuthenticatedId==props.post.user_id ? <Menu
+       
+        {props.userAuthenticatedId==props.post.user_id ? <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -423,7 +423,11 @@ export default function PostCard(props) {
 
         <MenuItem  onClick={handleOpenPostModal}>Edit</MenuItem>
       </Menu> : "" }
-      {/* <Card2 /> */}
-    </div>
+      
+      </Paper>
+      
+
+      // {/* <Card2 /> */}
+    
   );
 }

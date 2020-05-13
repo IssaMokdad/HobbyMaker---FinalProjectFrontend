@@ -48,10 +48,12 @@ export default function PasswordReset() {
   const [passwordHelperText, setPasswordHelperText] = useState("");
   const [resetSuccess, setResetSuccess] = useState("");
   const [isLoading, setIsLoading] = useState("");
+
   const handleChangePassword = (event) => {
     setPasswordError("");
     setPassword(event.target.value);
   };
+  
   const passwordResetAttempt = (event) => {
     event.preventDefault();
     setIsLoading(1);

@@ -1,6 +1,9 @@
 import React, { Fragment, useState, useRef, useEffect } from "react";
 import BottomScrollListener from "react-bottom-scroll-listener";
 import FormatQuoteIcon from "@material-ui/icons/FormatQuote";
+import { makeStyles } from "@material-ui/core/styles";
+import swal from "sweetalert";
+import Demo from "./Geolocated";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -21,13 +24,65 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Paper from "@material-ui/core/Paper";
 
+
+const useStyles = makeStyles({
+  root: {
+
+    flexGrow:1
+  },
+
+});
+
+
 function Home(props) {
+
+
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+
+
+  function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+
+
+  function success(pos) {
+    var crd = pos.coords;
+  
+    console.log('Your current position is:');
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
+  }
+
+
+
+
+  const classes = useStyles();
+
   const [posts, setPosts] = useState("");
 
   const [page, setPage] = useState(1);
 
   const [usersRecommendation, setUsersRecommendations] = useState("");
 
+  const [userAuthenticated, setUserAuthenticated] = useState('')
+
+  const getUserInfo = () => {
+    fetchRequest(api + "api/user/get-info/" + "?user-id=" + props.userAuthenticated.userId, "get").then(
+      (response) => {
+        if (response.data) {
+          setUserAuthenticated(response.data);
+          
+        } else {
+          swal("Something went wrong!");
+        }
+      }
+    );
+  };
   //this method is called when we hit the bottom page
   const handleScroll = (event) => {
     setPage(page + 1);
@@ -72,11 +127,13 @@ function Home(props) {
     });
   };
   //getting hobby videos from youtube related to the hobby of the user, 20 videos
-  // const getHobbyVideos = ()=>{
-  //   fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=cycling&type=video&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M').then(response=>response.json()).then(response=>{
+ 
+
+
+  // if(userAuthenticated.hobbies!==undefined && hobbyVideos===''){
+  //   fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q='+userAuthenticated.hobbies[0].hobby+'&type=video&key=AIzaSyBhlwcvur33Z6dsrw7lx07Ss2gJUbpCvt0').then(response=>response.json()).then(response=>{
   //     setHobbyVideos(response.items)
-  //   })
-  // }
+  //   })}
 
 
   //On every post add, call getPosts() to get posts latest 5 posts
@@ -85,10 +142,14 @@ function Home(props) {
   };
 
   useEffect(() => {
+    getUserInfo()
     getPosts();
     getFriendRecommendations();
     getRandomQuote();
-    // getHobbyVideos();
+    navigator.geolocation.getCurrentPosition(success, error, options);
+    // getHobbyVideos()
+   
+    
   }, []);
   
   //making an array of posts and passing getPosts method, post and userid as props
@@ -106,7 +167,9 @@ function Home(props) {
   //https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=cycling&type=video&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M
   return (
     <Fragment>
+
       <AppNavBar userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} />
+      {/* <Demo /> */}
       <h3
         style={{
           textAlign: "center",
@@ -114,12 +177,14 @@ function Home(props) {
           color: "grey",
         }}
       >
+        
         <strong>{randomQuote.content}</strong>
       </h3>
       <div>
         
         <BottomScrollListener onBottom={handleScroll} />
-        <Grid container xs={12}>
+        <div className={classes.root}>
+        <Grid container >
           <Grid
             xs={3}
             style={{
@@ -136,7 +201,7 @@ function Home(props) {
             
             </div> */}
             <div style={{ width: "100%" }}>
-              <h2> Videos you may like related to your hobby </h2>
+              <h2><strong> Videos you may like related to your hobby</strong> </h2>
             </div>
 
             {Array.from(hobbyVideos).map((item) => (
@@ -163,6 +228,7 @@ function Home(props) {
           >
             <div style={{ width: "77%" }}>
               <PostForm
+                userAuthenticated={userAuthenticated}
                 handlePostsAdd={handlePostsAdd}
                 userAuthenticatedId={props.userAuthenticated.userId}
               />
@@ -170,6 +236,7 @@ function Home(props) {
             {postss}
           </Grid>
           <Grid
+          item
             xs={3}
             style={{
               marginTop: "30px",
@@ -185,6 +252,7 @@ function Home(props) {
             {/* </div> */}
             <h2> Friend Suggestions </h2>
             {Array.from(usersRecommendation).map((user) => (
+              
               <FriendSuggestionCard
                 user={user}
                 getFriendRecommendations={getFriendRecommendations}
@@ -195,7 +263,9 @@ function Home(props) {
           </Grid>
         </Grid>
       </div>
+      </div>
     </Fragment>
+    
   );
 }
 

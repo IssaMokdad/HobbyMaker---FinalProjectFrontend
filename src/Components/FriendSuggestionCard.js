@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import cx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -8,6 +8,9 @@ import Slider from '@material-ui/core/Slider';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import IconButton from "@material-ui/core/IconButton";
 import { fetchRequest, api } from "./Apis";
+import {
+  Link,
+} from "react-router-dom";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
   const family =
@@ -17,6 +20,7 @@ const useStyles = makeStyles(({ spacing, palette }) => {
       display: 'flex',
       padding: spacing(2),
       minWidth: 288,
+      marginBottom:'20px',
       borderRadius: 12,
       boxShadow: '0 2px 4px 0 rgba(138, 148, 159, 0.2)',
       '& > *:nth-child(1)': {
@@ -69,7 +73,25 @@ const useSliderStyles = makeStyles(() => ({
 const FriendSuggestionCard = (props) => {
   const styles = useStyles();
   const sliderStyles = useSliderStyles();
+
+
   
+  const [age, setAge] = useState('')
+
+  
+
+  const calculateAge = ()=>{
+    let today = new Date();
+    var birthDate = new Date(props.user.birthday);  // create a date object directly from `dob1` argument
+    var age_now = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+    {
+        age_now--;
+    }
+    setAge(age_now);
+  }
+
 
   const addFriend = (event)=>{
       event.preventDefault()
@@ -83,13 +105,18 @@ const FriendSuggestionCard = (props) => {
         }
     })
   }
+
+  useEffect(()=>{
+    calculateAge()
+  }, [])
+
   return (
     <Card className={cx(styles.card)} elevation={2}>
-      <Avatar src={'https://i.pravatar.cc/300'} className={styles.avatar} />
+      <Avatar src={api + "images/" + props.user.image} className={styles.avatar} />
       
       <Box>
-        <h3 className={styles.heading}>Sarah Onella</h3>
-        <p className={styles.subheader}>23 y.o • Canada</p>
+        <h3 className={styles.heading}><Link to={"profile/" + 7}> {props.user.first_name + " " + props.user.last_name}</Link></h3>
+        <p className={styles.subheader}>{age + " years old"}</p>
         <Box display={'flex'} alignItems={'center'}>
             
           {/* <Slider classes={sliderStyles} defaultValue={30} /> */}

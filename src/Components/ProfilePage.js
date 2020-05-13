@@ -19,11 +19,18 @@ import EditProfile from "./EditProfile";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import SaveIcon from "@material-ui/icons/Save";
 import IconButton from "@material-ui/core/IconButton";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import FindFriends from "./FindFriends";
+import Friends from "./FriendsList";
+import FriendRequests from "./FriendRequests";
+import PendingRequests from "./PendingRequests"
 
 const useStyles = makeStyles({
   root: {
     maxWidth: "90%",
     marginLeft: "5%",
+    flexGrow: 1,
+
   },
   media: {
     height: 250,
@@ -38,6 +45,8 @@ export default function ProfilePage(props) {
   const { userId } = useParams();
   const [user, setUser] = useState("");
   const [friends, setFriends] = useState("");
+  const [friendRequests, setFriendRequests] = useState("");
+  const [pendingRequests, setPendingRequests] = useState('')
   const [timelineComponent, setTimelineComponent] = useState(1);
   const [aboutComponent, setAboutComponent] = useState("");
   const [friendsComponent, setFriendsComponent] = useState("");
@@ -59,6 +68,50 @@ export default function ProfilePage(props) {
     }
   };
 
+  const addFriend = (event) => {
+    event.preventDefault();
+    let data = {
+      user_id: props.userAuthenticated.userId,
+      friend_id: event.target.id,
+    };
+    fetchRequest(api + "api/friend/add", "post", data).then((response) => {
+      if (response.message === "success") {
+        getUserInfo();
+      }
+    });
+  };
+
+  const getFriendRequests = () => {
+    fetchRequest(
+      api + "api/friend/get-friend-requests?user_id=" + userId,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+        setFriendRequests(response.data);
+      }
+    });
+  };
+
+  const getPendingRequests = () => {
+    fetchRequest(
+      api + "api/friend/get-pending-requests?user_id=" + userId,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+        setPendingRequests(response.data);
+      }
+    });
+  };
+
+  const getUserFriends = () => {
+    fetchRequest(api + "api/friend/get-friends?user_id=" + userId, "get").then(
+      (response) => {
+        if (response.data) {
+          setFriends(response.data);
+        }
+      }
+    );
+  };
 
   const handleCoverPhotoChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -67,7 +120,20 @@ export default function ProfilePage(props) {
   };
 
   const profilePictureInput = useRef(null);
-  const coverPictureInput = useRef(null)
+  const coverPictureInput = useRef(null);
+
+  const defaultComponentSeen = () => {
+    setAboutComponent("");
+    setFriendsComponent("");
+    setTimelineComponent(1);
+    setFindFriendsComponent("");
+    setEditProfileComponent("");
+    setTimelineButtonFilled("contained");
+    setAboutButtonFilled("text");
+    setFriendsButtonFilled("text");
+    setEditProfileButtonFilled("text");
+    setFindFriendsButtonFilled("text");
+  };
 
   const handleComponentChange = (event) => {
     console.log(event.target.id);
@@ -134,7 +200,7 @@ export default function ProfilePage(props) {
     event.preventDefault();
     let formData = new FormData();
     formData.append("cover_photo", coverPictureInput.current.files[0]);
-    formData.append('user_id',props.userAuthenticated.userId )
+    formData.append("user_id", props.userAuthenticated.userId);
     fetch(api + "api/user/save-cover-picture", {
       method: "POST",
       headers: token,
@@ -148,7 +214,7 @@ export default function ProfilePage(props) {
             icon: "success",
           });
           setCoverPhoto("");
-          getUserInfo()
+          getUserInfo();
           console.log(response.json);
         } else {
           swal("Something went wrong!");
@@ -156,13 +222,11 @@ export default function ProfilePage(props) {
       });
   };
 
-
-
   const profilePictureSubmit = (event) => {
     event.preventDefault();
     let formData = new FormData();
     formData.append("image", profilePictureInput.current.files[0]);
-    formData.append('user_id',props.userAuthenticated.userId )
+    formData.append("user_id", props.userAuthenticated.userId);
     fetch(api + "api/user/save-profile-picture", {
       method: "POST",
       headers: token,
@@ -176,8 +240,7 @@ export default function ProfilePage(props) {
             icon: "success",
           });
           setProfilePhoto("");
-          getUserInfo()
-          console.log(response.json);
+          getUserInfo();
         } else {
           swal("Something went wrong!");
         }
@@ -208,6 +271,7 @@ export default function ProfilePage(props) {
   const [usersRecommendation, setUsersRecommendations] = useState("");
 
   //this method is called when we hit the bottom page
+
   const handleScroll = (event) => {
     setPage(page + 1);
 
@@ -234,14 +298,18 @@ export default function ProfilePage(props) {
       </Grid>
     ));
   }
-
+  let friendsIds = [];
+  if (user) {
+    friendsIds = user.friends.map((friend) => friend.friend_id);
+  }
   useEffect(() => {
     getUserInfo();
     getPosts();
-    return function cleanup() {
-      setProfilePhoto("");
-    };
-  }, []);
+    defaultComponentSeen();
+    getUserFriends();
+    getFriendRequests();
+    getPendingRequests();
+  }, [userId]);
 
   return (
     <Fragment>
@@ -251,16 +319,19 @@ export default function ProfilePage(props) {
       />
       <Card className={classes.root}>
         <CardActionArea>
-          {coverPhoto!=='' ? 
-          <CardMedia
-            className={classes.media}
-            image={coverPhoto}
-            title="Contemplative Reptile"
-          />: <CardMedia
-          className={classes.media}
-          image='https://images.unsplash.com/photo-1563991522451-90d2395a8854?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-          title="Contemplative Reptile"
-        />}
+          {coverPhoto !== "" ? (
+            <CardMedia
+              className={classes.media}
+              image={coverPhoto}
+              title="Contemplative Reptile"
+            />
+          ) : (
+            <CardMedia
+              className={classes.media}
+              image={api + "images/" + user.cover_photo}
+              title="Contemplative Reptile"
+            />
+          )}
           <CardContent>
             <span style={{ position: "relative", top: "30px" }}>
               <Typography
@@ -269,7 +340,7 @@ export default function ProfilePage(props) {
                 variant="h5"
                 component="h2"
               >
-                Lizard
+                {user.first_name + " " + user.last_name}
               </Typography>
             </span>
 
@@ -318,15 +389,32 @@ export default function ProfilePage(props) {
               multiple
               type="file"
             />
-            <label htmlFor="icon-button-file">
-              <IconButton
-                color="filled"
-                aria-label="upload picture"
-                component="span"
-              >
-                <PhotoCamera />
-              </IconButton>
-            </label>
+            {props.userAuthenticated.userId !== userId &&
+            friendsIds.indexOf(parseInt(props.userAuthenticated.userId)) ===
+              -1 ? (
+              <label htmlFor="addFriend">
+                <form id={userId} onSubmit={addFriend}>
+                  <IconButton type="submit" color="primary">
+                    <PersonAddIcon />
+                  </IconButton>
+                </form>
+              </label>
+            ) : (
+              ""
+            )}
+            {props.userAuthenticated.userId === userId ? (
+              <label htmlFor="icon-button-file">
+                <IconButton
+                  color="filled"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <PhotoCamera />
+                </IconButton>
+              </label>
+            ) : (
+              ""
+            )}
           </Grid>
           <Grid
             style={{ position: "relative", bottom: "80px", left: "91%" }}
@@ -341,16 +429,19 @@ export default function ProfilePage(props) {
               multiple
               type="file"
             />
-            <label htmlFor="cover-button-file">
-              
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
-              >
-               <PhotoCamera />
-              </IconButton>
-            </label>
+            {props.userAuthenticated.userId === userId ? (
+              <label htmlFor="cover-button-file">
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <PhotoCamera />
+                </IconButton>
+              </label>
+            ) : (
+              ""
+            )}
           </Grid>
 
           <Grid
@@ -363,30 +454,28 @@ export default function ProfilePage(props) {
             container
           >
             {profilePhoto !== "" ? (
-              <div style={{position:'relative', bottom:'90px', left:'110px'}}>
-              <form onSubmit={profilePictureSubmit}>
-                <IconButton
-                  
-                  type="submit"
-                  aria-label="add to favorites"
-                >
-                  <SaveIcon />
-                </IconButton>
-              </form></div>
+              <div
+                style={{ position: "relative", bottom: "90px", left: "110px" }}
+              >
+                <form onSubmit={profilePictureSubmit}>
+                  <IconButton type="submit" aria-label="add to favorites">
+                    <SaveIcon />
+                  </IconButton>
+                </form>
+              </div>
             ) : (
               ""
             )}
-                        {coverPhoto !== "" ? (
-              <div style={{position:'relative', bottom:'90px', left:'680px'}}>
-              <form onSubmit={coverPictureSubmit}>
-                <IconButton
-                  
-                  type="submit"
-                  aria-label="add to favorites"
-                >
-                  <SaveIcon />
-                </IconButton>
-              </form></div>
+            {coverPhoto !== "" ? (
+              <div
+                style={{ position: "relative", bottom: "90px", left: "680px" }}
+              >
+                <form onSubmit={coverPictureSubmit}>
+                  <IconButton type="submit" aria-label="add to favorites">
+                    <SaveIcon />
+                  </IconButton>
+                </form>
+              </div>
             ) : (
               ""
             )}
@@ -422,49 +511,132 @@ export default function ProfilePage(props) {
                 Friends
               </Button>
             </form>
-
-            <form onSubmit={handleComponentChange} id="editProfileComponent">
-              <Button
-                type="submit"
-                variant={editProfileButtonFilled}
-                size="small"
-                color="primary"
-              >
-                Edit Profile
-              </Button>
-            </form>
-
-            <form onSubmit={handleComponentChange} id="findFriendsComponent">
-              <Button
-                type="submit"
-                variant={findFriendsButtonFilled}
-                size="small"
-                color="primary"
-              >
-                Find Friends
-              </Button>
-            </form>
+            {props.userAuthenticated.userId === userId ? (
+              <form onSubmit={handleComponentChange} id="editProfileComponent">
+                <Button
+                  type="submit"
+                  variant={editProfileButtonFilled}
+                  size="small"
+                  color="primary"
+                >
+                  Edit Profile
+                </Button>
+              </form>
+            ) : (
+              ""
+            )}
+            {props.userAuthenticated.userId === userId ? (
+              <form onSubmit={handleComponentChange} id="findFriendsComponent">
+                <Button
+                  type="submit"
+                  variant={findFriendsButtonFilled}
+                  size="small"
+                  color="primary"
+                >
+                  Find Friends
+                </Button>
+              </form>
+            ) : (
+              ""
+            )}
           </Grid>
         </CardActions>
       </Card>
       <Grid container style={{ marginTop: "30px" }} xs={12}>
-        <Grid xs={3} item></Grid>
         {timelineComponent && (
-          <Grid
-            style={{ justifyContent: "center", alignContent: "center" }}
-            xs={6}
-            item
-            container
-          >
-            {postss}
-            <BottomScrollListener onBottom={handleScroll} />
-          </Grid>
+          <Fragment>
+            <Grid xs={3} item></Grid>
+            <Grid
+              style={{ justifyContent: "center", alignContent: "center" }}
+              xs={6}
+              spacing={3}
+              item
+              container
+            >
+              {postss}
+              <BottomScrollListener onBottom={handleScroll} />
+            </Grid>
+            <Grid xs={3} item></Grid>
+          </Fragment>
         )}
-        <Grid xs={9} style={{ height: "2000px" }} item cotainer>
+        <Grid className={classes.root} xs={12} item cotainer>
           {editProfileComponent && (
-            <EditProfile user={user} getUserInfo={getUserInfo} />
+            <Card style={{ height: "600px" }}>
+              <EditProfile
+                userAuthenticatedId={props.userAuthenticated.userId}
+                user={user}
+                getUserInfo={getUserInfo}
+              />
+            </Card>
           )}
         </Grid>
+        <Grid className={classes.root} xs={12} item cotainer>
+          {findFriendsComponent && (
+            <Card style={{ height: "600px" }}>
+              <FindFriends
+                userAuthenticatedId={props.userAuthenticated.userId}
+                user={user}
+                getUserInfo={getUserInfo}
+              />
+            </Card>
+          )}
+        </Grid>
+        {(friendsComponent &&
+            props.userAuthenticated.userId === userId) && <Grid style={{display:'flex', minHeight:'600px'}} xs={12} item cotainer>
+          <Grid item xs={4}>
+          <h3 style={{marginLeft:'130px'}}>Pending Requests</h3>
+          { 
+            Array.from(pendingRequests).map((friend) => (
+              
+              <div style={{width:'80%', marginLeft:'50px'}}><PendingRequests
+                friend={friend}
+                getPendingRequests={getPendingRequests}
+                key={friend.id}
+                userAuthenticatedId={props.userAuthenticated.userId}
+              /></div>
+            ))} </Grid>
+          <Grid item xs={4}>
+          <h3 style={{marginLeft:'100px'}}>Friends</h3>
+          { 
+            Array.from(friends).map((friend) => (
+              
+              <div style={{width:'80%', marginLeft:'30px'}}><Friends
+                friend={friend}
+                getUserFriends={getUserFriends}
+                key={friend.id}
+                userAuthenticatedId={props.userAuthenticated.userId}
+              /></div>
+            ))}
+            </Grid>
+            <Grid item xs={4}>
+            <h3 style={{marginLeft:'50px'}}>Friend Requests</h3>
+            { 
+            Array.from(friendRequests).map((friend) => (
+              <div style={{width:'80%'}}>
+              <FriendRequests
+                friend={friend}
+                getUserFriends={getUserFriends}
+                getFriendRequests={getFriendRequests}
+                key={friend.id}
+                userAuthenticatedId={props.userAuthenticated.userId}
+              /></div>
+            ))}
+            </Grid>
+        </Grid>}
+        {(friendsComponent &&
+            props.userAuthenticated.userId !== userId) && 
+            <Grid item container style={{display:'flex', flexDirection:'column', alignItems:'center'}} xs={12}>
+              {Array.from(friends).map((friend) => (
+              <Grid item xs={12}>
+              <Friends
+                friend={friend}
+                getUserFriends={getUserFriends}
+                key={friend.id}
+                userAuthenticatedId={props.userAuthenticated.userId}
+              /></Grid>
+            ))}
+            </Grid>
+              }
       </Grid>
     </Fragment>
   );

@@ -30,8 +30,10 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: "flex",
     padding: spacing(2),
     borderRadius: 16,
+
   },
   media: {
+
     minWidth: "25%",
     maxWidth: "25%",
     flexShrink: 0,
@@ -45,6 +47,8 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   content: {
     padding: spacing(0, 2, 0, 0),
     overflow: "scroll",
+    overflowX:'hidden',
+    overflowY:'hidden',
   },
   heading: {
     fontSize: 17,
@@ -244,7 +248,7 @@ const Card2 = (props) => {
         <CardMedia
           className={styles.media}
           image={
-            "https://www.brighttv.co.th/wp-content/uploads/2018/04/29739332_996623360491913_2322116227981377536_n.jpg"
+            api + 'images/' + props.content.user.image
           }
         />
         {/* </Grid> */}

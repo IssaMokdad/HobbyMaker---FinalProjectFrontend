@@ -64,9 +64,7 @@ const useStyles = makeStyles((theme) => ({
   fileInput: {
     display: "none",
   },
-  centerAdornment: {
-    marginLeft: "28%", // or your relevant measure
-  },
+
 }));
 
 export default function EditPostModal(props) {
@@ -79,9 +77,10 @@ export default function EditPostModal(props) {
 
   const [postContent, setPostContent] = useState("");
   const [fileInput, setFileInput] = useState(null);
+  const [marginLeftPost, setMarginLeftPost] = useState('28%')
   const handlePostChange = (event) => {
     if (event.target.value !== "") {
-      classes.centerAdornment = {};
+      setMarginLeftPost('0%')
     }
 
     setPostContent(event.target.value);
@@ -113,12 +112,11 @@ export default function EditPostModal(props) {
       <Paper elevation={3}>
         <Card>
           <CardContent>
-            <Grid container xs={12}>
+            <Grid container >
               <Grid item style={{ width: "10%" }}>
                 <Avatar
                   className={classes.large}
-                  alt="Remy Sharp"
-                  src="https://miro.medium.com/max/1400/1*davOueOBBitaRuzKTHNtFg.jpeg"
+                  src={api + "images/" + props.userAuthenticated.image}
                 />
               </Grid>
 
@@ -142,7 +140,8 @@ export default function EditPostModal(props) {
                     startAdornment: (
                       <InputAdornment
                         position="start"
-                        classes={{ positionStart: classes.centerAdornment }}
+                        children=''
+                        style={{ marginLeft: marginLeftPost }}
                       ></InputAdornment>
                     ),
                   }}
@@ -152,7 +151,7 @@ export default function EditPostModal(props) {
           </CardContent>
           <Divider variant="fullWidth" light />
           <CardMedia>
-            <Grid container xs={12}>
+            <Grid container >
               <Grid item className={classes.grid} xs={4}>
                 <input
                   accept="image/*"

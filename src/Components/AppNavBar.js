@@ -230,7 +230,7 @@ export default function AppNavBar(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            <Link color='white' to='/home'>Home</Link>
+            <Link style={{ color: '#FFF' }} to='/home'>Home</Link>
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -306,7 +306,7 @@ export default function AppNavBar(props) {
             style={{ width: "30%" }}
             anchorOrigin={{
               vertical: "bottom",
-              horizontal: "bottom",
+              horizontal: "center",
             }}
             transformOrigin={{
               vertical: "top",
@@ -353,7 +353,7 @@ export default function AppNavBar(props) {
             style={{ width: "30%" }}
             anchorOrigin={{
               vertical: "bottom",
-              horizontal: "bottom",
+              horizontal: "center",
             }}
             transformOrigin={{
               vertical: "top",

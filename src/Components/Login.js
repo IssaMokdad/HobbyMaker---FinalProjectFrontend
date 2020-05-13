@@ -77,12 +77,13 @@ export default function SignIn(props) {
       component="main"
       maxWidth="lg"
     >
-      <Grid container spacing={2} direction="row" maxWidth="lg">
+      <Grid container spacing={2} direction="row">
         <CssBaseline />
-
+        <Grid item xs={4}></Grid>
         <Grid
           item
           xs={4}
+          container
           direction="column"
           justify="center"
           alignItems="center"
@@ -116,7 +117,6 @@ export default function SignIn(props) {
                 <TextField
                   style={{ borderRadius: "30px" }}
                   variant="outlined"
-                  borderRadius={16}
                   // size='small'
                   margin="normal"
                   required={true}
