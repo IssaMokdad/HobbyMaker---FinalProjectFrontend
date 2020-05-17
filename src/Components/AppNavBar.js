@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
+import { fetchRequest, api, token } from "./Apis";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -17,7 +18,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import Popover from "@material-ui/core/Popover";
 import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
-
+import FriendRequests from "./FriendRequests";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -97,6 +98,15 @@ export default function AppNavBar(props) {
     null
   );
 
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsLength, setNotificationsLength] = useState(0);
+
+
+  
+ 
+
+  
+
   const handleClosePopoverMessage = () => {
     setAnchorElPopoverMessage(null);
   };
@@ -149,7 +159,9 @@ export default function AppNavBar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={props.logout}>Logout</MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link to={'/profile/'+props.userAuthenticatedId}>My account</Link></MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link to={"/profile/" + props.userAuthenticatedId}>My account</Link>
+      </MenuItem>
     </Menu>
   );
 
@@ -166,12 +178,12 @@ export default function AppNavBar(props) {
     >
       <MenuItem>
         <IconButton
-          onClick={handleClickPopoverMessage}
+          // onClick={markNotificationsAsRead}
           aria-describedby={id2}
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={0} color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
@@ -185,12 +197,12 @@ export default function AppNavBar(props) {
               onClick={handleClickPopoverNotification}
             > */}
         <IconButton
-          onClick={handleClickPopoverNotification}
+          // onClick={markNotificationsAsRead}
           aria-describedby={id}
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={19} color="secondary">
+          <Badge badgeContent={notificationsLength} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -210,11 +222,69 @@ export default function AppNavBar(props) {
       </MenuItem>
     </Menu>
   );
+  const realTimeNotifications = ()=>{
+
+      setNotifications([...notifications, props.rTNotification])
+      setNotificationsLength(notificationsLength + 1)
+    
+  }
+
+
+
+  const getNotifications = () => {
+    fetchRequest(
+      api + "api/get-user-notifications?user_id=" + props.userAuthenticatedId,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+          setNotifications(response.data);
+          setNotificationsLength(response.data.length);
+
+      }
+    });
+  };
+
+  const markNotificationsAsRead = (event) => {
+    handleClickPopoverNotification(event);
+    fetchRequest(
+      api + "api/mark-as-read?user_id=" + props.userAuthenticatedId,
+      "get"
+    ).then((response) => {
+      if (response.message==='success') {
+        setNotificationsLength();
+      }
+    });
+  };
+
+  const removeNotification = (index)=>{
+    let notificationUpdates = notifications.slice(0, index).concat(notifications.slice(index + 1))
+    setNotifications(notificationUpdates)
+  }
+
+
+
+  useEffect(() => {
+    console.log('hello')
+
+    if(props.rTNotification && notifications.length!==0){
+      realTimeNotifications()
+    }
+
+    if(notifications.length===0 && props.rTNotification){
+      realTimeNotifications()
+    }
+
+    if(!props.rTNotification && notifications.length===0){
+      getNotifications()
+    }
+   
+   
+  }, [props.rTNotification]);
 
   return (
     <div className={classes.grow}>
       <AppBar position="static">
-        <Toolbar variant='dense'>
+        <Toolbar variant="dense">
           <IconButton
             edge="start"
             className={classes.menuButton}
@@ -224,7 +294,9 @@ export default function AppNavBar(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            <Link style={{ color: '#FFF' }} to='/home'>Home</Link>
+            <Link style={{ color: "#FFF" }} to="/home">
+              Home
+            </Link>
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -259,12 +331,12 @@ export default function AppNavBar(props) {
             > */}
             {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
             <IconButton
-              onClick={handleClickPopoverNotification}
+              onClick={markNotificationsAsRead}
               aria-describedby={id}
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={19} color="secondary">
+              <Badge badgeContent={notificationsLength} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -312,32 +384,9 @@ export default function AppNavBar(props) {
                 style={{ marginBottom: "10px" }}
                 className={classes.typography}
               >
-                The content hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
+                <pre>The content of the Popover.</pre>
               </Typography>
             </Paper>
-            <Paper elevation={3}>
-              <Typography
-                style={{ marginBottom: "10px" }}
-                className={classes.typography}
-              >
-                The <Link to="/"> ekhtak</Link> content
-                hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-              </Typography>
-            </Paper>{" "}
-            <Paper elevation={3}>
-              <Typography
-                style={{ marginBottom: "10px" }}
-                className={classes.typography}
-              >
-                The content hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-              </Typography>
-            </Paper>
-            <Typography
-              style={{ marginBottom: "10px" }}
-              className={classes.typography}
-            >
-              The content hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-            </Typography>
           </Popover>
           <Popover
             id={id}
@@ -354,37 +403,46 @@ export default function AppNavBar(props) {
               horizontal: "center",
             }}
           >
-            <Paper elevation={3}>
-              <Typography
-                style={{ marginBottom: "10px" }}
-                className={classes.typography}
-              >
-                The content hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-              </Typography>
-            </Paper>
-            <Paper elevation={3}>
-              <Typography
-                style={{ marginBottom: "10px" }}
-                className={classes.typography}
-              >
-                The <Link to="/"> ekhtak</Link> content
-                hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-              </Typography>
-            </Paper>{" "}
-            <Paper elevation={3}>
-              <Typography
-                style={{ marginBottom: "10px" }}
-                className={classes.typography}
-              >
-                The content hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-              </Typography>
-            </Paper>
-            <Typography
-              style={{ marginBottom: "10px" }}
-              className={classes.typography}
-            >
-              The content hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh of the Popover.
-            </Typography>
+            {/* show every notification depending on its type */}
+            {notifications.length!==0 &&
+              Array.from(notifications).map(
+                (notification, i) => {
+                  {
+                    return notification.type ===
+                      "App\\Notifications\\AddRequest" ? (
+                     <Paper key={i} variant="outlined" elevation={3}>
+                        <FriendRequests
+                          index={i}
+                          removeNotification={removeNotification}
+                          friend={notification.data.user}
+                          userAuthenticatedId={props.userAuthenticatedId}
+                          showAcceptButton={1}
+                        />
+                      </Paper>
+                    ) : (
+                      ""
+                    );
+                  }
+                }
+                // <Paper elevation={3}>
+                //   <Typography
+                //     style={{ marginBottom: "10px" }}
+                //     className={classes.typography}
+                //   >
+                //   <pre>{notification.data.message}</pre>
+                //   </Typography>
+                // </Paper>
+              )}
+              {/* if there are no notifications, show this */}
+                {notifications.length===0 && 
+              <Paper variant='outlined' elevation={3}>
+                  <Typography
+                    style={{ marginBottom: "10px" }}
+                    className={classes.typography}
+                  >
+                  <pre>You have no notifications!</pre>
+                  </Typography>
+                </Paper>}
           </Popover>
         </Toolbar>
       </AppBar>

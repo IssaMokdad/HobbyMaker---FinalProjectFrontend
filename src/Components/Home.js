@@ -5,10 +5,12 @@ import swal from "sweetalert";
 import AppNavBar from "./AppNavBar";
 import PostCard from "./PostCard";
 import PostForm from "./PostForm";
-import { fetchRequest, api } from "./Apis";
+import { fetchRequest, api, token } from "./Apis";
 import Grid from "@material-ui/core/Grid";
 import FriendSuggestionCard from "./FriendSuggestionCard";
 import Paper from "@material-ui/core/Paper";
+
+
 
 
 const useStyles = makeStyles({
@@ -37,11 +39,25 @@ function Home(props) {
 
   function success(pos) {
     var crd = pos.coords;
-  
-    console.log('Your current position is:');
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
-    console.log(`More or less ${crd.accuracy} meters.`);
+    let data = {
+      latitude:crd.latitude,
+      longitude:crd.longitude,
+      user_id:props.userAuthenticated.userId
+    }
+
+    fetchRequest(api + "api/user/save-geometry-position", "post", data).then(
+      (response) => {
+        if (response.message==='success') {
+          
+        } else {
+          swal("Something went wrong while saving your geometry position!");
+        }
+      }
+    );
+    // console.log('Your current position is:');
+    // console.log(`Latitude : ${crd.latitude}`);
+    // console.log(`Longitude: ${crd.longitude}`);
+    // console.log(`More or less ${crd.accuracy} meters.`);
   }
 
 
@@ -128,6 +144,8 @@ function Home(props) {
   };
 
   useEffect(() => {
+    
+
     getUserInfo()
     getPosts();
     getFriendRecommendations();
@@ -154,7 +172,7 @@ function Home(props) {
   return (
     <Fragment>
 
-      <AppNavBar userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} />
+      <AppNavBar rTNotification={props.rTNotification} userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} />
       {/* <Demo /> */}
       <h3
         style={{

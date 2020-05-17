@@ -6,7 +6,7 @@ import Map from './Map';
 
 export default function FindFriends(props){
     
-    return(<Map  />)
+    return(<Map userAuthenticatedId={props.userAuthenticatedId} />)
 }
 
 

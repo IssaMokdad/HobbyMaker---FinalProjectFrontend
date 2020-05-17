@@ -94,7 +94,7 @@ const FriendSuggestionCard = (props) => {
       <Avatar src={api + "images/" + props.user.image} className={styles.avatar} />
       
       <Box>
-        <h3 className={styles.heading}><Link to={"profile/" + 7}> {props.user.first_name + " " + props.user.last_name}</Link></h3>
+        <h3 className={styles.heading}><Link to={"profile/" + props.user.id}> {props.user.first_name + " " + props.user.last_name}</Link></h3>
         <p className={styles.subheader}>{age + " years old"}</p>
         <Box display={'flex'} alignItems={'center'}>
             

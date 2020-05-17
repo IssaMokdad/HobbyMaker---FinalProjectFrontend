@@ -79,8 +79,17 @@ const FriendRequests = (props) => {
               title: "Now, you are friends!",
               icon: "success",
             });
-            props.getFriendRequests();
-            props.getUserFriends();
+            //this condition to let this component work in appnavbar because
+            //I am not passing these methods as props when I used FriendRequests component there
+            if(props.getFriendRequests!==undefined){
+              props.getFriendRequests();
+              props.getUserFriends();
+            }
+            //this method is passed by the appnavbar component
+            if(props.removeNotification){
+              props.removeNotification(props.index)
+            }
+            
           } else {
             swal({
               title: "Something went wrong, try again!",
@@ -124,6 +133,12 @@ const FriendRequests = (props) => {
       ) : (
         ""
       )}
+      {/* this is only rendered if it's coming from theappnavbar */}
+      {props.showAcceptButton && <form id={props.friend.id} onSubmit={acceptFriend}>
+          <IconButton type="submit">
+            <HowToRegIcon color="primary" />
+          </IconButton>
+        </form>}
     </Card>
   );
 };
