@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import {fetchRequest, api} from './Apis';
 import swal from "sweetalert";
@@ -16,6 +16,8 @@ import {
 function Map(props) {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [people, setPeople] = useState(null)
+  const [latt, setLat] = useState()
+  const [lngg, setLng] = useState()
 
   const getPeopleWithSameHobbyInSameCity = () => {
     fetchRequest(
@@ -30,7 +32,21 @@ function Map(props) {
     });
   };
 
+  const getAddressCoordinates = ()=>{
+    
+    fetch(
+      'https://maps.googleapis.com/maps/api/geocode/json?address=' + props.city +'&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M',
+    ).then(response=>response.json()).then(response => {
+      setLat(parseFloat(response.results[0].geometry.location.lat))
+      setLng(parseFloat(response.results[0].geometry.location.lng))
+
+    });
+  }
   useEffect(() => {
+    if(props.city!==undefined){
+      getAddressCoordinates()
+    }
+    
     const listener = e => {
       if (e.key === "Escape") {
         setSelectedPerson(null);
@@ -42,50 +58,48 @@ function Map(props) {
     return () => {
       window.removeEventListener("keydown", listener);
     };
-  }, []);
-
+  }, [props.city]);
   
-  return (
-    
-    <GoogleMap
-      defaultZoom={10}
-      defaultCenter={{ lat: 33.893791, lng: 35.501778 }}
-    //   defaultOptions={{ styles: mapStyles }}
-    >
-      {people && Array.from(people).map(person => (
-        <Marker
-          key={person.id}
-          position={{
-            lat: parseInt(person.latitude),
-            lng: parseInt(person.longitude)
-          }}
-          onClick={() => {
-            setSelectedPerson(person);
-          }}
-          icon={{
-            url: api + "images/" + person.image,
-            scaledSize: new window.google.maps.Size(25, 25)
-          }}
-        />))}
+  return(<GoogleMap
+    defaultZoom={10}
+    defaultCenter={{lat:1, lng:1}}
+    center={{ lat: latt, lng: lngg }}
+    // defaultOptions={{ styles: mapStyles }}
+  > 
+    {people && Array.from(people).map(person => (
+      <Marker
+        key={person.id}
+        position={{
+          lat: parseFloat(person.latitude),
+          lng: parseFloat(person.longitude)
+        }}
+        onClick={() => {
+          setSelectedPerson(person);
+        }}
+        icon={{
+          url: api + "images/" + person.image,
+          scaledSize: new window.google.maps.Size(25, 25)
+        }}
+      />))}
 
-      {selectedPerson && (
-        <InfoWindow
-          onCloseClick={() => {
-            setSelectedPerson(null);
-          }}
-          position={{
-            lat: parseInt(selectedPerson.latitude),
-            lng: parseInt(selectedPerson.longitude)
-          }}
-        >
-          <div>
-          <h2><Link exact to={"/profile/"+selectedPerson.id }>{selectedPerson.first_name + " " + selectedPerson.last_name}</Link></h2>
-            {/* <p>Mokdad</p> */}
-          </div>
-        </InfoWindow>
-      )}
-    </GoogleMap>
-  );
+    {selectedPerson && (
+      <InfoWindow
+        onCloseClick={() => {
+          setSelectedPerson(null);
+        }}
+        position={{
+          lat: parseFloat(selectedPerson.latitude),
+          lng: parseFloat(selectedPerson.longitude)
+        }}
+      >
+        <div>
+        <h2><Link exact to={"/profile/"+selectedPerson.id }>{selectedPerson.first_name + " " + selectedPerson.last_name}</Link></h2>
+          {/* <p>Mokdad</p> */}
+        </div>
+      </InfoWindow>
+    )}
+  </GoogleMap>);
+
 }
 
 const MapWrapped = withScriptjs(withGoogleMap(Map));
@@ -102,7 +116,7 @@ export default function App(props) {
   //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&sensor=true&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M
   return (
      display && <div style={{ width: "100vw", height: "100vh" }}>
-      <MapWrapped userAuthenticatedId={props.userAuthenticatedId}
+      <MapWrapped city={props.city} userAuthenticatedId={props.userAuthenticatedId}
         googleMapURL={'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M'
           
         }

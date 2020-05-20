@@ -1,12 +1,14 @@
-import React from "react";
-import "react-flags-select/css/react-flags-select.css";
+import React, {useEffect} from "react";
 import Map from './Map';
 
 
 
 export default function FindFriends(props){
+    useEffect(()=>{
+
+    }, [props.city])
     
-    return(<Map userAuthenticatedId={props.userAuthenticatedId} />)
+    return<Map city={props.city} userAuthenticatedId={props.userAuthenticatedId} />
 }
 
 

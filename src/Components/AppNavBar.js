@@ -297,6 +297,9 @@ export default function AppNavBar(props) {
             <Link style={{ color: "#FFF" }} to="/home">
               Home
             </Link>
+            <Link style={{ color: "#FFF" }} to="/onetimepage">
+              Messenger
+            </Link>
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>

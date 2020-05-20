@@ -9,7 +9,7 @@ import { fetchRequest, api, token } from "./Apis";
 import Grid from "@material-ui/core/Grid";
 import FriendSuggestionCard from "./FriendSuggestionCard";
 import Paper from "@material-ui/core/Paper";
-
+// import Messenger from './Messenger';
 
 
 
@@ -171,7 +171,7 @@ function Home(props) {
   //https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=cycling&type=video&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M
   return (
     <Fragment>
-
+      {/* <Messenger/> */}
       <AppNavBar rTNotification={props.rTNotification} userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} />
       {/* <Demo /> */}
       <h3

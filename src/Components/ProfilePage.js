@@ -574,7 +574,7 @@ export default function ProfilePage(props) {
             <Card style={{ height: "600px" }}>
               <FindFriends
                 userAuthenticatedId={props.userAuthenticated.userId}
-                user={user}
+                city={user.city}
                 getUserInfo={getUserInfo}
               />
             </Card>

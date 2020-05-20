@@ -2,7 +2,6 @@ import React, { useEffect, Fragment, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import "react-flags-select/css/react-flags-select.css";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import Select from "react-select";
 import Button from "@material-ui/core/Button";
@@ -12,6 +11,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { fetchRequest, api } from "./Apis";
 import swal from "sweetalert";
+import {hobbies} from './Hobbies';
 
 import {
   MuiPickersUtilsProvider,
@@ -75,20 +75,7 @@ export default function EditProfile(props) {
     );
   };
 
-  const scaryAnimals = [
-    { label: "Writing", value: "Writing" },
-    { label: "Baking", value: "Baking" },
-    { label: "Refinishing furniture", value: "Refinishing furniture" },
-    { label: "Flea Market Shopping", value: "Flea Market Shopping" },
-    { label: "Catering", value: "Catering" },
-    { label: "Making Music", value: "Making Music" },
-    { label: "Football", value: "Football" },
-    { label: "Basketball", value: "Basketball" },
-    { label: "Bartending", value: "Bartending" },
-    { label: "Chess", value: "Chess" },
-    { label: "Waraa", value: "Waraa" },
-    { label: "Cycling", value: "Cycling" },
-  ];
+
 
   //   if (password.length < 8) {
   //     setPasswordHelperText("Password must be 8 characters or more");
@@ -234,7 +221,7 @@ export default function EditProfile(props) {
                 isMulti
                 onChange={handleMultiValueChange}
                 value={multiValue}
-                options={scaryAnimals}
+                options={hobbies}
               />
             </Grid>
           </Grid>
