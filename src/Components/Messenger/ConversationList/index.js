@@ -10,37 +10,67 @@ import Button from '@material-ui/core/Button';
 
 export default function ConversationList(props) {
   const [conversations, setConversations] = useState([]);
+  const [friendId, setFriendId] = useState('')
+  // const [lastMessages, setLastMessages] = useState('')
 
   const handleContactChange = (event)=>{
     event.preventDefault()
+    setFriendId(event.currentTarget.dataset.id)
     props.handleContactChange( event.currentTarget.dataset.id)
   }
 
   useEffect(() => {
-    getConversations()
-  },[])
+    if(props.realTimeMessage){
+      getConversations()
+      props.setRTMEmpty()
+    }
+    else{
+      getConversations()
+    }
+    // getConversations()
+  },[props.realTimeMessage])
 
  const getConversations = () => {
-    fetchRequest(api + "api/friend/get-friends?user_id=" + props.userAuthenticatedId, 'get')
+    fetchRequest(api + "api/get-unread-messages?user_id=" + props.userAuthenticatedId, 'get')
     .then(response=> {
 
-        let newConversations = response.data.map(result => {
+      let unread_messages_count = response.unread_messages_count.map(result=>{
+
+          return result
+        
+
+      })
+
+       let lastMessages = response.last_messages.map(result=>
+          {
+            if(result){
+              return result.message
+            }
+            else{
+              return ''
+            }
+           
+          })
+
+        let newConversations = response.data.map((result,i) => {
           
           return {
-            id:result.friend_id,
+            friendId:result.friend_id,
             photo: api + 'images/'+ result.image,
             name: `${result.first_name} ${result.last_name}`,
-            text: 'Hello world! This is a long message that needs to be truncated.'
+            unread: unread_messages_count[i],
+            text:lastMessages[i]
+            // text: 'Hello world! This is a long message that needs to be truncated.'
           };
         });
-        setConversations([...conversations, ...newConversations])
+        setConversations([...newConversations])
     });
   }
-
+  console.log(conversations)
     return (
       <div className="conversation-list">
         <Toolbar
-          title="Messenger"
+          title="Contact List"
           leftItems={[
             <ToolbarButton key="cog" icon="ion-ios-cog" />
           ]}
@@ -50,12 +80,15 @@ export default function ConversationList(props) {
         />
         {/* <ConversationSearch /> */}
         {
+          
           conversations.map(conversation =>
-            <div data-id={conversation.id} onClick={handleContactChange}>
+            <div data-id={conversation.friendId} onClick={handleContactChange}>
               {/* <Button fullwidth type='submit' variant="outlined"> */}
             <ConversationListItem
-              key={conversation.name}
+              key={conversation.friendId}
+              friendIdSelected={friendId}
               data={conversation}
+              userAuthenticatedId={props.userAuthenticatedId}
             />
             {/* </Button> */}
             </div>

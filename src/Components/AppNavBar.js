@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import { fetchRequest, api, token } from "./Apis";
@@ -19,6 +19,8 @@ import Popover from "@material-ui/core/Popover";
 import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import FriendRequests from "./FriendRequests";
+import HomeIcon from "@material-ui/icons/Home";
+import SideDrawer from "./SideDrawer";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -100,18 +102,14 @@ export default function AppNavBar(props) {
 
   const [notifications, setNotifications] = useState([]);
   const [notificationsLength, setNotificationsLength] = useState(0);
-
-
-  
- 
-
-  
-
+  const [messages, setMessages] = useState([]);
+  const [messagesLength, setMessagesLength] = useState(0);
   const handleClosePopoverMessage = () => {
     setAnchorElPopoverMessage(null);
   };
   const open2 = Boolean(anchorElPopoverMessage);
   const id2 = open2 ? "simple-popover" : undefined;
+
   const handleClickPopoverMessage = (event) => {
     setAnchorElPopoverMessage(event.currentTarget);
   };
@@ -222,14 +220,15 @@ export default function AppNavBar(props) {
       </MenuItem>
     </Menu>
   );
-  const realTimeNotifications = ()=>{
+  const realTimeNotifications = () => {
+    setNotifications([...notifications, props.rTNotification]);
+    setNotificationsLength(parseInt(notificationsLength + 1));
+  };
 
-      setNotifications([...notifications, props.rTNotification])
-      setNotificationsLength(notificationsLength + 1)
-    
-  }
-
-
+  const realTimeMessages = () => {
+    setMessages([...messages, props.realTimeMessage]);
+    setMessagesLength(parseInt(messagesLength + 1));
+  };
 
   const getNotifications = () => {
     fetchRequest(
@@ -237,220 +236,284 @@ export default function AppNavBar(props) {
       "get"
     ).then((response) => {
       if (response.data) {
-          setNotifications(response.data);
-          setNotificationsLength(response.data.length);
+        setNotifications(response.data);
+        setNotificationsLength(response.data.length);
+      }
+    });
+  };
 
+  const getUnreadMessages = () => {
+    fetchRequest(
+      api + "api/get-message-notifications?user_id=" + props.userAuthenticatedId,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+        setMessages(response.data);
+        setMessagesLength(response.data.length);
       }
     });
   };
 
   const markNotificationsAsRead = (event) => {
+    let data = {
+      user_id:props.userAuthenticatedId
+    }
     handleClickPopoverNotification(event);
     fetchRequest(
-      api + "api/mark-as-read?user_id=" + props.userAuthenticatedId,
-      "get"
+      api + "api/mark-as-read" ,"post", data
     ).then((response) => {
-      if (response.message==='success') {
+      if (response.message === "success") {
         setNotificationsLength();
       }
     });
   };
 
-  const removeNotification = (index)=>{
-    let notificationUpdates = notifications.slice(0, index).concat(notifications.slice(index + 1))
-    setNotifications(notificationUpdates)
-  }
+  const markMessagesAsRead = (event) => {
+    handleClickPopoverMessage(event);
+    let data = {
+      user_id:props.userAuthenticatedId
+    }
+    fetchRequest(
+      api + "api/mark-messages-as-read", "post", data
+    ).then((response) => {
+      if (response.message === "success") {
+        setMessagesLength();
+      }
+    });
+  };
 
-
+  const removeNotification = (index) => {
+    let notificationUpdates = notifications
+      .slice(0, index)
+      .concat(notifications.slice(index + 1));
+    setNotifications(notificationUpdates);
+  };
 
   useEffect(() => {
-    console.log('hello')
+    console.log("hello");
 
-    if(props.rTNotification && notifications.length!==0){
-      realTimeNotifications()
+    if (props.rTNotification && notifications.length !== 0) {
+      realTimeNotifications();
     }
 
-    if(notifications.length===0 && props.rTNotification){
-      realTimeNotifications()
+    else if (notifications.length === 0 && props.rTNotification) {
+      realTimeNotifications();
     }
 
-    if(!props.rTNotification && notifications.length===0){
-      getNotifications()
+    else if (!props.rTNotification && notifications.length === 0) {
+      getNotifications();
     }
-   
-   
-  }, [props.rTNotification]);
+    if (props.realTimeMessage && messages.length !== 0) {
+      realTimeMessages();
+    }
+    else if (messages.length === 0 && props.realTimeMessage) {
+      realTimeMessages();
+    }
+    else if (!props.realTimeMessage && messages.length === 0) {
+      getUnreadMessages();
+    }
+  }, [props.rTNotification, props.realTimeMessage]);
 
   return (
-    <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            <Link style={{ color: "#FFF" }} to="/home">
-              Home
-            </Link>
-            <Link style={{ color: "#FFF" }} to="/onetimepage">
-              Messenger
-            </Link>
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
+    <Fragment>
+      <div className={classes.grow}>
+        <AppBar position="fixed">
+          <Toolbar variant="dense">
             <IconButton
-              onClick={handleClickPopoverMessage}
-              aria-describedby={id2}
-              aria-label="show 17 new notifications"
+              edge="start"
+              className={classes.menuButton}
               color="inherit"
+              aria-label="open drawer"
             >
-              <Badge badgeContent={9} color="secondary">
-                <MailIcon />
-              </Badge>
+              {/* <MenuIcon /> */}
             </IconButton>
-            {/* <Button
+            <Typography className={classes.title} variant="h6" noWrap>
+              <SideDrawer />
+
+              {/* <Link style={{ color: "#FFF" }} to="/messenger">
+              Messenger
+            </Link> */}
+            </Typography>
+            <Typography className={classes.title} variant="h6" noWrap>
+              <Link style={{ color: "#FFF" }} to="/home">
+                <HomeIcon />
+              </Link>
+              {/* <Link style={{ color: "#FFF" }} to="/messenger">
+              Messenger
+            </Link> */}
+            </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+              />
+            </div>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                onClick={markMessagesAsRead}
+                aria-describedby={id2}
+                aria-label="show 17 new notifications"
+                color="inherit"
+              >
+                <Badge badgeContent={messagesLength} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+              {/* <Button
               aria-describedby={id}
               variant="contained"
               color="primary"
               onClick={handleClickPopoverNotification}
             > */}
-            {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
-            <IconButton
-              onClick={markNotificationsAsRead}
-              aria-describedby={id}
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={notificationsLength} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            {/* </Button> */}
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-
-          <Popover
-            id={id2}
-            open={open2}
-            onClose={handleClosePopoverMessage}
-            anchorEl={anchorElPopoverMessage}
-            style={{ width: "30%" }}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            <Paper elevation={3}>
-              <Typography
-                style={{ marginBottom: "10px" }}
-                className={classes.typography}
+              {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
+              <IconButton
+                onClick={markNotificationsAsRead}
+                aria-describedby={id}
+                aria-label="show 17 new notifications"
+                color="inherit"
               >
-                <pre>The content of the Popover.</pre>
-              </Typography>
-            </Paper>
-          </Popover>
-          <Popover
-            id={id}
-            open={open}
-            onClose={handleClosePopoverNotification}
-            anchorEl={anchorElPopoverNotification}
-            style={{ width: "30%" }}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            {/* show every notification depending on its type */}
-            {notifications.length!==0 &&
-              Array.from(notifications).map(
-                (notification, i) => {
-                  {
-                    return notification.type ===
-                      "App\\Notifications\\AddRequest" ? (
-                     <Paper key={i} variant="outlined" elevation={3}>
-                        <FriendRequests
-                          index={i}
-                          removeNotification={removeNotification}
-                          friend={notification.data.user}
-                          userAuthenticatedId={props.userAuthenticatedId}
-                          showAcceptButton={1}
-                        />
+                <Badge badgeContent={notificationsLength} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              {/* </Button> */}
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+
+            <Popover
+              id={id2}
+              open={open2}
+              onClose={handleClosePopoverMessage}
+              anchorEl={anchorElPopoverMessage}
+              style={{ width: "30%" }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              {messages.length !== 0 &&
+                Array.from(messages).map(
+                  (message, i) => {
+                    return (
+                      <Paper key={i} variant="outlined" elevation={3}>
+                        <Typography
+                          style={{ marginBottom: "10px" }}
+                          className={classes.typography}
+                        >
+                          <pre><Link to='/messenger'>{'You have ' + message.unread + ' unread ' + (message.unread===1 ? 'message' : 'messages') + '\nfrom ' + message.first_name + " " + message.last_name}</Link>
+                           </pre>
+                        </Typography>
                       </Paper>
-                    ) : (
-                      ""
                     );
                   }
-                }
-                // <Paper elevation={3}>
-                //   <Typography
-                //     style={{ marginBottom: "10px" }}
-                //     className={classes.typography}
-                //   >
-                //   <pre>{notification.data.message}</pre>
-                //   </Typography>
-                // </Paper>
-              )}
-              {/* if there are no notifications, show this */}
-                {notifications.length===0 && 
-              <Paper variant='outlined' elevation={3}>
+                  
+                )}
+                {messages.length===0 && 
+                <Paper variant="outlined" elevation={3}>
                   <Typography
                     style={{ marginBottom: "10px" }}
                     className={classes.typography}
                   >
-                  <pre>You have no notifications!</pre>
+                    <pre><Link to='/messenger'>You have no messages!</Link></pre>
                   </Typography>
-                </Paper>}
-          </Popover>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </div>
+                </Paper>
+                  }
+            </Popover>
+            <Popover
+              id={id}
+              open={open}
+              onClose={handleClosePopoverNotification}
+              anchorEl={anchorElPopoverNotification}
+              style={{ width: "30%" }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              {/* show every notification depending on its type */}
+              {notifications.length !== 0 &&
+                Array.from(notifications).map(
+                  (notification, i) => {
+                    {
+                      return notification.type ===
+                        "App\\Notifications\\AddRequest" ? (
+                        <Paper key={i} variant="outlined" elevation={3}>
+                          <FriendRequests
+                            index={i}
+                            removeNotification={removeNotification}
+                            friend={notification.data.user}
+                            userAuthenticatedId={props.userAuthenticatedId}
+                            showAcceptButton={1}
+                          />
+                        </Paper>
+                      ) : (
+                        ""
+                      );
+                    }
+                  }
+                  // <Paper elevation={3}>
+                  //   <Typography
+                  //     style={{ marginBottom: "10px" }}
+                  //     className={classes.typography}
+                  //   >
+                  //   <pre>{notification.data.message}</pre>
+                  //   </Typography>
+                  // </Paper>
+                )}
+              {/* if there are no notifications, show this */}
+              {notifications.length === 0 && (
+                <Paper variant="outlined" elevation={3}>
+                  <Typography
+                    style={{ marginBottom: "10px" }}
+                    className={classes.typography}
+                  >
+                    <pre>You have no notifications!</pre>
+                  </Typography>
+                </Paper>
+              )}
+            </Popover>
+          </Toolbar>
+        </AppBar>
+        {renderMobileMenu}
+        {renderMenu}
+      </div>
+      <div style={{ marginBottom: "50px" }}></div>
+    </Fragment>
   );
 }

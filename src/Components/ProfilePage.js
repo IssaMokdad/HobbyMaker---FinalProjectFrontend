@@ -23,6 +23,7 @@ import FindFriends from "./FindFriends";
 import Friends from "./FriendsList";
 import FriendRequests from "./FriendRequests";
 import PendingRequests from "./PendingRequests"
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +32,7 @@ const useStyles = makeStyles({
     flexGrow: 1,
 
   },
+
   media: {
     height: 250,
   },
@@ -61,7 +63,8 @@ export default function ProfilePage(props) {
   const [findFriendsButtonFilled, setFindFriendsButtonFilled] = useState(
     "text"
   );
-
+  const [personAddIconDisplay, setPersonAddIconDisplay] = useState(1);
+  const [circularProgress, setCircularProgress] = useState()
   const handleProfilePhotoChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setProfilePhoto(URL.createObjectURL(event.target.files[0]));
@@ -69,6 +72,7 @@ export default function ProfilePage(props) {
   };
 
   const addFriend = (event) => {
+    setPersonAddIconDisplay('')
     event.preventDefault();
     let data = {
       user_id: props.userAuthenticated.userId,
@@ -76,7 +80,9 @@ export default function ProfilePage(props) {
     };
     fetchRequest(api + "api/friend/add", "post", data).then((response) => {
       if (response.message === "success") {
-        getUserInfo();
+        getUserFriends()
+      }else{
+        setPersonAddIconDisplay(1)
       }
     });
   };
@@ -251,6 +257,7 @@ export default function ProfilePage(props) {
         if (response.data) {
           setUser(response.data);
           setFriends(response.data.friends);
+          setCircularProgress()
         } else {
           swal("Something went wrong!");
         }
@@ -300,6 +307,7 @@ export default function ProfilePage(props) {
     friendsIds = user.friends.map((friend) => friend.friend_id);
   }
   useEffect(() => {
+    setCircularProgress(1)
     getUserInfo();
     getPosts();
     defaultComponentSeen();
@@ -309,12 +317,17 @@ export default function ProfilePage(props) {
     // eslint-disable-next-line
   }, [userId]);
 
+
+  if(circularProgress){
+    return <div style={{position:'absolute', left:'50%', top:'50%'}}><CircularProgress /></div>
+  }
+
   return (
     <Fragment>
-      <AppNavBar
+      {/* <AppNavBar
         userAuthenticatedId={props.userAuthenticated.userId}
         logout={props.logout}
-      />
+      /> */}
       <Card className={classes.root}>
         <CardActionArea>
           {coverPhoto !== "" ? (
@@ -392,7 +405,7 @@ export default function ProfilePage(props) {
             />
             {props.userAuthenticated.userId !== userId &&
             friendsIds.indexOf(parseInt(props.userAuthenticated.userId)) ===
-              -1 ? (
+              -1 ? (personAddIconDisplay && 
               <label htmlFor="addFriend">
                 <form id={userId} onSubmit={addFriend}>
                   <IconButton type="submit" color="primary">

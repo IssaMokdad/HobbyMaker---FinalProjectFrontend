@@ -60,7 +60,7 @@ export default function Compose(props) {
                 color="primary"
                 style={{
                   marginBottom: "15px",
-                  marginRight: "215px",
+                  marginRight: "230px",
                   transform: "scale(2)",
                 }}
                 aria-label="add to favorites"

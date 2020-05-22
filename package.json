@@ -37,7 +37,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "react-scroll-to-bottom": "^2.0.0",
-    "react-select": "^2.0.0-beta.7",
+    "react-select": "^3.1.0",
     "react-transition-group": "^4.4.0",
     "reactstrap": "^8.4.1",
     "shave": "^2.5.4",
@@ -65,5 +65,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-export-default-from": "^7.8.3"
   }
 }

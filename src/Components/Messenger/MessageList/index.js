@@ -9,6 +9,7 @@ import './MessageList.css';
 
 export default function MessageList(props) {
   
+  const [friend, setFriend] = useState('')
   const MY_USER_ID = props.userAuthenticatedId;
   const [messages, setMessages] = useState([])
   const [friendId, setFriendId]=useState(props.friendId)
@@ -47,7 +48,9 @@ export default function MessageList(props) {
     
     fetchRequest(api + "api/get-messages?user_id="+props.userAuthenticatedId+'&friend_id='+props.friendId, 'get')
      .then(response=> {
+        if(response.data){
 
+        
         let tempMessages = response.data.map(message=>
         ({
           id: message.id,
@@ -61,7 +64,10 @@ export default function MessageList(props) {
       // if(response.data.length===0){
       //   setMessages('')
       // }
-     })}
+    }
+  if(response.friend){
+    setFriend(response.friend)
+  }})}
 
   const renderMessages = () => {
     let i = 0;
@@ -122,18 +128,19 @@ export default function MessageList(props) {
     return tempMessages;
   }
 
+    if(friend===''){
+      return (<h1> Select a friend to start chat!</h1>)
+    }
+
     return(
       // <Element name="container" className="element" id="containerElement">
-      
+      <Fragment>
+      <div style={{width:'72%', backgroundColor: "#F0F0F0",position:'fixed', left:'350px'}}><img className="conversation-photo" src={api + 'images/'+ friend.image} alt="conversation" />
+      <span>{friend.first_name + ' ' + friend.last_name}</span></div>
+
+        
         <div className="message-list">
-        <Toolbar
-          title="Conversation Title"
-          rightItems={[
-            <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
-          ]}
-        />
+
 
 <div >{renderMessages() } </div>
         
@@ -146,7 +153,7 @@ export default function MessageList(props) {
           <ToolbarButton key="emoji" icon="ion-ios-happy" />
         ]}/>
         
-      </div>
+      </div></Fragment>
 
     );
 }

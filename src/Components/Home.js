@@ -172,7 +172,7 @@ function Home(props) {
   return (
     <Fragment>
       {/* <Messenger/> */}
-      <AppNavBar rTNotification={props.rTNotification} userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} />
+      {/* <AppNavBar rTNotification={props.rTNotification} userAuthenticatedId={props.userAuthenticated.userId} logout={props.logout} /> */}
       {/* <Demo /> */}
       <h3
         style={{

@@ -56,7 +56,7 @@ const FriendSuggestionCard = (props) => {
 
   const [age, setAge] = useState('')
 
-  
+  const [display, setDisplay] = useState(1)
 
   const calculateAge = ()=>{
     let today = new Date();
@@ -73,6 +73,7 @@ const FriendSuggestionCard = (props) => {
 
   const addFriend = (event)=>{
       event.preventDefault()
+      setDisplay()
     let data={
         friend_id:event.target.id,
         user_id : props.userAuthenticatedId
@@ -80,6 +81,9 @@ const FriendSuggestionCard = (props) => {
     fetchRequest(api+'api/friend/add', 'post', data).then(response=>{
         if(response.message==='success'){
             props.getFriendRecommendations()
+        }
+        else{
+          setDisplay(1)
         }
     })
   }
@@ -89,8 +93,10 @@ const FriendSuggestionCard = (props) => {
     // eslint-disable-next-line
   }, [])
 
+  
+
   return (
-    <Card className={cx(styles.card)} elevation={2}>
+    <div> {display && <Card className={cx(styles.card)} elevation={2}>
       <Avatar src={api + "images/" + props.user.image} className={styles.avatar} />
       
       <Box>
@@ -102,7 +108,7 @@ const FriendSuggestionCard = (props) => {
           {/* <span className={styles.value}>3/10</span> */}
         </Box>
       </Box><form id={props.user.id} onSubmit={addFriend}><IconButton type='submit' ><PersonAddIcon color='primary'/></IconButton></form>
-    </Card>
+    </Card>} </div>
   );
 };
 

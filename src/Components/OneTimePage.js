@@ -268,6 +268,19 @@ export default function CustomizedSteppers(props) {
       setCity(data.stateData.data.name);
     }
   };
+
+  const setFirstTimeLoginToFalse = ()=>{
+      let data = {
+        user_id:props.userAuthenticated.userId
+      }
+      fetchRequest(api + "api/user/first-time-login" , "post", data).then(
+        response => {
+          //this method only to change the first time login field to false
+        }
+      );
+  
+  }
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     submitUserInfoInput()
@@ -285,7 +298,7 @@ export default function CustomizedSteppers(props) {
 
   useEffect(()=>{
       getUserInfo()
-
+      setFirstTimeLoginToFalse()
   }, [])
   return (
     <div className={classes.root}>

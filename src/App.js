@@ -4,6 +4,7 @@ import Home from "./Components/Home";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import ForgotPassword from "./Components/ForgotPassword";
+import AppNavBar from './Components/AppNavBar';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -79,13 +80,21 @@ function App() {
   const handleChangeToken = (event) => {
     localStorage.setItem("token", event.access_token);
     localStorage.setItem("userId", event.user_id);
+    setFirstTimeLogin(event.first_time_login)
+
+    
     setToken(1); //this renders the component, but let useEffect render again on token change to assign the data to the user and avoid writing it in a separate method to avoid repeated code it
   };
-  console.log(rTNotification);
+  
+    
+  
   return (
     <div style={{ backgroundColor: "#F0F0F0" }}>
+      
       <Router>
+      {token !== "" && <AppNavBar realTimeMessage={realTimeMessage} rTNotification={rTNotification} userAuthenticatedId={userAuthenticated.userId} logout={logout} />}
         <Switch>
+        
         <Route path="/onetimepage">
             {(token !== "" && firstTimeLogin) ? (
               <OneTimePage userAuthenticated={userAuthenticated} />
@@ -132,8 +141,8 @@ function App() {
             {/* <Map /> */}
             {token === "" ? (
               <Login handleChangeToken={handleChangeToken} />
-            ) : (
-              <Redirect to="/home" />
+            ) : (firstTimeLogin ?
+              <Redirect to="/onetimepage" /> : <Redirect to="/home" />
             )}
           </Route>
           <Route path="/password-reset-confirm/:token">

@@ -2,11 +2,18 @@
   display: flex;
   align-items: center;
   padding: 10px;
+  
 }
 
 .conversation-list-item:hover {
   background: #eeeef1;
   cursor: pointer;
+}
+.selected{
+  background:#989898;
+}
+.unread-messages{
+  background: #D3D3D3 !important;
 }
 
 .conversation-photo {
