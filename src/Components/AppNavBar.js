@@ -290,7 +290,6 @@ export default function AppNavBar(props) {
   };
 
   useEffect(() => {
-    console.log("hello");
 
     if (props.rTNotification && notifications.length !== 0) {
       realTimeNotifications();

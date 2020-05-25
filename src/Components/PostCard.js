@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -22,7 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
 import swal from "sweetalert";
-import EditPostModal from './EditPostModal';
+import EditPostModal from "./EditPostModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,8 +53,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-
-
 }));
 
 export default function PostCard(props) {
@@ -68,31 +66,74 @@ export default function PostCard(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  
-
-  const getPostAfterDeleteComment = (id)=>{
+  const getPostAfterDeleteComment = (id) => {
     // setPost(post)
     // let commentsDetails = Array.from(post).map((comment) => (
     //   <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
     // ));
     // setComments(commentsDetails);
-    fetchRequest(
-      api + "api/comment/show/?post-id=" + id,
-      "get"
-    ).then((response) => {
-      let commentsDetails = response.data.map((comment) => (
-        <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
-      ));
-      setComments(commentsDetails);
-      post.comments = response.data
-      setPost(post)
-      setOpenCommentModal(true);
-    });
-  }
+    fetchRequest(api + "api/comment/show/?post_id=" + id, "get").then(
+      (response) => {
+        let commentsDetails = response.data.map((comment) => (
+          <Card2
+            key={comment.id}
+            userAuthenticatedId={props.userAuthenticatedId}
+            getPostAfterDeleteComment={getPostAfterDeleteComment}
+            content={comment}
+          />
+        ));
+        setComments(commentsDetails);
+        post.comments = response.data;
+        setPost(post);
+        setOpenCommentModal(true);
+      }
+    );
+  };
 
   const handleClick = (event) => {
-
     setAnchorEl(event.currentTarget);
+  };
+
+  const [buttonSaveText, setButtonSaveText] = useState(props.buttonSaveText);
+  const [display, setDisplay] = useState(1);
+  const unsavePost = (event) => {
+    // if(buttonText==='saved'){
+    //     return
+    // }
+
+    let data = {
+      post_id: event.target.id,
+      user_id: props.userAuthenticatedId,
+    };
+
+    fetchRequest(api + "api/unsave-post", "post", data).then((response) => {
+      if (response.message === "success") {
+        setButtonSaveText("Save Post");
+        handleClose();
+      } else {
+        swal("Something went wrong!");
+      }
+    });
+  };
+
+  const savePost = (event) => {
+    // if(buttonText==='saved'){
+    //     return
+    // }
+
+    let data = {
+      post_id: event.target.id,
+      user_id: props.userAuthenticatedId,
+    };
+
+    fetchRequest(api + "api/save-post", "post", data).then((response) => {
+      if (response.message === "success") {
+        setButtonSaveText("Unsave Post");
+        handleClose();
+      } else {
+        swal("Something went wrong!");
+      }
+    });
   };
 
   const handlePostDelete = (event) => {
@@ -135,16 +176,24 @@ export default function PostCard(props) {
     setAnchorEl(null);
   };
 
-  const handleOpenPostModal = ()=>{ setAnchorEl(null); setOpenPostModal(true);}
+  const handleOpenPostModal = () => {
+    setAnchorEl(null);
+    setOpenPostModal(true);
+  };
   const handleOpenCommentModal = (event) => {
     event.preventDefault();
 
     fetchRequest(
-      api + "api/comment/show/?post-id=" + event.target.id,
+      api + "api/comment/show/?post_id=" + event.target.id,
       "get"
     ).then((response) => {
       let commentsDetails = response.data.map((comment) => (
-        <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
+        <Card2
+          key={comment.id}
+          userAuthenticatedId={props.userAuthenticatedId}
+          getPostAfterDeleteComment={getPostAfterDeleteComment}
+          content={comment}
+        />
       ));
       setComments(commentsDetails);
       setOpenCommentModal(true);
@@ -252,40 +301,43 @@ export default function PostCard(props) {
     title = post.user.first_name + " " + post.user.last_name;
   }
   return (
-   
-      <Paper elevation={3}>
-        <Card className={classes.root}>
-          <CommentsShowModal
-            handleClose={handleCloseCommentModal}
-            open={openCommentModal}
-            content={comments}
-          />
-          <EditPostModal
-            url={url}
-            setOpenPostModal={setOpenPostModal}
-            getPosts={props.getPosts}
-            userAuthenticatedId={props.userAuthenticatedId}
-            handleClose={handleClosePostModal}
-            open={openPostModal}
-            post={post}
-          />
-          <Grid container>
-            <Grid item xs={9}>
-              <CardHeader
-                avatar={
-                  <Avatar alt="Remy Sharp" src={api + 'images/' + props.post.user.image} />
-                }
-                // action={
-                //   <IconButton aria-label="settings">
-                //     <MoreVertIcon />
-                //   </IconButton>
-                // }
+    <Paper elevation={3}>
+      <Card className={classes.root}>
+        <CommentsShowModal
+          handleClose={handleCloseCommentModal}
+          open={openCommentModal}
+          content={comments}
+        />
+        <EditPostModal
+          url={url}
+          setOpenPostModal={setOpenPostModal}
+          getPosts={props.getPosts}
+          userAuthenticatedId={props.userAuthenticatedId}
+          handleClose={handleClosePostModal}
+          open={openPostModal}
+          post={post}
+        />
+        <Grid container>
+          <Grid item xs={9}>
+            <CardHeader
+              avatar={
+                <Avatar
+                  alt="Remy Sharp"
+                  src={api + "images/" + props.post.user.image}
+                />
+              }
+              // action={
+              //   <IconButton aria-label="settings">
+              //     <MoreVertIcon />
+              //   </IconButton>
+              // }
 
-                title={title}
-                subheader={date} // June 9 2014
-              />
-            </Grid>
-            <Grid item xs={3}>
+              title={title}
+              subheader={date} // June 9 2014
+            />
+          </Grid>
+          <Grid item xs={3}>
+            {!props.fromSavedPostsComponent ? (
               <IconButton
                 color="primary"
                 style={{
@@ -298,61 +350,71 @@ export default function PostCard(props) {
               >
                 <MoreVertIcon />
               </IconButton>
-            </Grid>
+            ) : (
+              <IconButton
+                color="primary"
+                style={{
+                  marginLeft: "30px",
+                  marginTop: "15px",
+                  transform: "scale(2)",
+                }}
+                onClick={handleClick}
+                aria-label="add to favorites"
+              >
+                <MoreVertIcon />
+              </IconButton>
+            )}
           </Grid>
-          <CardMedia
-            className={classes.media}
-            image={url}
-            title="Paella dish"
+        </Grid>
+        <CardMedia className={classes.media} image={url} title="Paella dish" />
+        <CardContent>
+          <TextField
+            margin="normal"
+            required={true}
+            disabled={true}
+            color="primary"
+            // variant='filled'
+            fullWidth={true}
+            multiline
+            // size='small'
+            autoComplete="email"
+            value={post.content}
+            autoFocus
           />
-          <CardContent>
-            <TextField
-              margin="normal"
-              required={true}
-              disabled={true}
-              color="primary"
-              // variant='filled'
-              fullWidth={true}
-              multiline
-              // size='small'
-              autoComplete="email"
-              value={post.content}
-              autoFocus
-            />
 
-            {/* <Typography paragraph={true} variant="body2" color="textSecondary" classes={{width:'100%', display:'block'}} >
+          {/* <Typography paragraph={true} variant="body2" color="textSecondary" classes={{width:'100%', display:'block'}} >
               {post.content}
             </Typography> */}
-          </CardContent>
-          <div className="ml-3 row">
-            {handleLike}
-            {handleComment}
-          </div>
-          <CommentBox
-            handleChange={handleChangePost}
-            userAuthenticatedId={props.userAuthenticatedId}
-            post={post}
-          />
+        </CardContent>
+        <div className="ml-3 row">
+          {handleLike}
+          {handleComment}
+        </div>
+        <CommentBox
+          handleChange={handleChangePost}
+          userAuthenticatedId={props.userAuthenticatedId}
+          post={post}
+        />
 
-          {/* <TextField
+        {/* <TextField
     variant="filled"
     width='100%'
     fullWidth
     placeholder="Write a comment"
     color="secondary"
   /> */}
-          {/* <TextField
+        {/* <TextField
     variant="filled"
     width='100%'
     fullWidth
     placeholder="Write a comment"
     color="secondary"
   /> */}
-          {/* <CardActions disableSpacing> */}
-          {/* <IconButton aria-label="share">
+        {/* <CardActions disableSpacing> */}
+        {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}
-          {/* <IconButton
+        {/* <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
           })}
@@ -362,8 +424,8 @@ export default function PostCard(props) {
         >
           <ExpandMoreIcon />
         </IconButton> */}
-          {/* </CardActions> */}
-          {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {/* </CardActions> */}
+        {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
@@ -390,27 +452,34 @@ export default function PostCard(props) {
           </Typography>
         </CardContent>
       </Collapse> */}
-        </Card>
-       
-        {parseInt(props.userAuthenticatedId)===props.post.user_id ? <Menu
+      </Card>
+
+      <Menu
         id="simple-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem id={post.id} onClick={handlePostDelete}>
-          Delete
-        </MenuItem>
+        {parseInt(props.userAuthenticatedId) === props.post.user_id ? (
+          <Fragment>
+            <MenuItem id={post.id} onClick={handlePostDelete}>
+              Delete
+            </MenuItem>
 
-        <MenuItem  onClick={handleOpenPostModal}>Edit</MenuItem>
-      </Menu> : "" }
-      
-      </Paper>
-     
-      
+            <MenuItem onClick={handleOpenPostModal}>Edit</MenuItem>
+          </Fragment>
+        ) : (
+          <MenuItem
+            id={post.id}
+            onClick={buttonSaveText === "Save Post" ? savePost : unsavePost}
+          >
+            {buttonSaveText}
+          </MenuItem>
+        )}
+      </Menu>
+    </Paper>
 
-      // {/* <Card2 /> */}
-    
+    // {/* <Card2 /> */}
   );
 }

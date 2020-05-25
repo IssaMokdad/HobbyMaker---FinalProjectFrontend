@@ -5,16 +5,21 @@ import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {fetchRequest, api} from '../../Apis';
+import 'emoji-mart/css/emoji-mart.css'
+import { Picker } from 'emoji-mart'
+import InsertEmoticonTwoToneIcon from '@material-ui/icons/InsertEmoticonTwoTone';
 
 export default function Compose(props) {
 
   const [message, setMessage] = useState('')
-
+  const [showEmojis, setShowEmojis] = useState('')
   const handleMessageInput = (event)=>{
     setMessage(event.target.value)
   }
 
   const sendMessage = (event)=>{
+    
+    setShowEmojis()
     event.preventDefault()
 
     let data={
@@ -25,11 +30,25 @@ export default function Compose(props) {
 
     fetchRequest(api + "api/send-message", 'post', data).then(response=>{
       setMessage('')
+      props.handleRealTimeMessageSentFromMe(response.data)
       props.addMessage(response.data)
     })
 
     
   }
+
+  const showEmojisBlock = ()=>{
+    if(!showEmojis){
+      setShowEmojis(1)
+    }else{
+      setShowEmojis()
+    }
+    
+  }
+  const addEmoji = (event)=>{
+    setMessage(message + event.native)
+  }
+
 
   useEffect(()=>{
 
@@ -53,6 +72,11 @@ export default function Compose(props) {
               },
           endAdornment: (
             <InputAdornment position="end">
+              <IconButton style={{
+                  marginBottom: "15px",
+                  // marginRight: "230px",
+                  transform: "scale(2)",
+                }} onClick={showEmojisBlock}><InsertEmoticonTwoToneIcon/></IconButton>
               <IconButton
                 type="submit"
                 onChange={handleMessageInput}
@@ -82,6 +106,10 @@ export default function Compose(props) {
         {
           props.rightItems
         }
-      </div></form>
+      </div>
+      {showEmojis && <span style={{marginLeft:'600px'}}>
+   <Picker onSelect={addEmoji} /></span>}
+   <span style={{marginLeft:'800px'}}></span>
+</form>
     );
 }

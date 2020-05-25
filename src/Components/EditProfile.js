@@ -248,11 +248,15 @@ export default function EditProfile(props) {
               onChange={handleCountryChange}
             />
           </Grid>
-          <Grid style={{ marginLeft: "50px", marginTop: "50px" }} item>
-            <label style={{ marginRight: "20px" }}>Region</label>
+          <Grid style={{ display: "flex",
+              columnDirection: "row",
+              marginLeft: "50px",
+              marginTop: "55px",}} item>
+            <label style={{ marginRight: "19px" }}>Region</label>
             <RegionDropdown
               country={country}
               value={region}
+              style={{ width: "180px" }}
               blankOptionLabel="No country selected"
               defaultOptionLabel="Now select a region"
               onChange={handleChangeRegion}
@@ -260,7 +264,7 @@ export default function EditProfile(props) {
           </Grid>
 
           <Grid
-            style={{ position: "relative", left: "50px", top: "20px" }}
+            style={{ position: "relative", left: "50px", top: "55px" }}
             item
           >
             <MuiPickersUtilsProvider utils={DateFnsUtils}>

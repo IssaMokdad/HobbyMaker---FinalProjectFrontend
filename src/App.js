@@ -5,6 +5,9 @@ import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import ForgotPassword from "./Components/ForgotPassword";
 import AppNavBar from './Components/AppNavBar';
+
+
+
 import {
   BrowserRouter as Router,
   Redirect,
@@ -20,13 +23,15 @@ import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 import MessengerApp from "./Components/Messenger/App";
 import OneTimePage from './Components/OneTimePage'
-
+import SavedVideos from './Components/SavedVideos';
+import SavedPosts from './Components/SavedPosts';
 
 function App() {
+
   const [userAuthenticated, setUserAuthenticated] = useState({
     userId: "",
   });
-  const [firstTimeLogin, setFirstTimeLogin] = useState('')
+  const [firstTimeLogin, setFirstTimeLogin] = useState()
   const [rTNotification, setRTNotification] = useState();
   const [realTimeMessage, setRealTimeMessage] = useState();
   const [token, setToken] = useState("");
@@ -81,13 +86,11 @@ function App() {
     localStorage.setItem("token", event.access_token);
     localStorage.setItem("userId", event.user_id);
     setFirstTimeLogin(event.first_time_login)
-
-    
     setToken(1); //this renders the component, but let useEffect render again on token change to assign the data to the user and avoid writing it in a separate method to avoid repeated code it
   };
   
-    
-  
+    //google calender api
+  console.log(realTimeMessage)
   return (
     <div style={{ backgroundColor: "#F0F0F0" }}>
       
@@ -128,6 +131,26 @@ function App() {
             {token !== "" ? (
               <ProfilePage
                 logout={logout}
+                userAuthenticated={userAuthenticated}
+              />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route path="/saved-posts">
+            {token !== "" ? (
+              <SavedPosts
+                
+                userAuthenticated={userAuthenticated}
+              />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route path="/saved-videos">
+            {token !== "" ? (
+              <SavedVideos
+                
                 userAuthenticated={userAuthenticated}
               />
             ) : (

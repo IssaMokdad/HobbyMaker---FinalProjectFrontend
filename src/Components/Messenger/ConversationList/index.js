@@ -12,23 +12,36 @@ export default function ConversationList(props) {
   const [conversations, setConversations] = useState([]);
   const [friendId, setFriendId] = useState('')
   // const [lastMessages, setLastMessages] = useState('')
-
+  const handleLastMessageChange = (message, fromOrToFriendId)=>{
+    let newLastMessages=conversations.map((conversation)=>{
+      if(conversation.friendId===fromOrToFriendId){
+        conversation.text=message
+      }
+      return conversation
+    })
+    setConversations(newLastMessages)
+  }
   const handleContactChange = (event)=>{
     event.preventDefault()
     setFriendId(event.currentTarget.dataset.id)
     props.handleContactChange( event.currentTarget.dataset.id)
   }
 
+
   useEffect(() => {
     if(props.realTimeMessage){
-      getConversations()
+      handleLastMessageChange(props.realTimeMessage.message, props.realTimeMessage.from)
       props.setRTMEmpty()
     }
     else{
       getConversations()
     }
+
+    if(props.realTimeMessageSentFromMe){
+      handleLastMessageChange(props.realTimeMessageSentFromMe.message, props.realTimeMessageSentFromMe.to)
+    }
     // getConversations()
-  },[props.realTimeMessage])
+  },[props.realTimeMessage, props.realTimeMessageSentFromMe])
 
  const getConversations = () => {
     fetchRequest(api + "api/get-unread-messages?user_id=" + props.userAuthenticatedId, 'get')
@@ -40,7 +53,7 @@ export default function ConversationList(props) {
         
 
       })
-
+      
        let lastMessages = response.last_messages.map(result=>
           {
             if(result){
@@ -59,7 +72,8 @@ export default function ConversationList(props) {
             photo: api + 'images/'+ result.image,
             name: `${result.first_name} ${result.last_name}`,
             unread: unread_messages_count[i],
-            text:lastMessages[i]
+            text:lastMessages[i],
+            key:i
             // text: 'Hello world! This is a long message that needs to be truncated.'
           };
         });

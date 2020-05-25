@@ -162,13 +162,13 @@ const Card2 = (props) => {
                   </h3>
                 </Grid>
                 <Grid xs={2} item>
-                  <IconButton
+                {parseInt(props.userAuthenticatedId)===props.content.user_id ? <IconButton
                     color="primary"
                     onClick={handleClick}
                     aria-label="add to favorites"
                   >
                     <MoreVertIcon />
-                  </IconButton>
+                  </IconButton> : ""}
                 </Grid>
               </Grid>
               <Grid />

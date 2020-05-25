@@ -226,7 +226,7 @@ export default function CustomizedSteppers(props) {
   };
 
   const getUserInfo = () => {
-    fetchRequest(api + "api/user/get-info/?user-id=" + props.userAuthenticated.userId, "get").then(
+    fetchRequest(api + "api/user/get-info/?user_id=" + props.userAuthenticated.userId, "get").then(
       (response) => {
         if (response.data) {
             setUser(response.data)

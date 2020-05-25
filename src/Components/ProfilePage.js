@@ -252,7 +252,7 @@ export default function ProfilePage(props) {
   };
 
   const getUserInfo = () => {
-    fetchRequest(api + "api/user/get-info/?user-id=" + userId, "get").then(
+    fetchRequest(api + "api/user/get-info/?user_id=" + userId, "get").then(
       (response) => {
         if (response.data) {
           setUser(response.data);

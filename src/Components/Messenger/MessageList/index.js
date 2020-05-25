@@ -28,10 +28,7 @@ export default function MessageList(props) {
         
         getMessages();
       }
-       
-
-      
-      
+         
   },[props.friendId, props.realTimeMessage])
 
   const addMessage = (message)=>{
@@ -65,6 +62,7 @@ export default function MessageList(props) {
       //   setMessages('')
       // }
     }
+
   if(response.friend){
     setFriend(response.friend)
   }})}
@@ -142,9 +140,9 @@ export default function MessageList(props) {
         <div className="message-list">
 
 
-<div >{renderMessages() } </div>
+<div> {renderMessages()} </div>
         
-        <Compose addMessage={addMessage} friendId={props.friendId} userAuthenticatedId={props.userAuthenticatedId} rightItems={[
+        <Compose handleRealTimeMessageSentFromMe={props.handleRealTimeMessageSentFromMe} addMessage={addMessage} friendId={props.friendId} userAuthenticatedId={props.userAuthenticatedId} rightItems={[
           <ToolbarButton key="photo" icon="ion-ios-camera" />,
           <ToolbarButton key="image" icon="ion-ios-image" />,
           <ToolbarButton key="audio" icon="ion-ios-mic" />,

@@ -12,8 +12,15 @@ export default function Messenger(props) {
   const handleContactChange = (friendId)=>{
 
     setFriendId(friendId)
+    
   }
+  {/* here realTimeMessageSentFromMe is only to change the last message of the left sidebar when it is sent by me
+  and it is coming from compose component which is inside messagelist */}
+  const [realTimeMessageSentFromMe, setRealTimeMessageSentFromMe] = useState('')
 
+  const handleRealTimeMessageSentFromMe = (message)=>{
+    setRealTimeMessageSentFromMe(message)
+  }
   useEffect(()=>{
     scrollToBottom()
   }, [])
@@ -41,11 +48,13 @@ export default function Messenger(props) {
         /> */}
 
         <div className="scrollable sidebar">
-          <ConversationList setRTMEmpty={props.setRTMEmpty} realTimeMessage={props.realTimeMessage} handleContactChange={handleContactChange} userAuthenticatedId={props.userAuthenticatedId} />
+          {/* here realTimeMessageSentFromMe is only to change the last message of the left sidebar when it is sent by me
+          and it is coming from compose component which is inside messagelist */}
+          <ConversationList realTimeMessageSentFromMe={realTimeMessageSentFromMe} setRTMEmpty={props.setRTMEmpty} realTimeMessage={props.realTimeMessage} handleContactChange={handleContactChange} userAuthenticatedId={props.userAuthenticatedId} />
         </div>
         <ScrollToBottom className="scrollable content">
         <div>
-          <MessageList setRTMEmpty={props.setRTMEmpty} realTimeMessage={props.realTimeMessage} friendId={friendId} userAuthenticatedId={props.userAuthenticatedId}/>
+          <MessageList handleRealTimeMessageSentFromMe={handleRealTimeMessageSentFromMe} setRTMEmpty={props.setRTMEmpty} realTimeMessage={props.realTimeMessage} friendId={friendId} userAuthenticatedId={props.userAuthenticatedId}/>
         </div></ScrollToBottom>
       </div>
   );

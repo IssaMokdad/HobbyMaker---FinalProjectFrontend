@@ -40,7 +40,8 @@ export default function ConversationListItem(props) {
         setUnread(props.data.unread)
       }
       
-   
+      return () => {
+        markUnreadMessagesAsRead()}
     
   },[props.data, props.FriendIdSelected])
 

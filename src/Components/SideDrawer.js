@@ -12,6 +12,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
+import YouTubeIcon from '@material-ui/icons/YouTube';
+import ForumIcon from '@material-ui/icons/Forum';
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -45,22 +47,31 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <Link to='/messenger'><ListItemText primary={text} /></Link>
+        
+          <ListItem button key={'messenger'}>
+            <ListItemIcon><MailIcon /></ListItemIcon>
+            <Link to='/messenger'><ListItemText primary='Messenger' /></Link>
           </ListItem>
-        ))}
+          
+          <ListItem button key={'youtube-videos'}>
+            <ListItemIcon><YouTubeIcon/></ListItemIcon>
+            <Link to='/saved-videos'><ListItemText primary='YT Saved Videos' /></Link>
+          </ListItem>
+          <ListItem button key={'youtube-videos'}>
+            <ListItemIcon><ForumIcon/></ListItemIcon>
+            <Link to='/saved-posts'><ListItemText primary='Saved Posts' /></Link>
+          </ListItem>
+        
       </List>
-      <Divider />
-      <List>
+      {/* <Divider /> */}
+      {/* <List>
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </div>
   );
 
