@@ -40,11 +40,11 @@ export default function SavedVideos(props) {
     }, [])
     return (
         
-      <div className='container'>
+      <div className='justify-content-center container'>
           <h1 style={{textAlign:'center'}}><strong>Videos you have saved</strong></h1>
       <div className='row'>  
       
-      <div className='col-12 d-flex flex-wrap '>
+      <div className='col-12 justify-content-center d-flex flex-wrap '>
       
           {Array.from(videoIds).map(id=>
           

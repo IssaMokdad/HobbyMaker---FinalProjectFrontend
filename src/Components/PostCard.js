@@ -95,7 +95,7 @@ export default function PostCard(props) {
   };
 
   const [buttonSaveText, setButtonSaveText] = useState(props.buttonSaveText);
-  const [display, setDisplay] = useState(1);
+  const [display, setDisplay] = useState();
   const unsavePost = (event) => {
     // if(buttonText==='saved'){
     //     return
@@ -110,6 +110,9 @@ export default function PostCard(props) {
       if (response.message === "success") {
         setButtonSaveText("Save Post");
         handleClose();
+        if(props.fromSavedPostsComponent){
+          setDisplay(1)
+        }
       } else {
         swal("Something went wrong!");
       }
@@ -300,6 +303,10 @@ export default function PostCard(props) {
   if (post.user !== undefined) {
     title = post.user.first_name + " " + post.user.last_name;
   }
+
+  if(display){
+    return ''
+  }
   return (
     <Paper elevation={3}>
       <Card className={classes.root}>
@@ -326,11 +333,7 @@ export default function PostCard(props) {
                   src={api + "images/" + props.post.user.image}
                 />
               }
-              // action={
-              //   <IconButton aria-label="settings">
-              //     <MoreVertIcon />
-              //   </IconButton>
-              // }
+
 
               title={title}
               subheader={date} // June 9 2014
@@ -382,9 +385,6 @@ export default function PostCard(props) {
             autoFocus
           />
 
-          {/* <Typography paragraph={true} variant="body2" color="textSecondary" classes={{width:'100%', display:'block'}} >
-              {post.content}
-            </Typography> */}
         </CardContent>
         <div className="ml-3 row">
           {handleLike}
@@ -396,62 +396,7 @@ export default function PostCard(props) {
           post={post}
         />
 
-        {/* <TextField
-    variant="filled"
-    width='100%'
-    fullWidth
-    placeholder="Write a comment"
-    color="secondary"
-  /> */}
-        {/* <TextField
-    variant="filled"
-    width='100%'
-    fullWidth
-    placeholder="Write a comment"
-    color="secondary"
-  /> */}
-        {/* <CardActions disableSpacing> */}
-        {/* <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton> */}
-        {/* <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton> */}
-        {/* </CardActions> */}
-        {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-            minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-            heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-            browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken
-            and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and
-            pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-            without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-            medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
-            again without stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don’t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
-        </CardContent>
-      </Collapse> */}
+        
       </Card>
 
       <Menu

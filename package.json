@@ -25,6 +25,7 @@
     "prop-types": "^15.7.2",
     "pusher-js": "^6.0.3",
     "react": "^16.13.1",
+    "react-big-calendar": "^0.24.6",
     "react-bootstrap": "^1.0.1",
     "react-bottom-scroll-listener": "^3.0.0",
     "react-country-region-selector": "^2.1.0",

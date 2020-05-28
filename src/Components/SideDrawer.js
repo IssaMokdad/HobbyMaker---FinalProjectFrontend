@@ -14,6 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "react-router-dom";
 import YouTubeIcon from '@material-ui/icons/YouTube';
 import ForumIcon from '@material-ui/icons/Forum';
+import EventIcon from '@material-ui/icons/Event';
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -60,6 +61,10 @@ export default function TemporaryDrawer() {
           <ListItem button key={'youtube-videos'}>
             <ListItemIcon><ForumIcon/></ListItemIcon>
             <Link to='/saved-posts'><ListItemText primary='Saved Posts' /></Link>
+          </ListItem>
+          <ListItem button key={'events'}>
+            <ListItemIcon><EventIcon/></ListItemIcon>
+            <Link to='/events'><ListItemText primary='Events' /></Link>
           </ListItem>
         
       </List>

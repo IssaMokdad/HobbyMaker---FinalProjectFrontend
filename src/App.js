@@ -5,9 +5,6 @@ import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import ForgotPassword from "./Components/ForgotPassword";
 import AppNavBar from './Components/AppNavBar';
-
-
-
 import {
   BrowserRouter as Router,
   Redirect,
@@ -25,7 +22,8 @@ import MessengerApp from "./Components/Messenger/App";
 import OneTimePage from './Components/OneTimePage'
 import SavedVideos from './Components/SavedVideos';
 import SavedPosts from './Components/SavedPosts';
-
+import CreateEvent from './Components/CreateEvent';
+import Events from './Components/Events';
 function App() {
 
   const [userAuthenticated, setUserAuthenticated] = useState({
@@ -140,6 +138,16 @@ function App() {
           <Route path="/saved-posts">
             {token !== "" ? (
               <SavedPosts
+                
+                userAuthenticated={userAuthenticated}
+              />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route path="/events">
+            {token !== "" ? (
+              <Events
                 
                 userAuthenticated={userAuthenticated}
               />

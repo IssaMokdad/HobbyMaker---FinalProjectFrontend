@@ -64,7 +64,6 @@ function Home(props) {
 
   }
 
-
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
 
@@ -86,6 +85,7 @@ function Home(props) {
   const [usersRecommendation, setUsersRecommendations] = useState("");
 
   const [userAuthenticated, setUserAuthenticated] = useState('')
+  
   const [savedPostIds, setSavedPostIds] = useState('')
   // const [hobbies, setHobbies] = useState('')
 
@@ -101,7 +101,7 @@ function Home(props) {
           setVideoIds(videoIDs)
 
           let savedPostIDs=response.data.saved_posts.map(savedpost=>{
-            return savedpost.post_id
+            return parseInt(savedpost.post_id)
           })
           setSavedPostIds(savedPostIDs)
         } else {
@@ -110,6 +110,8 @@ function Home(props) {
       }
     );
   };
+
+  //google calende api:AIzaSyDLrs9tm88-rm1G7Qr81zm578SDh8ejvCY
   //this method is called when we hit the bottom page
   const handleScroll = (event) => {
     setPage(page + 1);
@@ -194,7 +196,7 @@ function Home(props) {
     <Grid style={{ width: "80%" }} key={post.id} item>
       <PostCard
         post={post}
-        buttonSaveText={savedPostIds.indexOf(props.userAuthenticated.userId)===-1 ? 'Save Post' : 'Unsave Post'}
+        buttonSaveText={savedPostIds.indexOf(post.id)===-1 ? 'Save Post' : 'Unsave Post'}
         getPosts={getPosts}
         userAuthenticatedId={props.userAuthenticated.userId}
       />

@@ -41,11 +41,11 @@ export default function SavedPosts(props) {
         <strong>Posts you have saved</strong>
       </h1>
       <div className="row">
-        <div className="col-12 d-flex flex-wrap ">
+        <div className="col-12 d-flex justify-content-center flex-wrap ">
           {Array.from(savedPosts).map((post) => (
             //   <div className='mr-auto'><ReactPlayer width='500px' controls={true} url={'https://www.youtube.com/watch?v=' + id}  /></div>
             // {/* // <ReactPlayer controls={true} url={'https://www.youtube.com/watch?v=' + id}  />)} */}
-            <div className="mr-auto">
+            <div style={{marginRight:'20px'}}>
               <PostCard
                 key={post.id}
                 post={post}

@@ -256,7 +256,7 @@ export default function ProfilePage(props) {
       (response) => {
         if (response.data) {
           setUser(response.data);
-          setFriends(response.data.friends);
+          // setFriends(response.data.friends);
           setCircularProgress()
         } else {
           swal("Something went wrong!");
@@ -273,8 +273,24 @@ export default function ProfilePage(props) {
 
   const [page, setPage] = useState(1);
 
+  const [savedPostIds, setSavedPostIds] = useState('')
 
   //this method is called when we hit the bottom page
+  const getSavedPosts = () => {
+    fetchRequest(
+      api + "api/get-saved-posts/?user_id=" + props.userAuthenticated.userId,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+        let savedPostIDs=response.data.map(savedpost=>{
+          return parseInt(savedpost.post_id)
+        })
+        setSavedPostIds(savedPostIDs)
+      } else {
+        swal("Something went wrong!");
+      }
+    });
+  };
 
   const handleScroll = (event) => {
     setPage(page + 1);
@@ -296,6 +312,7 @@ export default function ProfilePage(props) {
       <Grid style={{ width: "80%" }} key={post.id} item>
         <PostCard
           post={post}
+          buttonSaveText={savedPostIds.indexOf(post.id)===-1 ? 'Save Post' : 'Unsave Post'}
           getPosts={getPosts}
           userAuthenticatedId={props.userAuthenticated.userId}
         />
@@ -314,6 +331,7 @@ export default function ProfilePage(props) {
     getUserFriends();
     getFriendRequests();
     getPendingRequests();
+    getSavedPosts();
     // eslint-disable-next-line
   }, [userId]);
 
