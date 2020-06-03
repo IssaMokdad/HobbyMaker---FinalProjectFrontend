@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
+
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
@@ -56,6 +57,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostCard(props) {
+
+  
   const [post, setPost] = useState("");
 
   const [comments, setComments] = useState("");
@@ -346,7 +349,7 @@ export default function PostCard(props) {
                 style={{
                   marginLeft: "60px",
                   marginTop: "15px",
-                  transform: "scale(2)",
+                  transform: "scale(1)",
                 }}
                 onClick={handleClick}
                 aria-label="add to favorites"
@@ -357,7 +360,7 @@ export default function PostCard(props) {
               <IconButton
                 color="primary"
                 style={{
-                  marginLeft: "30px",
+                  marginLeft: "60px",
                   marginTop: "15px",
                   transform: "scale(2)",
                 }}
@@ -372,6 +375,7 @@ export default function PostCard(props) {
         <CardMedia className={classes.media} image={url} title="Paella dish" />
         <CardContent>
           <TextField
+            
             margin="normal"
             required={true}
             disabled={true}

@@ -2,7 +2,8 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import {fetchRequest, api} from './Apis';
 import swal from "sweetalert";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
+import RegionSelect from "react-region-flag-select";
 import {
   withGoogleMap,
   withScriptjs,
@@ -18,12 +19,13 @@ function Map(props) {
   const [people, setPeople] = useState(null)
   const [latt, setLat] = useState()
   const [lngg, setLng] = useState()
+  const [loading, setLoading] = useState()
 
-  const getPeopleWithSameHobbyInSameCity = () => {
+  const getPeopleWithSameHobbyAnywhere = () => {
     fetchRequest(
       api +
-        "api/users/get-recommendations?user_id=" +
-        props.userAuthenticatedId,
+        "api/users/get-recommendations-anywhere?user_id=" +
+        props.userAuthenticatedId + "&country=" + props.country + "&city=" + props.city,
       "get"
     ).then((response) => {
       if (response.data !== undefined) {
@@ -35,7 +37,7 @@ function Map(props) {
   const getAddressCoordinates = ()=>{
     
     fetch(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=' + props.city +'&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M',
+      'https://maps.googleapis.com/maps/api/geocode/json?address='+ props.country +','+ props.city +'&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M',
     ).then(response=>response.json()).then(response => {
       setLat(parseFloat(response.results[0].geometry.location.lat))
       setLng(parseFloat(response.results[0].geometry.location.lng))
@@ -54,16 +56,23 @@ function Map(props) {
     };
     window.addEventListener("keydown", listener);
 
-    getPeopleWithSameHobbyInSameCity()
+    getPeopleWithSameHobbyAnywhere()
+    setLoading(1)
     return () => {
       window.removeEventListener("keydown", listener);
     };
+    
   }, [props.city]);
   
-  return(<GoogleMap
+  if(!loading){
+    return(<CircularProgress />)
+    
+  }
+  return(
+    <GoogleMap
     defaultZoom={10}
     defaultCenter={{lat:1, lng:1}}
-    center={{ lat: latt, lng: lngg }}
+    center={loading!=='a' && { lat: latt, lng: lngg }} 
     // defaultOptions={{ styles: mapStyles }}
   > 
     {people && Array.from(people).map(person => (
@@ -74,7 +83,9 @@ function Map(props) {
           lng: parseFloat(person.longitude)
         }}
         onClick={() => {
+          setLoading('a')
           setSelectedPerson(person);
+
         }}
         icon={{
           url: api + "images/" + person.image,
@@ -85,7 +96,9 @@ function Map(props) {
     {selectedPerson && (
       <InfoWindow
         onCloseClick={() => {
+          setLoading('a')
           setSelectedPerson(null);
+
         }}
         position={{
           lat: parseFloat(selectedPerson.latitude),
@@ -116,7 +129,7 @@ export default function App(props) {
   //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&sensor=true&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M
   return (
      display && <div style={{ width: "100vw", height: "100vh" }}>
-      <MapWrapped city={props.city} userAuthenticatedId={props.userAuthenticatedId}
+      <MapWrapped country={props.country} city={props.city} userAuthenticatedId={props.userAuthenticatedId}
         googleMapURL={'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCVuknDu1ZA5Ipp2jnA0cBf5FWL594QI-M'
           
         }

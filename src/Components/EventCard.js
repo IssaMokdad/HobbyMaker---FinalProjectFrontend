@@ -111,7 +111,7 @@ const EventCard = (props) => {
     color="primary"
     style={{
     position:'relative',
-    left:'700px',
+    left:'710px',
     top:'40px',
     transform: "scale(1)",
     }}
@@ -155,18 +155,18 @@ const EventCard = (props) => {
         <MenuItem onClick={handleOpenEventModal}>Edit</MenuItem>
       </Menu>
 
-      <p style={{ color: "red", marginLeft: "14px" }}>
+      <p style={(props.fromCreatedEventsComponent || props.fromInvitationsComponent) ?{ color: "red", marginLeft: "40px" } : {color:'red', marginLeft:'20px'}}>
         <strong style={{ fontSize: "14px", alignText: "center" }}>
-          {moment(props.selectedStartDate).format("LL") +
-            ", " +
-            moment(props.selectedStartTime).format("LT") +
+          {props.selectedStartDate && moment(props.selectedStartDate).format("LL") +
+            ", " }
+            {props.selectedStartTime && moment(props.selectedStartTime).format("LT") +
             " "}
         </strong>
-        -{" "}
+        {" "}
         <strong style={{ fontSize: "14px" }}>
-          {moment(props.selectedEndDate).format("LL") +
-            ", " +
-            moment(props.selectedEndTime).format("LT")}
+          {props.selectedEndDate && "- " + moment(props.selectedEndDate).format("LL") +
+            ", " }
+            {props.selectedEndTime && moment(props.selectedEndTime).format("LT")}
         </strong>
       </p>
       <CardMedia
@@ -177,7 +177,7 @@ const EventCard = (props) => {
       <CardContent className={cardStyles.content}>
         <TextInfoContent
           classes={textCardContentStyles}
-          heading={props.eventName + " - " + props.location}
+          heading={props.eventName + (props.location && " - " + props.location)}
           body={props.eventDescription}
         />
       </CardContent>
@@ -193,13 +193,15 @@ const EventCard = (props) => {
           //     'https://i.pravatar.cc/300?img=4',
 
           //   ]}
-        /></IconButton>}
+        /></IconButton>}{props.faces && props.faces.length-4>0 && <b>{"+" + props.faces.length-4 + " going"}</b>}
       </Box>
       <GoingModal
           handleClose={handleCloseGoingModal}
           open={openGoingModal}
           content={props.faces}
         />
+
+        
     </Card>
 
     </div>

@@ -68,7 +68,11 @@ function App() {
       channel.listen(".add-request", function (data) {
         setRTNotification(data);
       });
+      channel.listen(".invitation-request", function (data) {
+        setRTNotification(data);
+      });
       channel.listen(".real-time-chat", function (data) {
+        console.log(data)
         setRealTimeMessage({
           id: data.message.id,
           timestamp: data.message.created_at,
@@ -93,11 +97,12 @@ function App() {
     <div style={{ backgroundColor: "#F0F0F0" }}>
       
       <Router>
-      {token !== "" && <AppNavBar realTimeMessage={realTimeMessage} rTNotification={rTNotification} userAuthenticatedId={userAuthenticated.userId} logout={logout} />}
+      {token !== "" && <AppNavBar setRTMEmpty={setRTMEmpty} realTimeMessage={realTimeMessage} rTNotification={rTNotification} userAuthenticatedId={userAuthenticated.userId} logout={logout} />}
         <Switch>
         
         <Route path="/onetimepage">
-            {(token !== "" && firstTimeLogin) ? (
+        {/* && firstTimeLogin */}
+            {(token !== "" ) ? (
               <OneTimePage userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />

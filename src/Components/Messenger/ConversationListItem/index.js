@@ -40,10 +40,10 @@ export default function ConversationListItem(props) {
         setUnread(props.data.unread)
       }
       
-      return () => {
-        markUnreadMessagesAsRead()}
+      // return () => {
+      //   markUnreadMessagesAsRead()}
     
-  },[props.data, props.FriendIdSelected])
+  },[props.data, props.friendIdSelected])
 
     const { photo, name, text } = props.data;
     if(unread){

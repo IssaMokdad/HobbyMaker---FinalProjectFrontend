@@ -372,7 +372,7 @@ export default function CustomizedSteppers(props) {
       )}
       {activeStep === 2 &&
       <div style={{  marginTop: "40px", }}>
-          <Map city={city} userAuthenticatedId={props.userAuthenticated.userId} />
+          <Map country={country} city={city} userAuthenticatedId={props.userAuthenticated.userId} />
         </div>
       }
     </div>

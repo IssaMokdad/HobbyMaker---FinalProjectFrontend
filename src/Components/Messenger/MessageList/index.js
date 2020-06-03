@@ -1,72 +1,77 @@
-import React, {useEffect, useState, useRef, Fragment} from 'react';
-import Compose from '../Compose';
-import Toolbar from '../Toolbar';
-import ToolbarButton from '../ToolbarButton';
-import Message from '../Message';
-import moment from 'moment';
-import {fetchRequest, api} from '../../Apis';
-import './MessageList.css';
-
+import React, { useEffect, useState, useRef, Fragment } from "react";
+import Compose from "../Compose";
+import Toolbar from "../Toolbar";
+import ToolbarButton from "../ToolbarButton";
+import Message from "../Message";
+import moment from "moment";
+import { fetchRequest, api } from "../../Apis";
+import "./MessageList.css";
+import VideocamIcon from "@material-ui/icons/Videocam";
+import IconButton from "@material-ui/core/IconButton";
+import VideoCall from "../../VideoCall";
 export default function MessageList(props) {
-  
-  const [friend, setFriend] = useState('')
+  const [friend, setFriend] = useState("");
   const MY_USER_ID = props.userAuthenticatedId;
-  const [messages, setMessages] = useState([])
-  const [friendId, setFriendId]=useState(props.friendId)
+  const [messages, setMessages] = useState([]);
+  const [friendId, setFriendId] = useState(props.friendId);
   // const scrollToBottom = ()=> {
   //   animateScroll.scrollToBottom({
   //     containerId: "containerElement"
 
-
   useEffect(() => {
-    if(props.realTimeMessage){
-      addMessage(props.realTimeMessage)
-      props.setRTMEmpty()
+    if (props.realTimeMessage) {
+      addMessage(props.realTimeMessage);
+      props.setRTMEmpty();
     }
 
-      if(props.friendId!==friendId){
-        
-        getMessages();
-      }
-         
-  },[props.friendId, props.realTimeMessage])
+    if (props.friendId && props.friendId !== friendId) {
+      setFriendId(props.friendId);
+      getMessages();
+    }
+  }, [props.friendId, props.realTimeMessage]);
 
-  const addMessage = (message)=>{
-    let tempMessages = 
-    [{
-      id: message.id,
-      author: message.from,
-      message: message.message,
-      timestamp: new Date(message.created_at).getTime()
-    }]
-    setMessages([...messages, ...tempMessages])
-  }
+  const addMessage = (message) => {
+    let tempMessages = [
+      {
+        id: message.id,
+        author: message.from,
+        message: message.message,
+        timestamp: new Date(message.created_at).getTime(),
+      },
+    ];
+    setMessages([...messages, ...tempMessages]);
+  };
   const getMessages = () => {
-    
-    fetchRequest(api + "api/get-messages?user_id="+props.userAuthenticatedId+'&friend_id='+props.friendId, 'get')
-     .then(response=> {
-        if(response.data){
-
-        
-        let tempMessages = response.data.map(message=>
-        ({
+    fetchRequest(
+      api +
+        "api/get-messages?user_id=" +
+        props.userAuthenticatedId +
+        "&friend_id=" +
+        props.friendId,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+        let tempMessages = response.data.map((message) => ({
           id: message.id,
           author: message.from,
           message: message.message,
-          timestamp:  new Date(message.created_at).getTime()
-        }))
-        
-      
-      setMessages([...tempMessages])
-      // if(response.data.length===0){
-      //   setMessages('')
-      // }
-    }
+          timestamp: new Date(message.created_at).getTime(),
+        }));
 
-  if(response.friend){
-    setFriend(response.friend)
-  }})}
+        setMessages([...tempMessages]);
+        // if(response.data.length===0){
+        //   setMessages('')
+        // }
+      }
 
+      if (response.friend) {
+        setFriend(response.friend);
+      }
+    });
+  };
+  const sendVideoCallRequest = (event) => {
+    event.preventDefault();
+  };
   const renderMessages = () => {
     let i = 0;
     let messageCount = messages.length;
@@ -86,14 +91,16 @@ export default function MessageList(props) {
 
       if (previous) {
         let previousMoment = moment(previous.timestamp);
-        let previousDuration = moment.duration(currentMoment.diff(previousMoment));
+        let previousDuration = moment.duration(
+          currentMoment.diff(previousMoment)
+        );
         prevBySameAuthor = previous.author === current.author;
-        
-        if (prevBySameAuthor && previousDuration.as('hours') < 1) {
+
+        if (prevBySameAuthor && previousDuration.as("hours") < 1) {
           startsSequence = false;
         }
 
-        if (previousDuration.as('hours') < 1) {
+        if (previousDuration.as("hours") < 1) {
           showTimestamp = false;
         }
       }
@@ -103,7 +110,7 @@ export default function MessageList(props) {
         let nextDuration = moment.duration(nextMoment.diff(currentMoment));
         nextBySameAuthor = next.author === current.author;
 
-        if (nextBySameAuthor && nextDuration.as('hours') < 1) {
+        if (nextBySameAuthor && nextDuration.as("hours") < 1) {
           endsSequence = false;
         }
       }
@@ -124,34 +131,59 @@ export default function MessageList(props) {
     }
 
     return tempMessages;
+  };
+
+  if (friend === "") {
+    return <h1> Select a friend to start chat!</h1>;
   }
 
-    if(friend===''){
-      return (<h1> Select a friend to start chat!</h1>)
-    }
+  return (
+    // <Element name="container" className="element" id="containerElement">
+    <Fragment>
+      <div
+        style={{
+          width: "72%",
+          backgroundColor: "#F0F0F0",
+          position: "fixed",
+          left: "350px",
+        }}
+      >
+        <img
+          className="conversation-photo"
+          src={api + "images/" + friend.image}
+          alt="conversation"
+        />
+        <span>{friend.first_name + " " + friend.last_name}</span>
+        <span>
+          <form onSubmit={sendVideoCallRequest}>
+            <IconButton type="submit" id={friendId} color="primary">
+              <VideocamIcon />
+            </IconButton>
+          </form>
+          <VideoCall user={{id:props.userAuthenticatedId}} userId={friendId} />
+        </span>
+      </div>
 
-    return(
-      // <Element name="container" className="element" id="containerElement">
-      <Fragment>
-      <div style={{width:'72%', backgroundColor: "#F0F0F0",position:'fixed', left:'350px'}}><img className="conversation-photo" src={api + 'images/'+ friend.image} alt="conversation" />
-      <span>{friend.first_name + ' ' + friend.last_name}</span></div>
+      <div className="message-list">
+        <div> {renderMessages()} </div>
 
-        
-        <div className="message-list">
-
-
-<div> {renderMessages()} </div>
-        
-        <Compose handleRealTimeMessageSentFromMe={props.handleRealTimeMessageSentFromMe} addMessage={addMessage} friendId={props.friendId} userAuthenticatedId={props.userAuthenticatedId} rightItems={[
-          <ToolbarButton key="photo" icon="ion-ios-camera" />,
-          <ToolbarButton key="image" icon="ion-ios-image" />,
-          <ToolbarButton key="audio" icon="ion-ios-mic" />,
-          <ToolbarButton key="money" icon="ion-ios-card" />,
-          <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
-          <ToolbarButton key="emoji" icon="ion-ios-happy" />
-        ]}/>
-        
-      </div></Fragment>
-
-    );
+        <Compose
+          handleRealTimeMessageSentFromMe={
+            props.handleRealTimeMessageSentFromMe
+          }
+          addMessage={addMessage}
+          friendId={props.friendId}
+          userAuthenticatedId={props.userAuthenticatedId}
+          rightItems={[
+            <ToolbarButton key="photo" icon="ion-ios-camera" />,
+            <ToolbarButton key="image" icon="ion-ios-image" />,
+            <ToolbarButton key="audio" icon="ion-ios-mic" />,
+            <ToolbarButton key="money" icon="ion-ios-card" />,
+            <ToolbarButton key="games" icon="ion-logo-game-controller-b" />,
+            <ToolbarButton key="emoji" icon="ion-ios-happy" />,
+          ]}
+        />
+      </div>
+    </Fragment>
+  );
 }

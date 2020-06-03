@@ -22,15 +22,14 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import FindFriends from "./FindFriends";
 import Friends from "./FriendsList";
 import FriendRequests from "./FriendRequests";
-import PendingRequests from "./PendingRequests"
-import CircularProgress from '@material-ui/core/CircularProgress';
-
+import PendingRequests from "./PendingRequests";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import About from "./About";
 const useStyles = makeStyles({
   root: {
     maxWidth: "90%",
     marginLeft: "5%",
     flexGrow: 1,
-
   },
 
   media: {
@@ -47,7 +46,7 @@ export default function ProfilePage(props) {
   const [user, setUser] = useState("");
   const [friends, setFriends] = useState("");
   const [friendRequests, setFriendRequests] = useState("");
-  const [pendingRequests, setPendingRequests] = useState('')
+  const [pendingRequests, setPendingRequests] = useState("");
   const [timelineComponent, setTimelineComponent] = useState(1);
   // eslint-disable-next-line
   const [aboutComponent, setAboutComponent] = useState("");
@@ -64,7 +63,7 @@ export default function ProfilePage(props) {
     "text"
   );
   const [personAddIconDisplay, setPersonAddIconDisplay] = useState(1);
-  const [circularProgress, setCircularProgress] = useState()
+  const [circularProgress, setCircularProgress] = useState();
   const handleProfilePhotoChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setProfilePhoto(URL.createObjectURL(event.target.files[0]));
@@ -72,7 +71,7 @@ export default function ProfilePage(props) {
   };
 
   const addFriend = (event) => {
-    setPersonAddIconDisplay('')
+    setPersonAddIconDisplay("");
     event.preventDefault();
     let data = {
       user_id: props.userAuthenticated.userId,
@@ -80,9 +79,9 @@ export default function ProfilePage(props) {
     };
     fetchRequest(api + "api/friend/add", "post", data).then((response) => {
       if (response.message === "success") {
-        getUserFriends()
-      }else{
-        setPersonAddIconDisplay(1)
+        getUserFriends();
+      } else {
+        setPersonAddIconDisplay(1);
       }
     });
   };
@@ -257,7 +256,7 @@ export default function ProfilePage(props) {
         if (response.data) {
           setUser(response.data);
           // setFriends(response.data.friends);
-          setCircularProgress()
+          setCircularProgress();
         } else {
           swal("Something went wrong!");
         }
@@ -273,7 +272,7 @@ export default function ProfilePage(props) {
 
   const [page, setPage] = useState(1);
 
-  const [savedPostIds, setSavedPostIds] = useState('')
+  const [savedPostIds, setSavedPostIds] = useState("");
 
   //this method is called when we hit the bottom page
   const getSavedPosts = () => {
@@ -282,10 +281,10 @@ export default function ProfilePage(props) {
       "get"
     ).then((response) => {
       if (response.data) {
-        let savedPostIDs=response.data.map(savedpost=>{
-          return parseInt(savedpost.post_id)
-        })
-        setSavedPostIds(savedPostIDs)
+        let savedPostIDs = response.data.map((savedpost) => {
+          return parseInt(savedpost.post_id);
+        });
+        setSavedPostIds(savedPostIDs);
       } else {
         swal("Something went wrong!");
       }
@@ -312,7 +311,9 @@ export default function ProfilePage(props) {
       <Grid style={{ width: "80%" }} key={post.id} item>
         <PostCard
           post={post}
-          buttonSaveText={savedPostIds.indexOf(post.id)===-1 ? 'Save Post' : 'Unsave Post'}
+          buttonSaveText={
+            savedPostIds.indexOf(post.id) === -1 ? "Save Post" : "Unsave Post"
+          }
           getPosts={getPosts}
           userAuthenticatedId={props.userAuthenticated.userId}
         />
@@ -324,7 +325,7 @@ export default function ProfilePage(props) {
     friendsIds = user.friends.map((friend) => friend.friend_id);
   }
   useEffect(() => {
-    setCircularProgress(1)
+    setCircularProgress(1);
     getUserInfo();
     getPosts();
     defaultComponentSeen();
@@ -335,9 +336,12 @@ export default function ProfilePage(props) {
     // eslint-disable-next-line
   }, [userId]);
 
-
-  if(circularProgress){
-    return <div style={{position:'absolute', left:'50%', top:'50%'}}><CircularProgress /></div>
+  if (circularProgress) {
+    return (
+      <div style={{ position: "absolute", left: "50%", top: "50%" }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
@@ -352,7 +356,7 @@ export default function ProfilePage(props) {
             <CardMedia
               className={classes.media}
               image={coverPhoto}
-              alt='profile'
+              alt="profile"
               title="Contemplative Reptile"
             />
           ) : (
@@ -378,7 +382,7 @@ export default function ProfilePage(props) {
               <img
                 width="150"
                 height="150"
-                alt='profile'
+                alt="profile"
                 style={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -393,7 +397,7 @@ export default function ProfilePage(props) {
               <img
                 width="150"
                 height="150"
-                alt='cover'
+                alt="cover"
                 style={{
                   borderRadius: "50%",
                   position: "absolute",
@@ -422,24 +426,20 @@ export default function ProfilePage(props) {
               type="file"
             />
             {props.userAuthenticated.userId !== userId &&
-            friendsIds.indexOf(parseInt(props.userAuthenticated.userId)) ===
-              -1 ? (personAddIconDisplay && 
-              <label htmlFor="addFriend">
-                <form id={userId} onSubmit={addFriend}>
-                  <IconButton type="submit" color="primary">
-                    <PersonAddIcon />
-                  </IconButton>
-                </form>
-              </label>
-            ) : (
-              ""
-            )}
+            friendsIds.indexOf(parseInt(props.userAuthenticated.userId)) === -1
+              ? personAddIconDisplay && (
+                  <label htmlFor="addFriend">
+                    <form id={userId} onSubmit={addFriend}>
+                      <IconButton type="submit" color="primary">
+                        <PersonAddIcon />
+                      </IconButton>
+                    </form>
+                  </label>
+                )
+              : ""}
             {props.userAuthenticated.userId === userId ? (
               <label htmlFor="icon-button-file">
-                <IconButton
-                  aria-label="upload picture"
-                  component="span"
-                >
+                <IconButton aria-label="upload picture" component="span">
                   <PhotoCamera />
                 </IconButton>
               </label>
@@ -589,7 +589,7 @@ export default function ProfilePage(props) {
             <Grid xs={3} item></Grid>
           </Fragment>
         )}
-        <Grid className={classes.root} xs={12} item >
+        <Grid className={classes.root} xs={12} item>
           {editProfileComponent && (
             <Card style={{ height: "600px" }}>
               <EditProfile
@@ -600,73 +600,99 @@ export default function ProfilePage(props) {
             </Card>
           )}
         </Grid>
-        <Grid className={classes.root} xs={12} item >
+        <Grid className={classes.root} xs={12} item>
           {findFriendsComponent && (
             <Card style={{ height: "600px" }}>
               <FindFriends
                 userAuthenticatedId={props.userAuthenticated.userId}
                 city={user.city}
+                country={user.country}
                 getUserInfo={getUserInfo}
               />
             </Card>
           )}
         </Grid>
-        {(friendsComponent &&
-            props.userAuthenticated.userId === userId) && <Grid style={{display:'flex', minHeight:'600px'}} xs={12} item >
-          <Grid item xs={4}>
-          <h3 style={{marginLeft:'130px'}}>Pending Requests</h3>
-          { 
-            Array.from(pendingRequests).map((friend) => (
-              
-              <div style={{width:'80%', marginLeft:'50px'}}><PendingRequests
-                friend={friend}
-                getPendingRequests={getPendingRequests}
-                key={friend.id}
-                userAuthenticatedId={props.userAuthenticated.userId}
-              /></div>
-            ))} </Grid>
-          <Grid item xs={4}>
-          <h3 style={{marginLeft:'100px'}}>Friends</h3>
-          { 
-            Array.from(friends).map((friend) => (
-              
-              <div style={{width:'80%', marginLeft:'30px'}}><Friends
-                friend={friend}
-                getUserFriends={getUserFriends}
-                key={friend.id}
-                userAuthenticatedId={props.userAuthenticated.userId}
-              /></div>
-            ))}
+        {friendsComponent && props.userAuthenticated.userId === userId && (
+          <Grid style={{ display: "flex", minHeight: "600px" }} xs={12} item>
+            <Grid item xs={4}>
+              <h3 style={{ marginLeft: "130px" }}>Pending Requests</h3>
+              {Array.from(pendingRequests).map((friend) => (
+                <div style={{ width: "80%", marginLeft: "50px" }}>
+                  <PendingRequests
+                    friend={friend}
+                    getPendingRequests={getPendingRequests}
+                    key={friend.id}
+                    userAuthenticatedId={props.userAuthenticated.userId}
+                  />
+                </div>
+              ))}{" "}
             </Grid>
             <Grid item xs={4}>
-            <h3 style={{marginLeft:'50px'}}>Friend Requests</h3>
-            { 
-            Array.from(friendRequests).map((friend) => (
-              <div style={{width:'80%'}}>
-              <FriendRequests
-                friend={friend}
-                getUserFriends={getUserFriends}
-                getFriendRequests={getFriendRequests}
-                key={friend.id}
-                userAuthenticatedId={props.userAuthenticated.userId}
-              /></div>
-            ))}
-            </Grid>
-        </Grid>}
-        {(friendsComponent &&
-            props.userAuthenticated.userId !== userId) && 
-            <Grid item container style={{display:'flex', flexDirection:'column', alignItems:'center'}} xs={12}>
+              <h3 style={{ marginLeft: "100px" }}>Friends</h3>
               {Array.from(friends).map((friend) => (
-              <Grid item xs={12}>
-              <Friends
-                friend={friend}
-                getUserFriends={getUserFriends}
-                key={friend.id}
-                userAuthenticatedId={props.userAuthenticated.userId}
-              /></Grid>
-            ))}
+                <div style={{ width: "80%", marginLeft: "30px" }}>
+                  <Friends
+                    friend={friend}
+                    getUserFriends={getUserFriends}
+                    key={friend.id}
+                    userAuthenticatedId={props.userAuthenticated.userId}
+                  />
+                </div>
+              ))}
             </Grid>
-              }
+            <Grid item xs={4}>
+              <h3 style={{ marginLeft: "50px" }}>Friend Requests</h3>
+              {Array.from(friendRequests).map((friend) => (
+                <div style={{ width: "80%" }}>
+                  <FriendRequests
+                    friend={friend}
+                    getUserFriends={getUserFriends}
+                    getFriendRequests={getFriendRequests}
+                    key={friend.id}
+                    userAuthenticatedId={props.userAuthenticated.userId}
+                  />
+                </div>
+              ))}
+            </Grid>
+          </Grid>
+        )}
+        {friendsComponent && props.userAuthenticated.userId !== userId && (
+          <Grid
+            item
+            container
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+            xs={12}
+          >
+            {Array.from(friends).map((friend) => (
+              <Grid item >
+                <Friends
+                  friend={friend}
+                  getUserFriends={getUserFriends}
+                  key={friend.id}
+                  userAuthenticatedId={props.userAuthenticated.userId}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+        {aboutComponent && (
+          <Grid
+            container
+            style={{ justifyContent: "center", alignContent: "center" }}
+            xs={12}
+            item
+          >
+            <About
+              userAuthenticatedId={props.userAuthenticated.userId}
+              user={user}
+              getUserInfo={getUserInfo}
+            />
+          </Grid>
+        )}
       </Grid>
     </Fragment>
   );

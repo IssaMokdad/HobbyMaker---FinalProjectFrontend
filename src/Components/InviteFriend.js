@@ -56,7 +56,7 @@ const InviteFriend = (props) => {
   const styles = useStyles();
 
   const [age, setAge] = useState("");
-
+  const [display, setDisplay] = useState('')
   const calculateAge = () => {
     let today = new Date();
     var birthDate = new Date(props.friend.birthday); // create a date object directly from `dob1` argument
@@ -70,9 +70,11 @@ const InviteFriend = (props) => {
 
   const inviteFriend = (event) => {
     // setPersonAddIconDisplay('')
+    setDisplay(1)
     event.preventDefault();
     let data = {
-      user_id: props.userAuthenticated.userId,
+      user_id : props.userAuthenticatedId,
+      event_id: props.eventId,
       friend_id: event.target.id,
     };
     fetchRequest(api + "api/invite-friend", "post", data).then((response) => {
@@ -80,6 +82,7 @@ const InviteFriend = (props) => {
        
       }else{
         swal('Something went wrong')
+        setDisplay()
         // setPersonAddIconDisplay(1)
       }
     });
@@ -89,6 +92,10 @@ const InviteFriend = (props) => {
     calculateAge();
     // eslint-disable-next-line
   }, []);
+
+  if(display){
+    return ''
+  }
 
   return (
     <Card className={cx(styles.card)} elevation={2}>

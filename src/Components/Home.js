@@ -16,6 +16,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
 import YoutubeVideos from './YoutubeVideos';
 import ReactPlayer from 'react-player';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { LinearProgress } from '@material-ui/core';
 // import Messenger from './Messenger';
 
 
@@ -23,7 +25,8 @@ import ReactPlayer from 'react-player';
 const useStyles = makeStyles({
   root: {
 
-    flexGrow:1
+    flexGrow:1,
+    width:'1280px'
   },
 
 });
@@ -31,7 +34,7 @@ const useStyles = makeStyles({
 
 function Home(props) {
   
-
+  const [progressDisplay, setProgressDisplay] = useState()
   var options = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -114,6 +117,7 @@ function Home(props) {
   //google calende api:AIzaSyDLrs9tm88-rm1G7Qr81zm578SDh8ejvCY
   //this method is called when we hit the bottom page
   const handleScroll = (event) => {
+    setProgressDisplay(1)
     setPage(page + 1);
     getPosts();
   };
@@ -142,7 +146,11 @@ function Home(props) {
         page,
       "get"
     ).then((response) => {
-      if (response.data !== undefined) setPosts(response.data);
+      if (response.data !== undefined) {
+        
+        setPosts(response.data);
+        setProgressDisplay('')
+      }
     });
 
   const [randomQuote, setRandomQuote] = useState("");
@@ -222,14 +230,14 @@ function Home(props) {
         
         {/* <strong>{randomQuote.content}</strong> */}
       {/* </h3> */}
-      <div>
+   
         
         <BottomScrollListener onBottom={handleScroll} />
         <div className={classes.root}>
         <Grid container >
       
-        <div style={{ position:'absolute', top:'80px', left:'60px',width: "100%" }}>
-              <h5><strong> Lastest videos of your hobby</strong> </h5>
+        <div style={{ position:'absolute', top:'80px', left:'60px',width: "70%", }}>
+              <h5 ><strong> Lastest videos of your hobby</strong> </h5>
             </div>
           <Grid
             xs={3}
@@ -273,7 +281,9 @@ function Home(props) {
                 userAuthenticatedId={props.userAuthenticated.userId}
               />
             </div>
-            {postss}
+            
+            {posts ? postss : <div style={{marginTop:'100px', transform:'scale(3)'}}><CircularProgress  /></div>}
+            {progressDisplay && <div style={{height:'60px',marginTop:'50px',transform:'scale(2)'}}><CircularProgress disableShrink={true} color='secondary' /></div>}
           </Grid>
           <Grid
           item
@@ -290,7 +300,7 @@ function Home(props) {
             {/* <div style={{ width: "100%", marginTop: "150px" }}> 
               
             {/* </div> */}
-            <h5><strong> Friend Suggestions </strong></h5>
+            <h5 ><strong> Friend Suggestions </strong></h5>
             {Array.from(usersRecommendation).map((user) => (
               
               <FriendSuggestionCard
@@ -303,7 +313,7 @@ function Home(props) {
           </Grid>
         </Grid>
       </div>
-      </div>
+      
     </Fragment>
     
   );

@@ -8,17 +8,25 @@ import {fetchRequest, api} from '../../Apis';
 import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 import InsertEmoticonTwoToneIcon from '@material-ui/icons/InsertEmoticonTwoTone';
+import swal from 'sweetalert';
 
 export default function Compose(props) {
 
   const [message, setMessage] = useState('')
   const [showEmojis, setShowEmojis] = useState('')
   const handleMessageInput = (event)=>{
-    setMessage(event.target.value)
+    
+    if (event.key==='Enter'){
+      event.preventDefault();
+    }
+    else{
+      setMessage(event.target.value)
+    }
+    
   }
 
   const sendMessage = (event)=>{
-    
+
     setShowEmojis()
     event.preventDefault()
 
@@ -29,9 +37,15 @@ export default function Compose(props) {
     }
 
     fetchRequest(api + "api/send-message", 'post', data).then(response=>{
-      setMessage('')
-      props.handleRealTimeMessageSentFromMe(response.data)
-      props.addMessage(response.data)
+      if(response.data){
+        setMessage('')
+        props.handleRealTimeMessageSentFromMe(response.data)
+        props.addMessage(response.data)
+      }
+      else{
+        swal('Something went wrong, check your connection')
+      }
+
     })
 
     
@@ -62,6 +76,11 @@ export default function Compose(props) {
         fullWidth
         required={true}
         multiline
+        onKeyPress={(event) => {
+          if (event.key== 'Enter'){
+              sendMessage(event)}
+
+      }}
         value={message}
         onChange={handleMessageInput}
         placeholder="Send a message"

@@ -12,7 +12,7 @@ import InviteFriend from "./InviteFriend";
 import InviteFriendsModal from "./InviteFriendsModal";
 import moment from "moment";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import { CssBaseline } from '@material-ui/core';
+
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -24,39 +24,58 @@ export default function CreateEvent(props) {
   // The first commit of Material-UI
   const [events, setEvents] = useState();
   const [createdEventsDisplay, setCreatedEventsDisplay] = useState(1)
-  const [editDisplay, setEditDisplay] = useState()
+  const [display, setDisplay] = useState()
   const [notInvitedFriends, setNotInvitedFriends] = useState("");
 
-  const [openInviteFriendModal, setOpenInviteFriendModal] = useState(false);
-  const handleCloseInviteFriendModal = () => {
-    setOpenInviteFriendModal(false);
-  };
-  const handleOpenInviteFriendModal = () => {
-    setOpenInviteFriendModal(true);
-  };
-  const [openId, setOpenId] = useState('')
 
-  const getNotInvitedFriends = (event) => {
-    let event_id = event.target.id
-    handleOpenInviteFriendModal()
-    setOpenId(event_id)
+  const cancelInvitation = (event) => {
     event.preventDefault()
-    
-    
-    fetchRequest(
-      api + "api/not-invited-friends?user_id=" + props.userAuthenticated.userId + "&event_id=" + event_id,
-      "get"
-    ).then((response) => {
-      if (response.data) {
-        setNotInvitedFriends(response.data);
-        
+    let id = event.target.id;
+
+    swal({
+      title: "Are you sure you don't want to go anymore?",
+    //   text: "Once deleted, you will not be able to recover this post!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        let data = {
+        event_id: id,
+        user_id: props.userAuthenticated.userId,
+        };
+        fetchRequest(api + "api/refuse-event-invitation", "POST", data).then((data) => {
+          if (data.message === "success") {
+
+
+            getEventsGoingTo()
+          } else {
+            swal({
+              title: "Something went wrong, try again!",
+            });
+          }
+        });
+      } else {
+        swal("Your are going to this event!");
       }
     });
   };
+//   const cancelInvitation = (event) => {
+//     event.preventDefault()
+//     let event_id = event.target.id
+//     fetchRequest(
+//       api + "api/refuse-event-invitation?user_id=" + props.userAuthenticated.userId + "&event_id=" + event_id,
+//       "get"
+//     ).then((response) => {
+//       if (response.message==='success') {
+//         setDisplay(1)
+//       }
+//     });
+//   };
 
-  const getUserEvents = () => {
+  const getEventsGoingTo = () => {
     fetchRequest(
-      api + "api/get-user-events?user_id=" + props.userAuthenticated.userId,
+      api + "api/get-user-events-going-to?user_id=" + props.userAuthenticated.userId,
       "get"
     ).then((response) => {
       if (response.data) {
@@ -69,18 +88,15 @@ export default function CreateEvent(props) {
 
   useEffect(() => {
     // getUserFriends();
-    getUserEvents();
+    getEventsGoingTo()
   }, []);
 
   return (
-    
-    <div >{events && events.map((event) => 
+    <div style={{marginTop:'45px'}} className='container'>{events && events.map((event) => 
     <Fragment><EventCard 
         eventDescription={event.description}
         eventName={event.name}
         id={event.id}
-        getUserEvents={getUserEvents}
-        fromCreatedEventsComponent={1}
         key={event.id}
         selectedStartTime={event.start_time}
         selectedEndTime={event.end_time}
@@ -94,26 +110,17 @@ export default function CreateEvent(props) {
             
 
 
-            <form onSubmit={getNotInvitedFriends} id={event.id}><Button
+            <form onSubmit={cancelInvitation} id={event.id}><Button
               
               variant="contained"
-              color="primary"
+              color="secondary"
               type='submit'
-              style={{ marginTop: "20px", marginLeft: "450px" }}
-              startIcon={<AddCircleIcon />}
+              style={{marginBottom:'20px', marginTop: "20px",width:'380px', marginLeft: "360px"}}
              
             >
-              Invite Friends
+              I don't want to go
             </Button> </form>
-            
-            <InviteFriendsModal
-         handleClose={handleCloseInviteFriendModal}
-         open={parseInt(openId)===parseInt(event.id) && openInviteFriendModal}
-         eventId={event.id}
-         openInviteModal={openInviteFriendModal}
-         userAuthenticatedId={props.userAuthenticated.userId}
-         friends={notInvitedFriends}
-       /> </Fragment>
+</Fragment>
        )}
 </div>
   );

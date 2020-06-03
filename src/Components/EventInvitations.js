@@ -12,7 +12,7 @@ import InviteFriend from "./InviteFriend";
 import InviteFriendsModal from "./InviteFriendsModal";
 import moment from "moment";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import { CssBaseline } from '@material-ui/core';
+
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -24,39 +24,47 @@ export default function CreateEvent(props) {
   // The first commit of Material-UI
   const [events, setEvents] = useState();
   const [createdEventsDisplay, setCreatedEventsDisplay] = useState(1)
-  const [editDisplay, setEditDisplay] = useState()
+  const [display, setDisplay] = useState()
   const [notInvitedFriends, setNotInvitedFriends] = useState("");
 
-  const [openInviteFriendModal, setOpenInviteFriendModal] = useState(false);
-  const handleCloseInviteFriendModal = () => {
-    setOpenInviteFriendModal(false);
-  };
-  const handleOpenInviteFriendModal = () => {
-    setOpenInviteFriendModal(true);
-  };
-  const [openId, setOpenId] = useState('')
-
-  const getNotInvitedFriends = (event) => {
-    let event_id = event.target.id
-    handleOpenInviteFriendModal()
-    setOpenId(event_id)
+  const acceptInvitation = (event) => {
     event.preventDefault()
-    
+    let event_id = event.target.id
+    let data = {
+        'event_id':event_id,
+        user_id:props.userAuthenticated.userId
+    }
     
     fetchRequest(
-      api + "api/not-invited-friends?user_id=" + props.userAuthenticated.userId + "&event_id=" + event_id,
-      "get"
+      api + "api/accept-event-invitation", "POST", data
     ).then((response) => {
-      if (response.data) {
-        setNotInvitedFriends(response.data);
-        
+      if (response.message==='success') {
+        setDisplay(1)
       }
     });
   };
 
-  const getUserEvents = () => {
+
+
+  const refuseInvitation = (event) => {
+    event.preventDefault()
+    let event_id = event.target.id
+    let data = {
+        'event_id':event_id,
+        user_id:props.userAuthenticated.userId
+    }
     fetchRequest(
-      api + "api/get-user-events?user_id=" + props.userAuthenticated.userId,
+      api + "api/refuse-event-invitation","POST", data
+    ).then((response) => {
+      if (response.message==='success') {
+        setDisplay(1)
+      }
+    });
+  };
+
+  const getEventsInvitations = () => {
+    fetchRequest(
+      api + "api/get-user-events-invitations?user_id=" + props.userAuthenticated.userId,
       "get"
     ).then((response) => {
       if (response.data) {
@@ -69,18 +77,18 @@ export default function CreateEvent(props) {
 
   useEffect(() => {
     // getUserFriends();
-    getUserEvents();
+    getEventsInvitations();
   }, []);
-
+  if(display){
+      return ""
+  }
   return (
-    
-    <div >{events && events.map((event) => 
+    <div style={{marginTop:'45px'}} className='container'>{events && events.map((event) => 
     <Fragment><EventCard 
         eventDescription={event.description}
         eventName={event.name}
         id={event.id}
-        getUserEvents={getUserEvents}
-        fromCreatedEventsComponent={1}
+        fromInvitationsComponent={1}
         key={event.id}
         selectedStartTime={event.start_time}
         selectedEndTime={event.end_time}
@@ -94,26 +102,26 @@ export default function CreateEvent(props) {
             
 
 
-            <form onSubmit={getNotInvitedFriends} id={event.id}><Button
+            <form onSubmit={acceptInvitation} id={event.id}><Button
               
               variant="contained"
               color="primary"
               type='submit'
-              style={{ marginTop: "20px", marginLeft: "450px" }}
-              startIcon={<AddCircleIcon />}
+              style={{ marginTop: "20px",width:'115px', marginLeft: "400px"}}
              
             >
-              Invite Friends
+              Going
             </Button> </form>
-            
-            <InviteFriendsModal
-         handleClose={handleCloseInviteFriendModal}
-         open={parseInt(openId)===parseInt(event.id) && openInviteFriendModal}
-         eventId={event.id}
-         openInviteModal={openInviteFriendModal}
-         userAuthenticatedId={props.userAuthenticated.userId}
-         friends={notInvitedFriends}
-       /> </Fragment>
+            <form onSubmit={refuseInvitation} id={event.id}><Button
+              
+              variant="contained"
+              color="secondary"
+              type='submit'
+              style={{ postition:'relative',bottom:'35px', left: "550px" }}
+             
+            >
+              Not Going
+            </Button> </form></Fragment>
        )}
 </div>
   );

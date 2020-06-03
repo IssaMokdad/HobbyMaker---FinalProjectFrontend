@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    width:'35%',
+    width:'400px',
     height:'80%',
     overflow:'scroll',
 
@@ -38,7 +38,7 @@ export default function InviteFriendsModal(props) {
   useEffect(()=>{
 
   },[])
-
+  
   return (
     <div>
 
@@ -56,8 +56,8 @@ export default function InviteFriendsModal(props) {
       >
         <Fade in={props.open}>
           <div className={classes.paper}>
-            <h2 style={{alignText:'center'}} id="transition-modal-title">Invite Friends</h2>
-            {props.friends && props.friends.map(friend=><InviteFriend friend={friend} />)}
+            <h2 style={{textAlign:'center'}} id="transition-modal-title">Invite Friends</h2>
+            {props.friends && props.friends.map(friend=><InviteFriend userAuthenticatedId={props.userAuthenticatedId} eventId={props.eventId} friend={friend} />)}
           </div>
         </Fade>
       </Modal>

@@ -101,15 +101,15 @@ export default function AppNavBar(props) {
   );
 
   const [notifications, setNotifications] = useState([]);
-  const [notificationsLength, setNotificationsLength] = useState(0);
+  const [notificationsLength, setNotificationsLength] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [messagesLength, setMessagesLength] = useState(0);
+  const [messagesLength, setMessagesLength] = useState(null);
   const handleClosePopoverMessage = () => {
     setAnchorElPopoverMessage(null);
   };
   const open2 = Boolean(anchorElPopoverMessage);
   const id2 = open2 ? "simple-popover" : undefined;
-
+  const [doneLoading, setDoneLoading] = useState('')
   const handleClickPopoverMessage = (event) => {
     setAnchorElPopoverMessage(event.currentTarget);
   };
@@ -226,7 +226,17 @@ export default function AppNavBar(props) {
   };
 
   const realTimeMessages = () => {
+    // let index;
+    // messages.map((message, i)=>{
+    //   if(parseInt(props.realTimeMessage.from)===parseInt(message.id)){
+    //     index=i
+    //   }
+    // })
+    // if(index && messagesLength!==0){
+
+    // }
     setMessages([...messages, props.realTimeMessage]);
+    props.setRTMEmpty()
     setMessagesLength(parseInt(messagesLength + 1));
   };
 
@@ -238,6 +248,7 @@ export default function AppNavBar(props) {
       if (response.data) {
         setNotifications(response.data);
         setNotificationsLength(response.data.length);
+        setDoneLoading(1)
       }
     });
   };
@@ -277,7 +288,7 @@ export default function AppNavBar(props) {
       api + "api/mark-messages-as-read", "post", data
     ).then((response) => {
       if (response.message === "success") {
-        setMessagesLength();
+        setMessagesLength(0);
       }
     });
   };
@@ -290,27 +301,19 @@ export default function AppNavBar(props) {
   };
 
   useEffect(() => {
-
-    if (props.rTNotification && notifications.length !== 0) {
-      realTimeNotifications();
-    }
-
-    else if (notifications.length === 0 && props.rTNotification) {
-      realTimeNotifications();
-    }
-
-    else if (!props.rTNotification && notifications.length === 0) {
+    if(!doneLoading){
       getNotifications();
-    }
-    if (props.realTimeMessage && messages.length !== 0) {
-      realTimeMessages();
-    }
-    else if (messages.length === 0 && props.realTimeMessage) {
-      realTimeMessages();
-    }
-    else if (!props.realTimeMessage && messages.length === 0) {
       getUnreadMessages();
+      setDoneLoading(1)
     }
+    if (props.rTNotification && doneLoading) {
+      realTimeNotifications();
+    }
+
+    if (props.realTimeMessage && doneLoading) {
+      realTimeMessages();
+    }
+
   }, [props.rTNotification, props.realTimeMessage]);
 
   return (
@@ -375,6 +378,7 @@ export default function AppNavBar(props) {
               {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
               <IconButton
                 onClick={markNotificationsAsRead}
+                // onClick={handleClickPopoverNotification}
                 aria-describedby={id}
                 aria-label="show 17 new notifications"
                 color="inherit"
@@ -482,7 +486,18 @@ export default function AppNavBar(props) {
                           />
                         </Paper>
                       ) : (
-                        ""
+                        <Paper variant="outlined" elevation={3}>
+                        <Typography
+                          noWrap={true}
+                          style={{ marginBottom: "10px" }}
+                          variant='body1'
+                          
+                          className={classes.typography}
+                        >
+                          <div onClick={handleClosePopoverNotification}><Link  to='/events'>{notification.data.message} </Link></div>
+                         
+                        </Typography>
+                      </Paper>
                       );
                     }
                   }

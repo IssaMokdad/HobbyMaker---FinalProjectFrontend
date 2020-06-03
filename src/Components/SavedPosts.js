@@ -45,7 +45,7 @@ export default function SavedPosts(props) {
           {Array.from(savedPosts).map((post) => (
             //   <div className='mr-auto'><ReactPlayer width='500px' controls={true} url={'https://www.youtube.com/watch?v=' + id}  /></div>
             // {/* // <ReactPlayer controls={true} url={'https://www.youtube.com/watch?v=' + id}  />)} */}
-            <div style={{marginRight:'20px'}}>
+            <div style={{marginRight:'20px',marginBottom:'20px', width:'490px'}}>
               <PostCard
                 key={post.id}
                 post={post}

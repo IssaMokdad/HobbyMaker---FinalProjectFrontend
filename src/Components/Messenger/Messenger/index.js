@@ -50,7 +50,7 @@ export default function Messenger(props) {
         <div className="scrollable sidebar">
           {/* here realTimeMessageSentFromMe is only to change the last message of the left sidebar when it is sent by me
           and it is coming from compose component which is inside messagelist */}
-          <ConversationList realTimeMessageSentFromMe={realTimeMessageSentFromMe} setRTMEmpty={props.setRTMEmpty} realTimeMessage={props.realTimeMessage} handleContactChange={handleContactChange} userAuthenticatedId={props.userAuthenticatedId} />
+          <ConversationList realTimeMessageSentFromMe={realTimeMessageSentFromMe} setRTMEmpty={props.setRTMEmpty} realTimeMessage={props.realTimeMessage}  handleContactChange={handleContactChange} userAuthenticatedId={props.userAuthenticatedId} />
         </div>
         <ScrollToBottom className="scrollable content">
         <div>

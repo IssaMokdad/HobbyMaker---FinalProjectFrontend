@@ -20,14 +20,14 @@ import EventCard from "./EventCard";
 import Button from "@material-ui/core/Button";
 export default function CreateEvent(props) {
   // The first commit of Material-UI
-  const [selectedStartDate, setSelectedStartDate] = useState(
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
     moment(new Date()).format("YYYY-MM-DD")
-  );
-  const [selectedEndDate, setSelectedEndDate] = useState(
-    moment(new Date()).format("YYYY-MM-DD")
-  );
-  const [selectedStartTime, setSelectedStartTime] = useState(new Date());
-  const [selectedEndTime, setSelectedEndTime] = useState(new Date());
+  
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
+    // moment(new Date()).format("YYYY-MM-DD")
+  
+  const [selectedStartTime, setSelectedStartTime] = useState(null);
+  const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [location, setLocation] = useState("");
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
@@ -65,7 +65,8 @@ export default function CreateEvent(props) {
   const fileInputs = useRef(null);
 
 
-  const eventCreateSubmit = () => {
+  const eventCreateSubmit = (event) => {
+    event.preventDefault()
     let formData = new FormData();
     formData.append("image", fileInputs.current.files[0]);
     formData.append("user_id", parseInt(props.userAuthenticated.userId));
@@ -93,10 +94,10 @@ export default function CreateEvent(props) {
           setEventDescription("");
           setLocation("");
           setEventName("");
-          setSelectedEndDate(new Date());
-          setSelectedStartTime(new Date());
-          setSelectedEndTime(new Date());
-          setSelectedStartDate(new Date());
+          setSelectedEndDate(null);
+          setSelectedStartTime(null);
+          setSelectedEndTime(null);
+          setSelectedStartDate(null);
           setFileInput("");
         }
       });
@@ -162,9 +163,12 @@ export default function CreateEvent(props) {
     <div className="container">
       <div className="row">
         <div className="col-8">
+          <form onSubmit={eventCreateSubmit}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               margin="normal"
+              required={true}
+              disablePast={true}
               style={{ marginRight: "80px", marginBottom: "40px" }}
               id="date-picker-dialog"
               label="From"
@@ -178,11 +182,14 @@ export default function CreateEvent(props) {
 
             <KeyboardDatePicker
               margin="normal"
+              required={true}
               style={{ marginRight: "80px", marginBottom: "40px" }}
               id="date-picker-dialog"
               label="To"
               format="MM/dd/yyyy"
+              disablePast={true}
               value={selectedEndDate}
+              minDate={selectedStartDate}
               onChange={handleEndDateChange}
               KeyboardButtonProps={{
                 "aria-label": "change date",
@@ -191,6 +198,7 @@ export default function CreateEvent(props) {
 
             <KeyboardTimePicker
               margin="normal"
+              required={true}
               id="time-picker"
               style={{ marginRight: "80px", marginBottom: "40px" }}
               label="Start time"
@@ -204,6 +212,7 @@ export default function CreateEvent(props) {
             <KeyboardTimePicker
               margin="normal"
               id="time-picker"
+              required={true}
               label="End time"
               style={{ marginRight: "80px", marginBottom: "40px" }}
               value={selectedEndTime}
@@ -214,6 +223,7 @@ export default function CreateEvent(props) {
             />
             <input
               accept="image/*"
+              required
               onChange={handleFileChange}
               ref={fileInputs}
               className="d-none"
@@ -223,6 +233,7 @@ export default function CreateEvent(props) {
             <TextField
               id="outlined-textarea"
               label="Event Name"
+              required={true}
               onChange={handleEventNameChange}
               value={eventName}
               style={{
@@ -235,6 +246,7 @@ export default function CreateEvent(props) {
             <TextField
               id="outlined-textarea"
               label="Location"
+              required={true}
               onChange={handleLocationChange}
               value={location}
               style={{
@@ -248,6 +260,7 @@ export default function CreateEvent(props) {
             <TextField
               id="outlined-multiline-static"
               label="Event Description"
+              required={true}
               style={{ width: "78.5%", marginLeft: "10px", marginTop: "20px" }}
               multiline
               onChange={handleEventDescriptionChange}
@@ -268,10 +281,11 @@ export default function CreateEvent(props) {
 
             {!props.edit ? <Button
               variant="contained"
+              type='submit'
               color="inherit"
               style={{ marginTop: "20px", marginLeft: "220px" }}
               startIcon={<AddCircleIcon />}
-              onClick={eventCreateSubmit}
+              
             >
               <b>Create</b>
             </Button> : <Button
@@ -304,7 +318,7 @@ export default function CreateEvent(props) {
                 src={fileInput}
               />
             )} */}
-          </MuiPickersUtilsProvider>
+          </MuiPickersUtilsProvider></form>
         </div>{" "}
         <div className="col-4">
           {!fileInput ? (

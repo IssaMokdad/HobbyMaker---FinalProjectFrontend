@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CreateEvent from './CreateEvent';
 import CreatedEvents from './CreatedEvents';
-
+import EventInvitations from './EventInvitations';
+import EventsGoingTo from './EventsGoingTo';
 export default function Events(props) {
   const [createEventComponent, setCreateEventComponent] = useState("");
   const [eventsYouCreatedComponent, setEventsYouCreatedComponent] = useState(
@@ -49,6 +50,7 @@ export default function Events(props) {
       }
   };
   return (
+
     <div style={{marginTop:'30px'}} className="container">
         <div className='row justify-content-center'>
         
@@ -113,6 +115,8 @@ export default function Events(props) {
     </div>
     {createEventComponent && <CreateEvent userAuthenticated={props.userAuthenticated} />}
     {eventsYouCreatedComponent && <CreatedEvents userAuthenticated={props.userAuthenticated} />}
+    {invitationsByFriends && <EventInvitations userAuthenticated={props.userAuthenticated} />}
+    {eventsYouAreGoingTo && <EventsGoingTo userAuthenticated={props.userAuthenticated} />}
     </div>
     
   );

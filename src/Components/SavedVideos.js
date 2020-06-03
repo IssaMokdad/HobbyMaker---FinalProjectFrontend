@@ -40,17 +40,17 @@ export default function SavedVideos(props) {
     }, [])
     return (
         
-      <div className='justify-content-center container'>
+      <div className='container'>
           <h1 style={{textAlign:'center'}}><strong>Videos you have saved</strong></h1>
       <div className='row'>  
       
-      <div className='col-12 justify-content-center d-flex flex-wrap '>
+      <div className='col-12 d-flex justify-content-center flex-wrap '>
       
           {Array.from(videoIds).map(id=>
           
         //   <div className='mr-auto'><ReactPlayer width='500px' controls={true} url={'https://www.youtube.com/watch?v=' + id}  /></div>
             // {/* // <ReactPlayer controls={true} url={'https://www.youtube.com/watch?v=' + id}  />)} */}
-            <div className='mr-auto'><YoutubeVideos fromSavedVideosComponent={true} getUserInfo={getUserInfo} key={id} buttonText='Unsave' userAuthenticatedId={props.userAuthenticated.userId} videoId={id} /></div>)}
+            <div style={{marginRight:'20px'}}><YoutubeVideos fromSavedVideosComponent={true} getUserInfo={getUserInfo} key={id} buttonText='Unsave' userAuthenticatedId={props.userAuthenticated.userId} videoId={id} /></div>)}
                 
       </div>
       </div> 

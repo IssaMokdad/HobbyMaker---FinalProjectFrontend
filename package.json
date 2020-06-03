@@ -45,6 +45,7 @@
     "react-transition-group": "^4.4.0",
     "reactstrap": "^8.4.1",
     "shave": "^2.5.4",
+    "simple-peer": "^9.7.2",
     "styled-components": "^5.1.0",
     "sweetalert": "^2.1.2",
     "uninstall": "0.0.0"
