@@ -1,14 +1,17 @@
 //Declaring this server ip as it will be used across all apis
 export const api = "http://localhost:8000/"
+
+
+var accessToken
 //Creating this fetch request that will be used to fetch data in all the application except for form data type
 export const fetchRequest = (url, method, data = null) => {
-  let token = localStorage.getItem('token');
+  accessToken = localStorage.getItem('token');
   if (method === "get") {
     return fetch(url, {
       headers: {
         'Accept': "application/json",
         "Content-Type": "application/json",
-        'Authorization': "Bearer "+token,
+        'Authorization': "Bearer "+accessToken,
         
       },
     }).then((response) => response.json());
@@ -17,7 +20,7 @@ export const fetchRequest = (url, method, data = null) => {
       headers: {
         'Accept': "application/json",
         "Content-Type": "application/json",
-        'Authorization': "Bearer "+token,
+        'Authorization': "Bearer "+accessToken,
       },
       method: "POST",
       body: JSON.stringify(data),
@@ -25,4 +28,5 @@ export const fetchRequest = (url, method, data = null) => {
   }
 };
 //declaring this token to use it in form data fetch
-export const token = { 'Authorization': "Bearer "+localStorage.getItem('token')}
+
+

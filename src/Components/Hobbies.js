@@ -9,6 +9,7 @@ export const hobbies = [
     { label: "Basketball", value: "Basketball" },
     { label: "Bartending", value: "Bartending" },
     { label: "Chess", value: "Chess" },
+    { label: "Hiking", value: "Hiking" },
     { label: "Waraa", value: "Waraa" },
     { label: "Cycling", value: "Cycling" },
   ];

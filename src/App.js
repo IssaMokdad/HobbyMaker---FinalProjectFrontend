@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Home from "./Components/Home";
-import Login from "./Components/Login";
-import SignUp from "./Components/SignUp";
-import ForgotPassword from "./Components/ForgotPassword";
+import Login from "./Components/Auth/Login";
+import SignUp from "./Components/Auth/SignUp";
+import ForgotPassword from "./Components/Auth/ForgotPassword";
 import AppNavBar from './Components/AppNavBar';
 import {
   BrowserRouter as Router,
@@ -11,19 +11,19 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import PasswordReset from "./Components/PasswordReset";
-import ConfirmRegistration from "./Components/ConfirmRegistration";
-import ProfilePage from "./Components/ProfilePage";
+import PasswordReset from "./Components/Auth/PasswordReset";
+import ConfirmRegistration from "./Components/Auth/ConfirmRegistration";
+import ProfilePage from "./Components/Profile/ProfilePage";
 // import Map from './Components/Map'
-import { api, token } from "./Components/Apis";
+import { api } from "./Components/Apis";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 import MessengerApp from "./Components/Messenger/App";
 import OneTimePage from './Components/OneTimePage'
-import SavedVideos from './Components/SavedVideos';
-import SavedPosts from './Components/SavedPosts';
-import CreateEvent from './Components/CreateEvent';
-import Events from './Components/Events';
+import SavedVideos from './Components/YoutubeVideos/SavedVideos';
+import SavedPosts from './Components/Posts/SavedPosts';
+// import CreateEvent from './Components/CreateEvent';
+import Events from './Components/Events/Events';
 function App() {
 
   const [userAuthenticated, setUserAuthenticated] = useState({
@@ -75,11 +75,18 @@ function App() {
         console.log(data)
         setRealTimeMessage({
           id: data.message.id,
-          timestamp: data.message.created_at,
+          created_at: data.message.created_at,
           message: data.message.message,
           from: data.message.from,
         });
       });
+    }
+
+    return ()=>{
+      if(window.Echo){
+        window.Echo.leave("my-channel." + userAuthenticated.userId)
+      }
+      
     }
   }, [token]); //render again to assign user data if login successful
 
@@ -88,11 +95,14 @@ function App() {
     localStorage.setItem("token", event.access_token);
     localStorage.setItem("userId", event.user_id);
     setFirstTimeLogin(event.first_time_login)
+    setUserAuthenticated({
+      userId: event.user_id,
+    });
     setToken(1); //this renders the component, but let useEffect render again on token change to assign the data to the user and avoid writing it in a separate method to avoid repeated code it
   };
   
     //google calender api
-  console.log(realTimeMessage)
+  console.log(userAuthenticated.userId)
   return (
     <div style={{ backgroundColor: "#F0F0F0" }}>
       
@@ -101,8 +111,8 @@ function App() {
         <Switch>
         
         <Route path="/onetimepage">
-        {/* && firstTimeLogin */}
-            {(token !== "" ) ? (
+        
+            {(token !== "" && firstTimeLogin) ? (
               <OneTimePage userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />

@@ -18,7 +18,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import Popover from "@material-ui/core/Popover";
 import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
-import FriendRequests from "./FriendRequests";
+import FriendRequests from "./Friends/FriendRequests";
 import HomeIcon from "@material-ui/icons/Home";
 import SideDrawer from "./SideDrawer";
 
@@ -221,11 +221,13 @@ export default function AppNavBar(props) {
     </Menu>
   );
   const realTimeNotifications = () => {
-    setNotifications([...notifications, props.rTNotification]);
-    setNotificationsLength(parseInt(notificationsLength + 1));
+    getNotifications()
+    // setNotifications([...notifications, props.rTNotification]);
+    // setNotificationsLength(parseInt(notificationsLength + 1));
   };
 
   const realTimeMessages = () => {
+    getUnreadMessages()
     // let index;
     // messages.map((message, i)=>{
     //   if(parseInt(props.realTimeMessage.from)===parseInt(message.id)){
@@ -235,9 +237,9 @@ export default function AppNavBar(props) {
     // if(index && messagesLength!==0){
 
     // }
-    setMessages([...messages, props.realTimeMessage]);
-    props.setRTMEmpty()
-    setMessagesLength(parseInt(messagesLength + 1));
+    // setMessages([...messages, props.realTimeMessage]);
+    // props.setRTMEmpty()
+    // setMessagesLength(parseInt(messagesLength + 1));
   };
 
   const getNotifications = () => {

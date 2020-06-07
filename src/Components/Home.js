@@ -3,18 +3,20 @@ import BottomScrollListener from "react-bottom-scroll-listener";
 import { makeStyles } from "@material-ui/core/styles";
 import swal from "sweetalert";
 import AppNavBar from "./AppNavBar";
-import PostCard from "./PostCard";
-import PostForm from "./PostForm";
+import PostCard from "./Posts/PostCard";
+import PostForm from "./Posts/PostForm";
+import ChatBot from './Chatbot';
+// import ChatBot from 'react-simple-chatbot';
 import { fetchRequest, api, token } from "./Apis";
 import Grid from "@material-ui/core/Grid";
-import FriendSuggestionCard from "./FriendSuggestionCard";
+import FriendSuggestionCard from "./Friends/FriendSuggestionCard";
 import Paper from "@material-ui/core/Paper";
 import Button from '@material-ui/core/Button';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import IconButton from "@material-ui/core/IconButton";
-import YoutubeVideos from './YoutubeVideos';
+import YoutubeVideos from './YoutubeVideos/YoutubeVideos';
 import ReactPlayer from 'react-player';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { LinearProgress } from '@material-ui/core';
@@ -312,10 +314,11 @@ function Home(props) {
             ))}
           </Grid>
         </Grid>
+        {userAuthenticated && <ChatBot userAuthenticated={userAuthenticated} />}
       </div>
-      
+
     </Fragment>
-    
+
   );
 }
 

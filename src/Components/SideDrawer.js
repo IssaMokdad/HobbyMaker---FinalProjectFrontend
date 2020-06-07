@@ -60,7 +60,7 @@ export default function TemporaryDrawer() {
           </ListItem>
           <ListItem button key={'youtube-videos'}>
             <ListItemIcon><ForumIcon/></ListItemIcon>
-            <Link to='/onetimepage'><ListItemText primary='Saved Posts' /></Link>
+            <Link to='/savedposts'><ListItemText primary='Saved Posts' /></Link>
           </ListItem>
           <ListItem button key={'events'}>
             <ListItemIcon><EventIcon/></ListItemIcon>

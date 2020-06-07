@@ -16,7 +16,7 @@ import RegionSelect from "react-region-flag-select";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Select from "react-select";
 import {hobbies as Hobbies} from './Hobbies';
-import Map from './Map';
+import Map from './Map/Map';
 import {fetchRequest, api} from './Apis';
 import swal from "sweetalert";
 import SportsHandballIcon from '@material-ui/icons/SportsHandball';
@@ -341,8 +341,8 @@ export default function CustomizedSteppers(props) {
                 <Button
                   variant="contained"
                   color="primary"
-                  disabled={(activeStep===0 && (!country || !city))}
-                  disabled={(activeStep===1 && (!hobbies))}
+                  disabled={(activeStep===0 && (!country || !city) || (activeStep===1 && !hobbies))}
+                  // disabled={(activeStep===1 && (!hobbies))}
                   onClick={handleNext}
                   className={classes.button}
                 >
