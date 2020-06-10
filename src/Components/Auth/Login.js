@@ -13,6 +13,9 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
+import SocialButton from '../SocialButton'
+ 
+//faceboon appid: 253749016050969
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,6 +48,30 @@ export default function SignIn(props) {
   const [password, setPassword] = useState("");
 
   const [loginError, setLoginError] = useState("");
+
+  const handleSocialLogin = (user) => {
+    console.log(user)
+    let data = {
+      email:user.profile.email,
+      first_name:user.profile.firstName,
+      last_name:user.profile.lastName,
+
+    };
+
+    fetchRequest(api + "api/auth/social-login", "post", data).then((response) => {
+      if (response.message === "Authorized") {
+
+        props.handleChangeToken(response);
+      } else {
+        alert('There is something wrong with social login!, retry')
+      }
+    });
+    
+  }
+   
+  const handleSocialLoginFailure = (err) => {
+    console.error(err)
+  }
 
   const [showPassword, setShowPassword] = useState(false)
 
@@ -197,6 +224,14 @@ export default function SignIn(props) {
                 </Grid>
               </Grid>
             </form>
+            <SocialButton
+      provider='facebook'
+      appId='253749016050969'
+      onLoginSuccess={handleSocialLogin}
+      onLoginFailure={handleSocialLoginFailure}
+    >
+      Login with Facebook
+    </SocialButton>
           </div>
           <Box mt={8}>
             <Copyright />

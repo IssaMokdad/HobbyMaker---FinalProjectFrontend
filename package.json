@@ -43,6 +43,7 @@
     "react-select": "^3.1.0",
     "react-select-country-list": "^2.1.2",
     "react-simple-chatbot": "^0.6.1",
+    "react-social-login": "^3.4.7",
     "react-transition-group": "^4.4.0",
     "reactstrap": "^8.4.1",
     "shave": "^2.5.4",
