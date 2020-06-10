@@ -158,8 +158,9 @@ export default function EditPostModal(props) {
                 {fileInput && (
                   <img
                     width="100px"
-                    height="60px"
+                    height="50px"
                     alt='post'
+                    style={{marginBottom:'10.5px'}}
                     className={classes.media}
                     src={fileInput}
                   />
@@ -169,6 +170,7 @@ export default function EditPostModal(props) {
                 <IconButton
                   style={{
                     marginLeft: "40px",
+                    marginBottom:'8px',
                     transform: "scale(1.7)",
                   }}
                   type="submit"

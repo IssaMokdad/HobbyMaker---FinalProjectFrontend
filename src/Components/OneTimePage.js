@@ -326,9 +326,10 @@ export default function CustomizedSteppers(props) {
         ) : (
           <div style={{ marginTop: "40px", marginLeft: "42%" }}>
             {" "}
-            <div>
-              <Typography className={classes.instructions}>
-                {getStepContent(activeStep)}
+            <div >
+              <Typography  className={classes.instructions}>
+                {activeStep===2 ? <strong style={{position:'relative', right:'100px'}}>{getStepContent(activeStep)}</strong>
+                : <strong >{getStepContent(activeStep)}</strong>}
               </Typography>
               <div>
                 <Button

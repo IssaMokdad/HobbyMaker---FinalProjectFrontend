@@ -9,6 +9,10 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "./Copyright";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,7 +46,17 @@ export default function SignIn(props) {
 
   const [loginError, setLoginError] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false)
+
   const handleChangePassword = (event) => setPassword(event.target.value);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickShowPassword = ()=>{
+    setShowPassword(!showPassword)
+  }
 
   const handleChangeEmail = (event) => {
     if (loginError) {
@@ -143,9 +157,21 @@ export default function SignIn(props) {
                 onChange={handleChangePassword}
                 name="password"
                 label="Password"
-                type="password"
+                type={!showPassword ? "password" : "text"}
                 id="password"
                 autoComplete="current-password"
+                InputProps= {{
+                  endAdornment:
+                  (<InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>)
+                }}
               />
 
               <Button

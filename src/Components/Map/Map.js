@@ -20,6 +20,8 @@ function Map(props) {
   const [latt, setLat] = useState()
   const [lngg, setLng] = useState()
   const [loading, setLoading] = useState()
+  const [imageWidth, setImageWidth] = useState(25)
+  const [imageHeight, setImageHeight] = useState(25)
 
   const getPeopleWithSameHobbyAnywhere = () => {
     fetchRequest(
@@ -85,11 +87,13 @@ function Map(props) {
         onClick={() => {
           setLoading('a')
           setSelectedPerson(person);
+          setImageWidth(150)
+          setImageHeight(150)
 
         }}
         icon={{
           url: api + "images/" + person.image,
-          scaledSize: new window.google.maps.Size(25, 25)
+          scaledSize: new window.google.maps.Size( 25, 25) 
         }}
       />))}
 

@@ -157,8 +157,8 @@ function Home(props) {
 
   const [randomQuote, setRandomQuote] = useState("");
   // eslint-disable-next-line
-  const [hobbyVideos, setHobbyVideos] = useState([{id:{videoId:'OeaZPpZ7k30'}}]);
-
+  const [hobbyVideos, setHobbyVideos] = useState([{id:{videoId:'8Ch2vBkVUQQ'}},{id:{videoId:'8v0TXuLRLeo'}},{id:{videoId:'BcqfiDcvnlQ'}}]);
+  
   //getting a random quote by the following api
   const getRandomQuote = () => {
     fetchRequest("https://api.quotable.io/random", "get").then((response) => {

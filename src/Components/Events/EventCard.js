@@ -23,6 +23,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import EditEventModal from './EditEventModal';
 import GoingModal from './GoingModal';
+import PublicIcon from '@material-ui/icons/Public';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 
 // moment().format('LL')
 
@@ -135,6 +137,7 @@ const EventCard = (props) => {
             eventDescription={props.eventDescription}
             eventName={props.eventName}
             image={props.image}
+            privacy={props.privacy}
             content={props.faces}
             selectedStartDate={props.selectedStartDate}
             edit='1' />}
@@ -155,18 +158,19 @@ const EventCard = (props) => {
         <MenuItem onClick={handleOpenEventModal}>Edit</MenuItem>
       </Menu>
 
-      <p style={(props.fromCreatedEventsComponent || props.fromInvitationsComponent) ?{ color: "red", marginLeft: "20px" } : {color:'red', marginLeft:'20px'}}>
-        <strong style={{ fontSize: "14px", alignText: "center" }}>
+      <p style={(props.fromCreatedEventsComponent || props.fromInvitationsComponent) ?{ color: "red",textAlign: "center" } : {color:'red',textAlign: "center"}}>
+        <strong style={{ fontSize: "13px" }}>
           {props.selectedStartDate && moment(props.selectedStartDate).format("LL") +
             ", " }
             {props.selectedStartTime && moment(props.selectedStartTime).format("LT") +
             " "}
         </strong>
         {" "}
-        <strong style={{ fontSize: "14px" }}>
+        <strong style={{ fontSize: "13px" }}>
           {props.selectedEndDate && "- " + moment(props.selectedEndDate).format("LL") +
             ", " }
-            {props.selectedEndTime && moment(props.selectedEndTime).format("LT")}
+            {props.selectedEndTime && moment(props.selectedEndTime).format("LT")
+            + " "}  {props.privacy==='public' && <PublicIcon/>} {props.privacy==='onlyFriends' && <PeopleAltIcon/>}
         </strong>
       </p>
       <CardMedia

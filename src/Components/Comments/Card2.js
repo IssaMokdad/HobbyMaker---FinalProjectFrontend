@@ -26,9 +26,11 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 
     minWidth: "25%",
     maxWidth: "25%",
+    maxHeight:'80%',
+    minHeight:'80%',
     flexShrink: 0,
     backgroundColor: palette.grey[200],
-    borderRadius: 12,
+    borderRadius: '50%',
     boxShadow: "0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9",
   },
   rating: {
@@ -50,7 +52,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   },
   body: {
     fontSize: 14,
-    color: palette.grey[500],
+    // color: 'grey',
   },
   divider: {
     margin: spacing(1, 0),
@@ -181,7 +183,7 @@ const Card2 = (props) => {
             </Box>
 
             {editComment === "" ? (
-              <p className={styles.body}>{props.content.comment}</p>
+              <p style={{color:'grey'}}><strong>{props.content.comment}</strong></p>
             ) : (
               <Grid container>
                 <Grid xs={11} item>
@@ -191,7 +193,7 @@ const Card2 = (props) => {
                     value={comment}
                     onChange={handleCommentChange}
                     id="standard-basic"
-                    label="Standard"
+                    // label="Standard"
                   />
                 </Grid>
                 <Grid xs={1} item>

@@ -6,15 +6,10 @@ export default function CustomChatBot(props){
 
     const [userAuthenticated, setUserAuthenticated] = useState(props.userAuthenticated)
     const steps = [
-      {
-         id: "Greet",
-         message: "Hello "+userAuthenticated.first_name + ", Welcome to HobbyMaker",
-         trigger: "Help"
-      },
 
       {
          id: "Help",
-         message:"How can we help you, " + userAuthenticated.first_name + "?",
+         message:"Hello, How can we help you, " + userAuthenticated.first_name + "?",
          trigger: "Displaying options to help"
         },
      

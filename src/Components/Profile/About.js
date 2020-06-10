@@ -89,12 +89,12 @@ export default function About(props) {
     
       <div className='container ' style={{ minHeight:'600px', display:'flex', flexDirection:'column',  alignItems:'center'}} >
           
-  <div style={divCss} ><h1 style={{textAlign:'center', }}><b>Hobbies</b></h1><Typography style={{marginLeft:'18px'}} align='center' display='block' color='secondary'><h1 style={{ textAlign:'center', display:'inline'}}>{user.hobbies && user.hobbies.map(hobby=>  <h3 style={{marginRight:'20px',textAlign:'center', display:'inline'}}><strong>{hobby.hobby}</strong></h3>)}</h1></Typography></div>
+  <div style={divCss} ><h1 style={{textAlign:'center', }}><b>Hobbies</b></h1><Typography style={{marginLeft:'18px'}} align='center' display='block' color='primary'><h1 style={{fontWeight:'bold', textAlign:'center', display:'inline'}}>{user.hobbies && user.hobbies.map(hobby=>  <h3 style={{marginRight:'20px',textAlign:'center', display:'inline'}}><strong>{hobby.hobby}</strong></h3>)}</h1></Typography></div>
     {/* <Button>Hobbies</Button> */}
     <div style={{marginTop:'20px',...divCss}}><div style={{marginTop:'20px',}} ><h1 style={{textAlign:'center' }}><b >From <LocationOnOutlinedIcon style={{transform:'scale(2)'}} fontSize='large' /></b></h1></div>
-  <div style={{marginTop:'20px'}}><Typography display='block' color='secondary'><h1 style={{ textAlign:'center', display:'inline'}}>{user.city + ", " + user.country}</h1></Typography></div></div>
+  <div style={{marginTop:'20px'}}><Typography display='block' color='primary'><h1 style={{fontWeight:'bold', textAlign:'center', display:'inline'}}>{user.city + ", " + user.country}</h1></Typography></div></div>
   
-  {!edit && <div style={{marginTop:'20px',...divCss}}><h1 style={{textAlign:'center' }}><b>Bio</b>{parseInt(user.id)===parseInt(props.userAuthenticatedId) && <IconButton onClick={makeEditable} color='secondary'><EditIcon /></IconButton>}</h1><Typography color='secondary' variant='body1' paragraph={true} ><strong>{bio}</strong></Typography></div>}
+  {!edit && <div style={{marginTop:'20px',...divCss}}><h1 style={{textAlign:'center' }}><b>Bio</b>{parseInt(user.id)===parseInt(props.userAuthenticatedId) && <IconButton onClick={makeEditable} color='secondary'><EditIcon /></IconButton>}</h1><Typography color='primary' variant='body1' paragraph={true} ><strong>{bio}</strong></Typography></div>}
    {edit && <div style={{width:'1110px',marginTop:'20px',...divCss}} ><TextField
       id="outlined-multiline-static"
       label="Bio"

@@ -98,7 +98,7 @@ export default function EditPostModal(props) {
       >
         <Fade in={props.open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Edit Your Post</h2>
+            <h2 style={{textAlign:'center'}} id="transition-modal-title">Edit Your Post</h2>
 
             <form onSubmit={editPostSubmit}>
               <TextField

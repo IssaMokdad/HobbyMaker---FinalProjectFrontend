@@ -25,7 +25,7 @@ import EventCard from "./EventCard";
 import Button from "@material-ui/core/Button";
 export default function CreateEvent(props) {
   // The first commit of Material-UI
-  const [initiate, setInitiate] = useState('')
+  const [initiate, setInitiate] = useState(0)
   const [events, setEvents] = useState();
   const [createdEventsDisplay, setCreatedEventsDisplay] = useState(1)
   const [editDisplay, setEditDisplay] = useState()
@@ -95,6 +95,7 @@ export default function CreateEvent(props) {
         getUserEvents={getUserEvents}
         fromCreatedEventsComponent={1}
         key={event.id}
+        privacy={event.privacy}
         handleInitiate={handleInitiate}
         selectedStartTime={event.start_time}
         selectedEndTime={event.end_time}

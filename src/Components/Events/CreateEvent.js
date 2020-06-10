@@ -7,10 +7,16 @@ import PhotoCameraTwoToneIcon from "@material-ui/icons/PhotoCameraTwoTone";
 import TextField from "@material-ui/core/TextField";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { fetchRequest, api, token } from "../Apis";
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 import swal from "sweetalert";
 import InviteFriend from "./InviteFriend";
 import InviteFriendsModal from "./InviteFriendsModal";
 import moment from "moment";
+import PublicIcon from '@material-ui/icons/Public';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -18,7 +24,13 @@ import {
 } from "@material-ui/pickers";
 import EventCard from "./EventCard";
 import Button from "@material-ui/core/Button";
+import { makeStyles } from '@material-ui/core/styles';
+
+
+
+
 export default function CreateEvent(props) {
+ 
   // The first commit of Material-UI
   const [selectedStartDate, setSelectedStartDate] = useState(null);
     moment(new Date()).format("YYYY-MM-DD")
@@ -31,6 +43,12 @@ export default function CreateEvent(props) {
   const [location, setLocation] = useState("");
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
+  const [privacy, setPrivacy] = useState('')
+
+  const handleChangePrivacy = (event)=>{
+    setPrivacy(event.target.value)
+  }
+
   const handleEventNameChange = (event) => {
     setEventName(event.target.value);
   };
@@ -74,6 +92,7 @@ export default function CreateEvent(props) {
     formData.append("name", eventName);
     formData.append("start_date", selectedStartDate);
     formData.append("end_date", selectedEndDate);
+    formData.append("privacy", privacy);
     formData.append("start_time", selectedStartTime);
     // moment(selectedStartTime).format('LT')
     formData.append("end_time", selectedEndTime);
@@ -99,6 +118,7 @@ export default function CreateEvent(props) {
           setSelectedEndTime(null);
           setSelectedStartDate(null);
           setFileInput("");
+          setPrivacy('')
         }
       });
   };
@@ -111,6 +131,7 @@ export default function CreateEvent(props) {
     formData.append("event_id", props.eventId);
     formData.append("name", eventName);
     formData.append("start_date", selectedStartDate);
+    formData.append("privacy", privacy);
     formData.append("end_date", selectedEndDate);
     formData.append("start_time", selectedStartTime);
     // moment(selectedStartTime).format('LT')
@@ -155,15 +176,40 @@ export default function CreateEvent(props) {
       setSelectedEndTime(props.selectedEndTime);
       setSelectedStartDate(props.selectedStartDate);
       setFileInput(props.image);
+      setPrivacy(props.privacy)
     }
     // getUserFriends();
   }, [props.edit]);
-  
+
   return (
     <div className="container">
+      <FormControl style={privacy ? {width:'120px',display:'inline', position:'absolute',zIndex:1,left:'83%',top:'120px'} : {width:'120px', position:'absolute',zIndex:1,left:'83%',top:'110px' }} >
+        {!privacy ? <InputLabel id="demo-controlled-open-select-label">Privacy</InputLabel> : ""}
+        <Select
+          labelId="demo-controlled-open-select-label"
+          value={privacy}
+          onChange={handleChangePrivacy}
+          id="demo-mutiple-name"
+          // multiple
+          // value={personName}
+          // onChange={handleChange}
+          // input={<Input />}
+          // MenuProps={MenuProps}
+        >
+         
+            <MenuItem value='public' >
+            <strong style={{marginRight:'5px'}}>Public</strong> <PublicIcon/>
+            </MenuItem>
+            <MenuItem value='onlyFriends'>
+             <strong style={{marginRight:'5px'}}>Friends</strong> <PeopleAltIcon/>
+            </MenuItem>
+            
+        </Select>
+      </FormControl>
       <div className="row">
         <div className="col-8">
           <form onSubmit={eventCreateSubmit}>
+
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               margin="normal"
@@ -321,6 +367,7 @@ export default function CreateEvent(props) {
           </MuiPickersUtilsProvider></form>
         </div>{" "}
         <div className="col-4">
+        
           {!fileInput ? (
             <label htmlFor="icon-button-file">
               <IconButton
@@ -336,7 +383,7 @@ export default function CreateEvent(props) {
           ) : (
             <label htmlFor="icon-button-file">
               <IconButton
-                style={{ position: "relative", top: "20px", left: "80px" }}
+                style={{ position: "relative", top: "10px", left: "0px" }}
                 color="inherit"
                 aria-label="upload picture"
                 component="span"
@@ -356,6 +403,7 @@ export default function CreateEvent(props) {
             selectedEndDate={selectedEndDate}
             location={location}
             image={fileInput}
+            privacy={privacy}
             faces={props.content}
             
           />

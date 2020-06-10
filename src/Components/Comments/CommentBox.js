@@ -15,11 +15,12 @@ const useStyles = makeStyles((theme) => ({
   },
   underline: {
     "&&&:before": {
-      borderBottom: "none"
+      borderBottom: "none",
     },
     "&&:after": {
-      borderBottom: "none"
-    }},
+      borderBottom: "none",
+    },
+  },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
@@ -43,12 +44,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function CommentBox(props) {
-
-  const classes = useStyles()
+  const classes = useStyles();
   const [comment, setComment] = useState("");
 
   const handleCommentChange = (event) => setComment(event.target.value);
-
 
   const commentSubmit = (event) => {
     event.preventDefault();
@@ -57,12 +56,10 @@ export default function CommentBox(props) {
       post_id: event.target.id,
       user_id: props.userAuthenticatedId,
     };
-    fetchRequest(api+"api/comment/create", "post", data).then(
-      (response) => {
-        setComment('')
-        props.handleChange(response.data)
-      }
-    );
+    fetchRequest(api + "api/comment/create", "post", data).then((response) => {
+      setComment("");
+      props.handleChange(response.data);
+    });
   };
 
   return (
@@ -70,23 +67,28 @@ export default function CommentBox(props) {
       <TextField
         variant="filled"
         fullWidth
+        id={props.post.id}
         required={true}
+        onKeyPress={(event) => {
+          if (event.key == "Enter") {
+            commentSubmit(event);
+          }
+        }}
         multiline
         onChange={handleCommentChange}
         value={comment}
         placeholder="Write a comment"
         color="secondary"
         InputProps={{
-            style: {
-                borderRadius: '25px'
-              },
+          style: {
+            borderRadius: "25px",
+          },
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
                 type="submit"
                 variant="filled"
                 color="primary"
-
                 style={{
                   marginBottom: "15px",
                   transform: "scale(1)",

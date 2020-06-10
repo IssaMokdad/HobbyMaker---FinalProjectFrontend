@@ -111,8 +111,8 @@ function App() {
         <Switch>
         
         <Route path="/onetimepage">
-        
-            {(token !== "" && firstTimeLogin) ? (
+        {/* && firstTimeLogin */}
+            {(token !== "" && firstTimeLogin ) ? (
               <OneTimePage userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />

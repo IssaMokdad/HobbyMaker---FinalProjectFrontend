@@ -496,7 +496,7 @@ export default function AppNavBar(props) {
                           
                           className={classes.typography}
                         >
-                          <div onClick={handleClosePopoverNotification}><Link  to='/events'>{notification.data.message} </Link></div>
+                          <div onClick={handleClosePopoverNotification}><Link  to={notification.type==='App\\Notifications\\AcceptFriendRequest' ? ('/profile/'+notification.data.user.id) :'/events'}>{notification.data.message} </Link></div>
                          
                         </Typography>
                       </Paper>

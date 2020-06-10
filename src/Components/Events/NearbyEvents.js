@@ -115,6 +115,7 @@ export default function CreateEvent(props) {
             </form>
           </Fragment>
         ))}
+        {!events && <div><strong>There are no nearby public events</strong></div>}
     </div>
   );
 }

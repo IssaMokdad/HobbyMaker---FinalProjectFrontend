@@ -96,7 +96,7 @@ export default function CreateEvent(props) {
     // getUserFriends();
     getEventsGoingTo()
   }, [props.initiate]);
-
+  console.log(props.initiate)
   return (
     // style={{marginTop:'45px'}}
     <div  >{events ? <h1 style={{textAlign:'center'}}>{seen && <strong>Going To</strong>}</h1> : <h1 style={{textAlign:'center'}}>{seen && <strong>You don't have going events</strong>}</h1>}{events && events.map((event) => 
@@ -111,6 +111,7 @@ export default function CreateEvent(props) {
         selectedEndDate={event.end_date}
         location={event.location}
         faces={event.going}
+        privacy={event.privacy}
         userAuthenticatedId={props.userAuthenticated.userId}
         image={api + "images/" + event.image} />
          

@@ -10,6 +10,8 @@ export const hobbies = [
     { label: "Bartending", value: "Bartending" },
     { label: "Chess", value: "Chess" },
     { label: "Hiking", value: "Hiking" },
-    { label: "Waraa", value: "Waraa" },
+    { label: "Reading", value: "Reading" },
+    { label: "Movies", value: "Movies" },
+    { label: "Cards", value: "Cards" },
     { label: "Cycling", value: "Cycling" },
   ];

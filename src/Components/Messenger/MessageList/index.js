@@ -248,11 +248,11 @@ export default function MessageList(props) {
         />
         <span>{friend.first_name + " " + friend.last_name}</span>
         <span>
-          <form style={{display:'inline'}} onSubmit={videoCallRequest}>
+         {!videoDisplay &&  <form style={{display:'inline'}} onSubmit={videoCallRequest}>
             <IconButton type="submit" id={friendId} color="secondary">
               <VideocamIcon />
             </IconButton>
-          </form>
+          </form>}
          {videoDisplay && <VideoCall initiate={initiate} user={{id:props.userAuthenticatedId}} userId={friendId} />}
          {videoDisplay && <form onSubmit={endCall}>
             <IconButton type="submit" color="secondary">

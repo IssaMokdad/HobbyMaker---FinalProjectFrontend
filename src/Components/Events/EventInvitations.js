@@ -29,9 +29,10 @@ export default function CreateEvent(props) {
   const [seen, setSeen] = useState('')
   const acceptInvitation = (event) => {
     event.preventDefault()
-    let event_id = event.target.id
+    
+    let eventId = event.target.id
     let data = {
-        'event_id':event_id,
+        'event_id':eventId,
         user_id:props.userAuthenticated.userId
     }
     
@@ -39,26 +40,43 @@ export default function CreateEvent(props) {
       api + "api/accept-event-invitation", "POST", data
     ).then((response) => {
       if (response.message==='success') {
+        getEventsInvitations()
+        // popEvent(eventId)
         props.handleInitiate()
-        setDisplay(1)
       }
     });
   };
 
+  // const popEvent = (eventId)=>{
+  //   let index
+  //   events.map((event, i)=>{
+  //     if(parseInt(eventId)===parseInt(event.id)){
+  //       index=i
+  //     }
+  //   }
 
+  //   )
+
+  //   setEvents(events.splice(index, 1))
+  //   if (events.length===0){
+  //     setEvents(null)
+  //   }
+    
+  // }
 
   const refuseInvitation = (event) => {
     event.preventDefault()
-    let event_id = event.target.id
+    let eventId = event.target.id
     let data = {
-        'event_id':event_id,
+        'event_id':eventId,
         user_id:props.userAuthenticated.userId
     }
     fetchRequest(
       api + "api/refuse-event-invitation","POST", data
     ).then((response) => {
       if (response.message==='success') {
-        setDisplay(1)
+        getEventsInvitations()
+        // popEvent(eventId)
       }
     });
   };
@@ -84,9 +102,7 @@ export default function CreateEvent(props) {
     // getUserFriends();
     getEventsInvitations();
   }, []);
-  if(display){
-      return ""
-  }
+
   return (
     // style={{marginTop:'45px'}} className='container'
   <div >{events ? <h1 style={{textAlign:'center'}}>{seen && <strong>Invitations</strong>}</h1> : <h1 style={{textAlign:'center'}}>{seen && <strong>You have no invitations</strong>}</h1>}{events && events.map((event) => 
@@ -102,6 +118,7 @@ export default function CreateEvent(props) {
         selectedEndDate={event.end_date}
         location={event.location}
         faces={event.going}
+        privacy={event.privacy}
         userAuthenticatedId={props.userAuthenticated.userId}
         image={api + "images/" + event.image} />
          
