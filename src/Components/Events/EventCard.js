@@ -107,7 +107,7 @@ const EventCard = (props) => {
   if (display) {
     return "";
   }
-
+  console.log(props.faces)
   return (
     <div>{props.fromCreatedEventsComponent ? <IconButton
     color="primary"
@@ -162,14 +162,14 @@ const EventCard = (props) => {
         <strong style={{ fontSize: "13px" }}>
           {props.selectedStartDate && moment(props.selectedStartDate).format("LL") +
             ", " }
-            {props.selectedStartTime && moment(props.selectedStartTime).format("LT") +
+            {props.selectedStartTime && props.selectedStartTime +
             " "}
         </strong>
         {" "}
         <strong style={{ fontSize: "13px" }}>
           {props.selectedEndDate && "- " + moment(props.selectedEndDate).format("LL") +
             ", " }
-            {props.selectedEndTime && moment(props.selectedEndTime).format("LT")
+            {props.selectedEndTime && props.selectedEndTime
             + " "}  {props.privacy==='public' && <PublicIcon/>} {props.privacy==='onlyFriends' && <PeopleAltIcon/>}
         </strong>
       </p>
@@ -197,7 +197,7 @@ const EventCard = (props) => {
           //     'https://i.pravatar.cc/300?img=4',
 
           //   ]}
-        /></IconButton>}{props.faces && props.faces.length-4>0 && <b>{"+" + props.faces.length-4 + " going"}</b>}
+        /></IconButton>}{props.faces && props.faces.length-4>0 && <b>+ {   props.faces.length-4 + " going"}</b>}
       </Box>
       <GoingModal
           handleClose={handleCloseGoingModal}

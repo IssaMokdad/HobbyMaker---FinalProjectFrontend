@@ -93,9 +93,9 @@ export default function CreateEvent(props) {
     formData.append("start_date", selectedStartDate);
     formData.append("end_date", selectedEndDate);
     formData.append("privacy", privacy);
-    formData.append("start_time", selectedStartTime);
+    formData.append("start_time", moment(selectedStartTime).format('LT'));
     // moment(selectedStartTime).format('LT')
-    formData.append("end_time", selectedEndTime);
+    formData.append("end_time", moment(selectedEndTime).format('LT'));
     formData.append("location", location);
     fetch(api + "api/event-create", {
       method: "POST",
@@ -397,8 +397,8 @@ export default function CreateEvent(props) {
           <EventCard
             eventDescription={eventDescription}
             eventName={eventName}
-            selectedStartTime={selectedStartTime}
-            selectedEndTime={selectedEndTime}
+            selectedStartTime={!props.edit ? moment(selectedStartTime).format('LT') : selectedStartTime}
+            selectedEndTime={!props.edit ? moment(selectedEndTime).format('LT') : selectedEndTime}
             selectedStartDate={selectedStartDate}
             selectedEndDate={selectedEndDate}
             location={location}

@@ -6,15 +6,18 @@ import { fetchRequest, api } from "../Apis";
 import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
 import Box from "@material-ui/core/Box";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "./Copyright";
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import SocialButton from '../SocialButton'
- 
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import SocialButton from "../FacebookLogin";
+import GoogleLogin from "../GoogleLogin";
+import CarouselForm from "../CarouselForm";
+// quickstart-1590241264177
 //faceboon appid: 253749016050969
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +26,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+  },
+  root: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2),
+    },
+    marginBottom: "20px",
+    marginTop:'20px'
   },
   imageCard: {
     width: "100%",
@@ -49,31 +60,33 @@ export default function SignIn(props) {
 
   const [loginError, setLoginError] = useState("");
 
-  const handleSocialLogin = (user) => {
-    console.log(user)
-    let data = {
-      email:user.profile.email,
-      first_name:user.profile.firstName,
-      last_name:user.profile.lastName,
+  const [loading, setLoading] = useState(false);
 
+  const handleSocialLogin = (user) => {
+    setLoading(true);
+    console.log(user);
+    let data = {
+      email: user.profile.email,
+      first_name: user.profile.firstName,
+      last_name: user.profile.lastName,
     };
 
-    fetchRequest(api + "api/auth/social-login", "post", data).then((response) => {
-      if (response.message === "Authorized") {
-
-        props.handleChangeToken(response);
-      } else {
-        alert('There is something wrong with social login!, retry')
+    fetchRequest(api + "api/auth/social-login", "post", data).then(
+      (response) => {
+        if (response.message === "Authorized") {
+          props.handleChangeToken(response);
+        } else {
+          alert("There is something wrong with social login!, retry");
+        }
       }
-    });
-    
-  }
-   
-  const handleSocialLoginFailure = (err) => {
-    console.error(err)
-  }
+    );
+  };
 
-  const [showPassword, setShowPassword] = useState(false)
+  const handleSocialLoginFailure = (err) => {
+    console.error(err);
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChangePassword = (event) => setPassword(event.target.value);
 
@@ -81,9 +94,9 @@ export default function SignIn(props) {
     event.preventDefault();
   };
 
-  const handleClickShowPassword = ()=>{
-    setShowPassword(!showPassword)
-  }
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleChangeEmail = (event) => {
     if (loginError) {
@@ -113,25 +126,46 @@ export default function SignIn(props) {
   };
   return (
     <Container
-      style={{ backgroundColor: "#f2f2f2" }}
+      style={{ backgroundColor: "white" }}
       mt={1}
       component="main"
       maxWidth="lg"
     >
       <Grid container spacing={2} direction="row">
         <CssBaseline />
-        <Grid item xs={4}></Grid>
+
+        <Grid
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            alignContent: "center",
+          }}
+          item
+          xs={7}
+        >
+          <h2 style={{ textAlign: "center", color: "blue", marginTop: "20px" }}>
+            <strong>
+              HobbyMaker's mission is clear, bring talented people around the
+              world together!
+            </strong>
+          </h2>
+          <CarouselForm />
+        </Grid>
+        {/* <Grid item xs={4}> */}
+        {/* <CarouselForm /> */}
+        {/* </Grid> */}
         <Grid
           item
           xs={4}
           container
           direction="column"
-          justify="center"
-          alignItems="center"
+          style={{ marginLeft: "55px" }}
         >
           <div className={classes.paper}>
             <img
-              alt='logo'
+              alt="logo"
               width="238.5"
               height="200"
               src="/images/hobbymaker-logo.png"
@@ -161,7 +195,6 @@ export default function SignIn(props) {
                   variant="outlined"
                   // size='small'
                   margin="normal"
-                  required={true}
                   fullWidth
                   id="email"
                   label="Email Address"
@@ -176,8 +209,7 @@ export default function SignIn(props) {
 
               <TextField
                 variant="outlined"
-                margin="normal"
-                required={true}
+                // margin="normal"
                 fullWidth
                 // size='small'
                 value={password}
@@ -187,31 +219,58 @@ export default function SignIn(props) {
                 type={!showPassword ? "password" : "text"}
                 id="password"
                 autoComplete="current-password"
-                InputProps= {{
-                  endAdornment:
-                  (<InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>)
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
 
-              <Button
-                type="submit"
-                fullWidth
-                size="small"
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign In
-              </Button>
-              <Grid container>
+              {!loading ? (
+                <Button
+                  type="submit"
+                  fullWidth
+                  disabled={email && password ? false : true}
+                  size="medium"
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign In
+                </Button>
+              ) : (
+                <div className={classes.root}>
+                  <LinearProgress variant="query" />
+                  <LinearProgress variant="query" color="secondary" />
+                </div>
+              )}
+              {/* <Grid
+                container
+                item
+                style={{ justifyContent: "center", alignContent: "center" }}
+              ><strong style={{fontSize:'20px', marginBottom:'10px'}}>or</strong></Grid> */}
+              <Grid fullWidth container item>
+                <Grid item xs={6}>
+                  <SocialButton
+                    provider="facebook"
+                    appId="253749016050969"
+                    onLoginSuccess={handleSocialLogin}
+                    onLoginFailure={handleSocialLoginFailure}
+                  ></SocialButton>
+                </Grid>
+                <Grid item xs={6}>
+                  <GoogleLogin handleSocialLogin={handleSocialLogin} />
+                </Grid>
+              </Grid>
+              <Grid style={{ marginTop: "10px" }} container>
                 <Grid item xs>
                   <Link to="/passwordreset" variant="body2">
                     Forgot password?
@@ -224,14 +283,6 @@ export default function SignIn(props) {
                 </Grid>
               </Grid>
             </form>
-            <SocialButton
-      provider='facebook'
-      appId='253749016050969'
-      onLoginSuccess={handleSocialLogin}
-      onLoginFailure={handleSocialLoginFailure}
-    >
-      Login with Facebook
-    </SocialButton>
           </div>
           <Box mt={8}>
             <Copyright />

@@ -10,6 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import CarouselForm from "../CarouselForm";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -144,12 +145,30 @@ export default function SignUp() {
     );
   }
   return (
-    <Container component="main" maxWidth="lg">
+    <Container style={{ backgroundColor: "white" }} component="main" maxWidth="lg">
       <CssBaseline />
       {/* <div className={classes.paper}> */}
       <Grid container xs={12} spacing={2} direction="row">
-        <Grid item xs={4}></Grid>
-        <Grid fullWidth style={{display:'flex', flexDirection:'column', alignItems:'center'}} item xs={4}>
+      <Grid
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            alignContent: "center",
+          }}
+          item
+          xs={7}
+        >
+          <h2 style={{ textAlign: "center", color: "blue", marginTop: "20px" }}>
+            <strong>
+              HobbyMaker's mission is clear, bring talented people around the
+              world together!
+            </strong>
+          </h2>
+          <CarouselForm />
+        </Grid>
+        <Grid fullWidth style={{display:'flex', flexDirection:'column',marginLeft: "55px" , alignItems:'center'}} item xs={4}>
         <img
           alt="logo"
           width="238.5"
@@ -290,6 +309,7 @@ export default function SignUp() {
 
           {isLoading === "" ? (
             <Button
+              disabled={(email && password && selectedDate && gender && firstName && lastName) ? false : true}
               type="submit"
               style={{ width: "100%" }}
               variant="contained"

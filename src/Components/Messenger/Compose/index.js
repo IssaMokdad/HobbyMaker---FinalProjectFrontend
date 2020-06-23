@@ -71,7 +71,7 @@ export default function Compose(props) {
       <div className="compose">
         <TextField
           variant="filled"
-          fullWidth
+          style={{width:'74%'}}
           required={true}
           disableUnderline={true}
           multiline
@@ -95,7 +95,7 @@ export default function Compose(props) {
                   style={{
                     marginBottom: "15px",
                     // marginRight: "230px",
-                    transform: "scale(2)",
+                    transform: "scale(1.5)",
                   }}
                   onClick={showEmojisBlock}
                 >
@@ -108,8 +108,8 @@ export default function Compose(props) {
                   color="primary"
                   style={{
                     marginBottom: "15px",
-                    marginRight: "230px",
-                    transform: "scale(2)",
+                    marginRight: "0px",
+                    transform: "scale(1.5)",
                   }}
                   aria-label="add to favorites"
                 >
@@ -125,7 +125,7 @@ export default function Compose(props) {
           className="compose-input border-color-primary"
           placeholder="Type a message, @name"
         /> */}
-        {props.rightItems}
+        {/* {props.rightItems} */}
       </div>
       {showEmojis && (
         <span style={{position:'relative', left: "570px", top:'128px' }}>

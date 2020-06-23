@@ -5,6 +5,7 @@ import './Messenger.css';
 import ScrollToBottom, {useScrollToBottom} from 'react-scroll-to-bottom';
 import Toolbar from '../Toolbar';
 import ToolbarButton from '../ToolbarButton';
+
 export default function Messenger(props) {
 
   const [friendId, setFriendId] = useState('')
@@ -22,6 +23,7 @@ export default function Messenger(props) {
     setRealTimeMessageSentFromMe(message)
   }
   useEffect(()=>{
+
     scrollToBottom()
   }, [])
 

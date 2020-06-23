@@ -5,6 +5,7 @@ import clsx from "clsx";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
+import { Link } from "react-router-dom";
 import Check from "@material-ui/icons/Check";
 import SettingsIcon from "@material-ui/icons/Settings";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
@@ -316,11 +317,11 @@ export default function CustomizedSteppers(props) {
       <div>
         {activeStep === steps.length ? (
           <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
+            <Typography style={{marginLeft:'40%'}} className={classes.instructions}>
+              <strong>All steps completed - you&apos;re finished</strong>
             </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
+            <Button style={{marginLeft:'45%'}} onClick={handleReset} className={classes.button}>
+              <strong><Link to='/home' >Go to homepage</Link></strong>
             </Button>
           </div>
         ) : (

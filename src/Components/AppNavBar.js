@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import { fetchRequest, api, token } from "./Apis";
+import FriendsList from "./Friends/FriendsList";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -93,7 +94,8 @@ export default function AppNavBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [searchValue, setSearchValue] = useState(null)
+  const [searchResults, setSearchResults] = useState(null)
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [anchorElPopoverMessage, setAnchorElPopoverMessage] = React.useState(
@@ -109,11 +111,21 @@ export default function AppNavBar(props) {
   };
   const open2 = Boolean(anchorElPopoverMessage);
   const id2 = open2 ? "simple-popover" : undefined;
-  const [doneLoading, setDoneLoading] = useState('')
+  const [doneLoading, setDoneLoading] = useState("");
   const handleClickPopoverMessage = (event) => {
     setAnchorElPopoverMessage(event.currentTarget);
   };
-
+  const handleSearchValue = (event) => {
+    setSearchValue(event.target.value)
+    fetchRequest(
+      api + "api/search?search_value=" + event.target.value,
+      "get"
+    ).then((response) => {
+      if (response.data) {
+        setSearchResults(response.data);
+      }
+    });
+  };
   const [
     anchorElPopoverNotification,
     setAnchorElPopoverNotification,
@@ -221,13 +233,13 @@ export default function AppNavBar(props) {
     </Menu>
   );
   const realTimeNotifications = () => {
-    getNotifications()
+    getNotifications();
     // setNotifications([...notifications, props.rTNotification]);
     // setNotificationsLength(parseInt(notificationsLength + 1));
   };
 
   const realTimeMessages = () => {
-    getUnreadMessages()
+    getUnreadMessages();
     // let index;
     // messages.map((message, i)=>{
     //   if(parseInt(props.realTimeMessage.from)===parseInt(message.id)){
@@ -250,14 +262,16 @@ export default function AppNavBar(props) {
       if (response.data) {
         setNotifications(response.data);
         setNotificationsLength(response.data.length);
-        setDoneLoading(1)
+        setDoneLoading(1);
       }
     });
   };
 
   const getUnreadMessages = () => {
     fetchRequest(
-      api + "api/get-message-notifications?user_id=" + props.userAuthenticatedId,
+      api +
+        "api/get-message-notifications?user_id=" +
+        props.userAuthenticatedId,
       "get"
     ).then((response) => {
       if (response.data) {
@@ -269,12 +283,10 @@ export default function AppNavBar(props) {
 
   const markNotificationsAsRead = (event) => {
     let data = {
-      user_id:props.userAuthenticatedId
-    }
+      user_id: props.userAuthenticatedId,
+    };
     handleClickPopoverNotification(event);
-    fetchRequest(
-      api + "api/mark-as-read" ,"post", data
-    ).then((response) => {
+    fetchRequest(api + "api/mark-as-read", "post", data).then((response) => {
       if (response.message === "success") {
         setNotificationsLength();
       }
@@ -284,15 +296,15 @@ export default function AppNavBar(props) {
   const markMessagesAsRead = (event) => {
     handleClickPopoverMessage(event);
     let data = {
-      user_id:props.userAuthenticatedId
-    }
-    fetchRequest(
-      api + "api/mark-messages-as-read", "post", data
-    ).then((response) => {
-      if (response.message === "success") {
-        setMessagesLength(0);
+      user_id: props.userAuthenticatedId,
+    };
+    fetchRequest(api + "api/mark-messages-as-read", "post", data).then(
+      (response) => {
+        if (response.message === "success") {
+          setMessagesLength(0);
+        }
       }
-    });
+    );
   };
 
   const removeNotification = (index) => {
@@ -303,10 +315,10 @@ export default function AppNavBar(props) {
   };
 
   useEffect(() => {
-    if(!doneLoading){
+    if (!doneLoading) {
       getNotifications();
       getUnreadMessages();
-      setDoneLoading(1)
+      setDoneLoading(1);
     }
     if (props.rTNotification && doneLoading) {
       realTimeNotifications();
@@ -315,11 +327,11 @@ export default function AppNavBar(props) {
     if (props.realTimeMessage && doneLoading) {
       realTimeMessages();
     }
-
   }, [props.rTNotification, props.realTimeMessage]);
 
   return (
     <Fragment>
+      {(searchValue && searchResults) && <div style={{zIndex:1,backgroundColor:'white',position:'absolute',top:'45px',width:'150px !important', left:'130px'}}>{searchResults.map(user=><FriendsList key={user.id} friend={user}/>)}</div>}
       <div className={classes.grow}>
         <AppBar position="fixed">
           <Toolbar variant="dense">
@@ -352,13 +364,17 @@ export default function AppNavBar(props) {
               </div>
               <InputBase
                 placeholder="Search…"
+                onChange={handleSearchValue}
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
                 inputProps={{ "aria-label": "search" }}
               />
+              
             </div>
+            
+            
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton
@@ -429,32 +445,41 @@ export default function AppNavBar(props) {
               }}
             >
               {messages.length !== 0 &&
-                Array.from(messages).map(
-                  (message, i) => {
-                    return (
-                      <Paper key={i} variant="outlined" elevation={3}>
-                        <Typography
-                          style={{ marginBottom: "10px" }}
-                          className={classes.typography}
-                        >
-                          <pre><Link to='/messenger'>{'You have ' + message.unread + ' unread ' + (message.unread===1 ? 'message' : 'messages') + '\nfrom ' + message.first_name + " " + message.last_name}</Link>
-                           </pre>
-                        </Typography>
-                      </Paper>
-                    );
-                  }
-                  
-                )}
-                {messages.length===0 && 
+                Array.from(messages).map((message, i) => {
+                  return (
+                    <Paper key={i} variant="outlined" elevation={3}>
+                      <Typography
+                        style={{ marginBottom: "10px" }}
+                        className={classes.typography}
+                      >
+                        <pre>
+                          <Link to="/messenger">
+                            {"You have " +
+                              message.unread +
+                              " unread " +
+                              (message.unread === 1 ? "message" : "messages") +
+                              "\nfrom " +
+                              message.first_name +
+                              " " +
+                              message.last_name}
+                          </Link>
+                        </pre>
+                      </Typography>
+                    </Paper>
+                  );
+                })}
+              {messages.length === 0 && (
                 <Paper variant="outlined" elevation={3}>
                   <Typography
                     style={{ marginBottom: "10px" }}
                     className={classes.typography}
                   >
-                    <pre><Link to='/messenger'>You have no messages!</Link></pre>
+                    <pre>
+                      <Link to="/messenger">You have no messages!</Link>
+                    </pre>
                   </Typography>
                 </Paper>
-                  }
+              )}
             </Popover>
             <Popover
               id={id}
@@ -489,17 +514,26 @@ export default function AppNavBar(props) {
                         </Paper>
                       ) : (
                         <Paper variant="outlined" elevation={3}>
-                        <Typography
-                          noWrap={true}
-                          style={{ marginBottom: "10px" }}
-                          variant='body1'
-                          
-                          className={classes.typography}
-                        >
-                          <div onClick={handleClosePopoverNotification}><Link  to={notification.type==='App\\Notifications\\AcceptFriendRequest' ? ('/profile/'+notification.data.user.id) :'/events'}>{notification.data.message} </Link></div>
-                         
-                        </Typography>
-                      </Paper>
+                          <Typography
+                            noWrap={true}
+                            style={{ marginBottom: "10px" }}
+                            variant="body1"
+                            className={classes.typography}
+                          >
+                            <div onClick={handleClosePopoverNotification}>
+                              <Link
+                                to={
+                                  notification.type ===
+                                  "App\\Notifications\\AcceptFriendRequest"
+                                    ? "/profile/" + notification.data.user.id
+                                    : "/events"
+                                }
+                              >
+                                {notification.data.message}{" "}
+                              </Link>
+                            </div>
+                          </Typography>
+                        </Paper>
                       );
                     }
                   }

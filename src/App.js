@@ -5,6 +5,7 @@ import Login from "./Components/Auth/Login";
 import SignUp from "./Components/Auth/SignUp";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import AppNavBar from './Components/AppNavBar';
+import NearbyEvents from './Components/Events/NearbyEvents'
 import {
   BrowserRouter as Router,
   Redirect,
@@ -112,7 +113,7 @@ function App() {
         
         <Route path="/onetimepage">
         {/* && firstTimeLogin */}
-            {(token !== "" && firstTimeLogin ) ? (
+            {(token !== ""  ) ? (
               <OneTimePage userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />
@@ -150,6 +151,7 @@ function App() {
               <Redirect to="/" />
             )}
           </Route>
+
           <Route path="/saved-posts">
             {token !== "" ? (
               <SavedPosts

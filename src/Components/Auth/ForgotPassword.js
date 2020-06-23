@@ -88,8 +88,11 @@ export default function ForgotPassword(props) {
     );
   }
   return (
-    <Container component="main" maxWidth="xs">
+    <Container style={{ backgroundColor: "white" }} component="main" maxWidth="lg">
       <CssBaseline />
+      <Grid container>
+      <Grid item xs={4}></Grid>
+      <Grid item xs={4}>
       <div className={classes.paper}>
       <img
           alt="logo"
@@ -142,6 +145,7 @@ export default function ForgotPassword(props) {
             type="submit"
             style={{width:'100%'}}
             variant="contained"
+            disabled = {email ? false : true}
             color="primary"
             className={classes.submit}
           >
@@ -164,10 +168,11 @@ export default function ForgotPassword(props) {
             </Grid>
           </Grid>
         </form>
-      </div>
-      <Box mt={8}>
+      </div><Box mt={8}>
         <Copyright />
-      </Box>
+      </Box></Grid>
+      <Grid item xs={4}></Grid>
+      </Grid>
     </Container>
   );
 }

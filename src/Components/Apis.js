@@ -1,6 +1,6 @@
 //Declaring this server ip as it will be used across all apis
+// export const api = "http://localhost:8000/"
 export const api = "http://localhost:8000/"
-
 
 var accessToken
 //Creating this fetch request that will be used to fetch data in all the application except for form data type

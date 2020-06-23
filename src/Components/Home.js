@@ -6,6 +6,7 @@ import AppNavBar from "./AppNavBar";
 import PostCard from "./Posts/PostCard";
 import PostForm from "./Posts/PostForm";
 import ChatBot from './Chatbot';
+import TestChat from './TestChat'
 // import ChatBot from 'react-simple-chatbot';
 import { fetchRequest, api, token } from "./Apis";
 import Grid from "@material-ui/core/Grid";
@@ -314,7 +315,8 @@ function Home(props) {
             ))}
           </Grid>
         </Grid>
-        {userAuthenticated && <ChatBot userAuthenticated={userAuthenticated} />}
+        {/* {userAuthenticated && <ChatBot userAuthenticated={userAuthenticated} />} */}
+        <TestChat userAuthenticatedId={props.userAuthenticated.userId}/>
       </div>
 
     </Fragment>
