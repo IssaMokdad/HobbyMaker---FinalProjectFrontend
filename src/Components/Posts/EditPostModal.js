@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import { api, token } from "../Apis";
+import { api } from "../Apis";
 import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     width: "45%",
     height: "80%",
     overflow: "scroll",
-
   },
 }));
 
@@ -41,7 +40,7 @@ export default function EditPostModal(props) {
   const handlePostChange = (event) => {
     setPostContent(event.target.value);
   };
-  const token = {'Authorization': "Bearer "+localStorage.getItem('token')}
+  const token = { Authorization: "Bearer " + localStorage.getItem("token") };
   const [fileInput, setFileInput] = useState(null);
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -54,7 +53,7 @@ export default function EditPostModal(props) {
     formData.append("image", fileInputs.current.files[0]);
     formData.append("user_id", parseInt(props.userAuthenticatedId));
     formData.append("content", postContent);
-    formData.append("post_id",props.post.id )
+    formData.append("post_id", props.post.id);
     fetch(api + "api/post/edit", {
       method: "POST",
       headers: token,
@@ -62,24 +61,22 @@ export default function EditPostModal(props) {
     })
       .then((response) => response.json())
       .then((response) => {
-        if(response.message==='success'){
+        if (response.message === "success") {
           swal({
             title: "Edited Successfully!",
             icon: "success",
-        });
-            props.getPosts();
-            props.setOpenPostModal(false)
+          });
+          props.getPosts();
+          props.setOpenPostModal(false);
+        } else {
+          swal("Something went wrong!");
         }
-        else{
-            swal('Something went wrong!')
-        }
-        
       });
   };
 
   useEffect(() => {
     setPostContent(props.post.content);
-    setFileInput(props.url)
+    setFileInput(props.url);
   }, [props.post, props.url]);
 
   return (
@@ -98,7 +95,9 @@ export default function EditPostModal(props) {
       >
         <Fade in={props.open}>
           <div className={classes.paper}>
-            <h2 style={{textAlign:'center'}} id="transition-modal-title">Edit Your Post</h2>
+            <h2 style={{ textAlign: "center" }} id="transition-modal-title">
+              Edit Your Post
+            </h2>
 
             <form onSubmit={editPostSubmit}>
               <TextField
@@ -156,8 +155,8 @@ export default function EditPostModal(props) {
                   <img
                     width="490px"
                     height="276px"
-                    alt='post'
-                    style={{objectFit:'contain'}}
+                    alt="post"
+                    style={{ objectFit: "contain" }}
                     className={classes.media}
                     src={fileInput}
                   />

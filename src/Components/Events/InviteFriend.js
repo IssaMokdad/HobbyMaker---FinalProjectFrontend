@@ -4,13 +4,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import { fetchRequest, api } from "../Apis";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
-import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
   const family =
@@ -51,12 +48,11 @@ const useStyles = makeStyles(({ spacing, palette }) => {
   };
 });
 
-
 const InviteFriend = (props) => {
   const styles = useStyles();
 
   const [age, setAge] = useState("");
-  const [display, setDisplay] = useState('')
+  const [display, setDisplay] = useState("");
   const calculateAge = () => {
     let today = new Date();
     var birthDate = new Date(props.friend.birthday); // create a date object directly from `dob1` argument
@@ -69,21 +65,18 @@ const InviteFriend = (props) => {
   };
 
   const inviteFriend = (event) => {
-    // setPersonAddIconDisplay('')
-    setDisplay(1)
+    setDisplay(1);
     event.preventDefault();
     let data = {
-      user_id : props.userAuthenticatedId,
+      user_id: props.userAuthenticatedId,
       event_id: props.eventId,
       friend_id: event.target.id,
     };
     fetchRequest(api + "api/invite-friend", "post", data).then((response) => {
       if (response.message === "success") {
-       
-      }else{
-        swal('Something went wrong')
-        setDisplay()
-        // setPersonAddIconDisplay(1)
+      } else {
+        swal("Something went wrong");
+        setDisplay();
       }
     });
   };
@@ -93,8 +86,8 @@ const InviteFriend = (props) => {
     // eslint-disable-next-line
   }, []);
 
-  if(display){
-    return ''
+  if (display) {
+    return "";
   }
 
   return (
@@ -112,20 +105,14 @@ const InviteFriend = (props) => {
           </Link>
         </h3>
         <p className={styles.subheader}>{age + " years old"}</p>
-        <Box display={"flex"} alignItems={"center"}>
-          {/* <Slider classes={sliderStyles} defaultValue={30} /> */}
-          {/* <span className={styles.value}>3/10</span> */}
-        </Box>
+        <Box display={"flex"} alignItems={"center"}></Box>
       </Box>
-      
-        <form id={props.friend.friend_id} onSubmit={inviteFriend}>
-          <Button variant="contained" color="primary" type="submit">
-              Invite
-            {/* <AddIcon color="secondary" /> */}
-          </Button>
-        </form>
-       
-      
+
+      <form id={props.friend.friend_id} onSubmit={inviteFriend}>
+        <Button variant="contained" color="primary" type="submit">
+          Invite
+        </Button>
+      </form>
     </Card>
   );
 };

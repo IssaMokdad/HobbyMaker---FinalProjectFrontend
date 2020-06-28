@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { fetchRequest, api } from "../Apis";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
-import HowToRegIcon from '@material-ui/icons/HowToReg';
+import HowToRegIcon from "@material-ui/icons/HowToReg";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
   const family =
@@ -69,34 +69,31 @@ const FriendRequests = (props) => {
     event.preventDefault();
     let friendId = event.target.id;
     let data = {
-        friend_id: friendId,
-        user_id: props.userAuthenticatedId,
-      };
-      fetchRequest(api + "api/friend/accept", "post", data).then(
-        (response) => {
-          if (response.message === "success") {
-            swal({
-              title: "Now, you are friends!",
-              icon: "success",
-            });
-            //this condition to let this component work in appnavbar because
-            //I am not passing these methods as props when I used FriendRequests component there
-            if(props.getFriendRequests!==undefined){
-              props.getFriendRequests();
-              props.getUserFriends();
-            }
-            //this method is passed by the appnavbar component
-            if(props.removeNotification){
-              props.removeNotification(props.index)
-            }
-            
-          } else {
-            swal({
-              title: "Something went wrong, try again!",
-            });
-          }
+      friend_id: friendId,
+      user_id: props.userAuthenticatedId,
+    };
+    fetchRequest(api + "api/friend/accept", "post", data).then((response) => {
+      if (response.message === "success") {
+        swal({
+          title: "Now, you are friends!",
+          icon: "success",
+        });
+        //this condition to let this component work in appnavbar because
+        //I am not passing these methods as props when I used FriendRequests component there
+        if (props.getFriendRequests !== undefined) {
+          props.getFriendRequests();
+          props.getUserFriends();
         }
-      );
+        //this method is passed by the appnavbar component
+        if (props.removeNotification) {
+          props.removeNotification(props.index);
+        }
+      } else {
+        swal({
+          title: "Something went wrong, try again!",
+        });
+      }
+    });
   };
 
   useEffect(() => {
@@ -119,10 +116,7 @@ const FriendRequests = (props) => {
           </Link>
         </h3>
         <p className={styles.subheader}>{age + " years old"}</p>
-        <Box display={"flex"} alignItems={"center"}>
-          {/* <Slider classes={sliderStyles} defaultValue={30} /> */}
-          {/* <span className={styles.value}>3/10</span> */}
-        </Box>
+        <Box display={"flex"} alignItems={"center"}></Box>
       </Box>
       {parseInt(props.userAuthenticatedId) === props.friend.user_id ? (
         <form id={props.friend.friend_id} onSubmit={acceptFriend}>
@@ -134,11 +128,13 @@ const FriendRequests = (props) => {
         ""
       )}
       {/* this is only rendered if it's coming from theappnavbar */}
-      {props.showAcceptButton && <form id={props.friend.id} onSubmit={acceptFriend}>
+      {props.showAcceptButton && (
+        <form id={props.friend.id} onSubmit={acceptFriend}>
           <IconButton type="submit">
             <HowToRegIcon color="primary" />
           </IconButton>
-        </form>}
+        </form>
+      )}
     </Card>
   );
 };

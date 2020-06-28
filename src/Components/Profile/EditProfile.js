@@ -11,7 +11,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { fetchRequest, api } from "../Apis";
 import swal from "sweetalert";
-import {hobbies} from '../Hobbies';
+import { hobbies } from "../Hobbies";
 
 import {
   MuiPickersUtilsProvider,
@@ -75,21 +75,6 @@ export default function EditProfile(props) {
     );
   };
 
-
-
-  //   if (password.length < 8) {
-  //     setPasswordHelperText("Password must be 8 characters or more");
-  //     setPasswordError(1);
-  //     setIsLoading("");
-  //     return;
-  //   }
-  //   if (password !== passwordConfirm) {
-  //     setPasswordHelperText("Passwords must match");
-  //     setPasswordError(1);
-  //     setIsLoading("");
-  //     return;
-  //   }
-
   useEffect(() => {
     setCountry(props.user.country);
     setRegion(props.user.city);
@@ -145,17 +130,13 @@ export default function EditProfile(props) {
     setBirthday(moment(date).format("YYYY-MM-DD"));
   };
 
-  // const handleHobbyChange = (event) => {
-  //   setHobby([]);
-  // };
-
   const handleChangePasswordConfirm = (event) =>
     setPasswordConfirm(event.target.value);
 
   const submitProfileInfoChange = () => {
-    if(multiValue.length===0){
-      swal('You forgot to enter your hobby')
-      return
+    if (multiValue.length === 0) {
+      swal("You forgot to enter your hobby");
+      return;
     }
     let data = {
       first_name: firstName,
@@ -164,7 +145,7 @@ export default function EditProfile(props) {
       birthday,
       city: region,
       user_id: props.userAuthenticatedId,
-      hobby: multiValue.map(hobby=>hobby.value),
+      hobby: multiValue.map((hobby) => hobby.value),
     };
     fetchRequest(api + "api/user/info-change", "post", data).then(
       (response) => {
@@ -248,10 +229,15 @@ export default function EditProfile(props) {
               onChange={handleCountryChange}
             />
           </Grid>
-          <Grid style={{ display: "flex",
+          <Grid
+            style={{
+              display: "flex",
               columnDirection: "row",
               marginLeft: "50px",
-              marginTop: "55px",}} item>
+              marginTop: "55px",
+            }}
+            item
+          >
             <label style={{ marginRight: "19px" }}>Region</label>
             <RegionDropdown
               country={country}
@@ -391,8 +377,6 @@ export default function EditProfile(props) {
           </div>
         </Grid>
       </Grid>
-
-      {/* <ReactFlagsSelect value={country} onChange={handleCountryChange} searchable={true} /> */}
 
       <Grid
         container

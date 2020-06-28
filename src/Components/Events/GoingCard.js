@@ -4,10 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import { fetchRequest, api } from "../Apis";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import swal from "sweetalert";
+import { api } from "../Apis";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(({ spacing, palette }) => {
@@ -49,7 +46,6 @@ const useStyles = makeStyles(({ spacing, palette }) => {
   };
 });
 
-
 const GoingList = (props) => {
   const styles = useStyles();
 
@@ -65,8 +61,6 @@ const GoingList = (props) => {
     }
     setAge(age_now);
   };
-
-
 
   useEffect(() => {
     calculateAge();
@@ -88,12 +82,8 @@ const GoingList = (props) => {
           </Link>
         </h3>
         <p className={styles.subheader}>{age + " years old"}</p>
-        <Box display={"flex"} alignItems={"center"}>
-          {/* <Slider classes={sliderStyles} defaultValue={30} /> */}
-          {/* <span className={styles.value}>3/10</span> */}
-        </Box>
+        <Box display={"flex"} alignItems={"center"}></Box>
       </Box>
-
     </Card>
   );
 };

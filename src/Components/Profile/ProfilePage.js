@@ -8,7 +8,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import { fetchRequest, api } from "../Apis";
 import Typography from "@material-ui/core/Typography";
-import AppNavBar from "../AppNavBar";
 import Grid from "@material-ui/core/Grid";
 import { useParams } from "react-router-dom";
 import swal from "sweetalert";
@@ -25,7 +24,6 @@ import FriendRequests from "../Friends/FriendRequests";
 import PendingRequests from "../Friends/PendingRequests";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import About from "./About";
-
 
 const useStyles = makeStyles({
   root: {
@@ -72,8 +70,7 @@ export default function ProfilePage(props) {
     }
   };
 
-
-  const token = {'Authorization': "Bearer "+localStorage.getItem('token')}
+  const token = { Authorization: "Bearer " + localStorage.getItem("token") };
 
   const addFriend = (event) => {
     setPersonAddIconDisplay("");
@@ -351,10 +348,6 @@ export default function ProfilePage(props) {
 
   return (
     <Fragment>
-      {/* <AppNavBar
-        userAuthenticatedId={props.userAuthenticated.userId}
-        logout={props.logout}
-      /> */}
       <Card className={classes.root}>
         <CardActionArea>
           {coverPhoto !== "" ? (
@@ -392,7 +385,7 @@ export default function ProfilePage(props) {
                   borderRadius: "50%",
                   position: "absolute",
                   left: "44%",
-                  objectFit:'cover',
+                  objectFit: "cover",
                   bottom: "30px",
                   borderColor: "black",
                   borderWidth: "8px",
@@ -407,7 +400,7 @@ export default function ProfilePage(props) {
                 style={{
                   borderRadius: "50%",
                   position: "absolute",
-                  objectFit:'cover',
+                  objectFit: "cover",
                   left: "44%",
                   bottom: "30px",
                   borderColor: "black",
@@ -675,7 +668,7 @@ export default function ProfilePage(props) {
             xs={12}
           >
             {Array.from(friends).map((friend) => (
-              <Grid item >
+              <Grid item>
                 <Friends
                   friend={friend}
                   getUserFriends={getUserFriends}

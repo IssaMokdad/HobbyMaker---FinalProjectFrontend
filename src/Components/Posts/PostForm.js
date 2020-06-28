@@ -7,7 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { api, token } from "../Apis";
+import { api } from "../Apis";
 import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
   fileInput: {
     display: "none",
   },
-
 }));
 
 export default function EditPostModal(props) {
@@ -59,13 +58,13 @@ export default function EditPostModal(props) {
 
   const [postContent, setPostContent] = useState("");
   const [fileInput, setFileInput] = useState(null);
-  const [marginLeftPost, setMarginLeftPost] = useState('28%')
+  const [marginLeftPost, setMarginLeftPost] = useState("28%");
 
-  const token = {'Authorization': "Bearer "+localStorage.getItem('token')}
+  const token = { Authorization: "Bearer " + localStorage.getItem("token") };
 
   const handlePostChange = (event) => {
     if (event.target.value !== "") {
-      setMarginLeftPost('0%')
+      setMarginLeftPost("0%");
     }
 
     setPostContent(event.target.value);
@@ -87,16 +86,16 @@ export default function EditPostModal(props) {
       .then((response) => {
         setPostContent("");
         setFileInput("");
-        props.handlePostsAdd()
+        props.handlePostsAdd();
       });
   };
 
   return (
     <form id="form1" onSubmit={postSubmit}>
-      <Paper style={{width:'99%', marginLeft:'0.5%'}} elevation={3}>
-        <Card >
+      <Paper style={{ width: "99%", marginLeft: "0.5%" }} elevation={3}>
+        <Card>
           <CardContent>
-            <Grid container >
+            <Grid container>
               <Grid item style={{ width: "10%" }}>
                 <Avatar
                   className={classes.large}
@@ -108,7 +107,6 @@ export default function EditPostModal(props) {
                 <TextField
                   variant="filled"
                   fullWidth
-                  // margin='dense'
                   required={true}
                   multiline={true}
                   onChange={handlePostChange}
@@ -124,7 +122,7 @@ export default function EditPostModal(props) {
                     startAdornment: (
                       <InputAdornment
                         position="start"
-                        children=''
+                        children=""
                         style={{ marginLeft: marginLeftPost }}
                       ></InputAdornment>
                     ),
@@ -133,7 +131,7 @@ export default function EditPostModal(props) {
               </Grid>
             </Grid>
             <Divider />
-            <Grid container style={{height:'10px'}} >
+            <Grid container style={{ height: "10px" }}>
               <Grid item className={classes.grid} xs={4}>
                 <input
                   accept="image/*"
@@ -159,8 +157,8 @@ export default function EditPostModal(props) {
                   <img
                     width="100px"
                     height="50px"
-                    alt='post'
-                    style={{marginBottom:'10.5px'}}
+                    alt="post"
+                    style={{ marginBottom: "10.5px" }}
                     className={classes.media}
                     src={fileInput}
                   />
@@ -170,7 +168,7 @@ export default function EditPostModal(props) {
                 <IconButton
                   style={{
                     marginLeft: "40px",
-                    marginBottom:'8px',
+                    marginBottom: "8px",
                     transform: "scale(1.7)",
                   }}
                   type="submit"
@@ -182,10 +180,8 @@ export default function EditPostModal(props) {
               </Grid>
             </Grid>
           </CardContent>
-          
-          <CardMedia style={{height:'30px'}}>
 
-          </CardMedia>
+          <CardMedia style={{ height: "30px" }}></CardMedia>
         </Card>
       </Paper>
     </form>

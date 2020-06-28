@@ -25,15 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditEventModal(props) {
   const classes = useStyles();
-  // const [open, setOpen] = React.useState(false);
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
   useEffect(()=>{
 
   },[props.content])

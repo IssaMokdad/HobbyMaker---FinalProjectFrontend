@@ -12,8 +12,7 @@ import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
 import { fetchRequest, api } from "../Apis";
 import moment from "moment";
 import Badge from "../Badge";
-import TextField from "@material-ui/core/TextField";
-import Card2 from "../Comments/Card2";
+import CommentCard from "../Comments/CommentCard";
 import CommentBox from "../Comments/CommentBox";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import CommentsShowModal from "../Comments/CommentsShowModal";
@@ -57,8 +56,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostCard(props) {
-
-  
   const [post, setPost] = useState("");
 
   const [comments, setComments] = useState("");
@@ -70,15 +67,10 @@ export default function PostCard(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const getPostAfterDeleteComment = (id) => {
-    // setPost(post)
-    // let commentsDetails = Array.from(post).map((comment) => (
-    //   <Card2 key={comment.id} userAuthenticatedId={props.userAuthenticatedId} getPostAfterDeleteComment={getPostAfterDeleteComment} content={comment} />
-    // ));
-    // setComments(commentsDetails);
     fetchRequest(api + "api/comment/show/?post_id=" + id, "get").then(
       (response) => {
         let commentsDetails = response.data.map((comment) => (
-          <Card2
+          <CommentCard
             key={comment.id}
             userAuthenticatedId={props.userAuthenticatedId}
             getPostAfterDeleteComment={getPostAfterDeleteComment}
@@ -100,10 +92,6 @@ export default function PostCard(props) {
   const [buttonSaveText, setButtonSaveText] = useState(props.buttonSaveText);
   const [display, setDisplay] = useState();
   const unsavePost = (event) => {
-    // if(buttonText==='saved'){
-    //     return
-    // }
-
     let data = {
       post_id: event.target.id,
       user_id: props.userAuthenticatedId,
@@ -113,8 +101,8 @@ export default function PostCard(props) {
       if (response.message === "success") {
         setButtonSaveText("Save Post");
         handleClose();
-        if(props.fromSavedPostsComponent){
-          setDisplay(1)
+        if (props.fromSavedPostsComponent) {
+          setDisplay(1);
         }
       } else {
         swal("Something went wrong!");
@@ -123,10 +111,6 @@ export default function PostCard(props) {
   };
 
   const savePost = (event) => {
-    // if(buttonText==='saved'){
-    //     return
-    // }
-
     let data = {
       post_id: event.target.id,
       user_id: props.userAuthenticatedId,
@@ -194,7 +178,7 @@ export default function PostCard(props) {
       "get"
     ).then((response) => {
       let commentsDetails = response.data.map((comment) => (
-        <Card2
+        <CommentCard
           key={comment.id}
           userAuthenticatedId={props.userAuthenticatedId}
           getPostAfterDeleteComment={getPostAfterDeleteComment}
@@ -299,16 +283,13 @@ export default function PostCard(props) {
     }
   }
 
-  // const handleExpandClick = () => {
-  //   setExpanded(!expanded);
-  // };
   let title;
   if (post.user !== undefined) {
     title = post.user.first_name + " " + post.user.last_name;
   }
 
-  if(display){
-    return ''
+  if (display) {
+    return "";
   }
   return (
     <Paper elevation={3}>
@@ -336,8 +317,6 @@ export default function PostCard(props) {
                   src={api + "images/" + props.post.user.image}
                 />
               }
-
-
               title={title}
               subheader={date} // June 9 2014
             />
@@ -374,22 +353,9 @@ export default function PostCard(props) {
         </Grid>
         <CardMedia className={classes.media} image={url} title="Paella dish" />
         <CardContent>
-
-              <p ><strong>{post.content}</strong></p>
-          {/* <TextField
-            
-            margin="normal"
-            required={true}
-            // disabled={true}
-            color="secondary"
-            // variant='filled'
-            fullWidth={true}
-            multiline
-            // size='small'
-            value={post.content}
-            // autoFocus
-          /> */}
-
+          <p>
+            <strong>{post.content}</strong>
+          </p>
         </CardContent>
         <div className="ml-3 row">
           {handleLike}
@@ -400,8 +366,6 @@ export default function PostCard(props) {
           userAuthenticatedId={props.userAuthenticatedId}
           post={post}
         />
-
-        
       </Card>
 
       <Menu
@@ -429,7 +393,5 @@ export default function PostCard(props) {
         )}
       </Menu>
     </Paper>
-
-    // {/* <Card2 /> */}
   );
 }

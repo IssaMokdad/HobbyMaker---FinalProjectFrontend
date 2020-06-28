@@ -1,5 +1,4 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -11,8 +10,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import CarouselForm from "../CarouselForm";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "./Copyright";
@@ -87,25 +84,23 @@ export default function SignUp() {
     });
   };
 
-  const [emailError, setEmailError] = React.useState("");
+  const [emailError, setEmailError] = useState("");
 
-  const [selectedDate, setSelectedDate] = React.useState(null
-    // new Date("2014-08-18")
-  );
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const [firstName, setFirstName] = React.useState("");
+  const [firstName, setFirstName] = useState("");
 
-  const [isLoading, setIsLoading] = React.useState("");
+  const [isLoading, setIsLoading] = useState("");
 
-  const [lastName, setLastName] = React.useState("");
+  const [lastName, setLastName] = useState("");
 
-  const [registerSuccess, setRegisterSuccess] = React.useState("");
+  const [registerSuccess, setRegisterSuccess] = useState("");
 
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = useState("");
 
-  const [gender, setGender] = React.useState("");
+  const [gender, setGender] = useState("");
 
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = useState("");
 
   const handleChangeEmail = (event) => {
     setEmailError("");
@@ -145,11 +140,14 @@ export default function SignUp() {
     );
   }
   return (
-    <Container style={{ backgroundColor: "white" }} component="main" maxWidth="lg">
+    <Container
+      style={{ backgroundColor: "white" }}
+      component="main"
+      maxWidth="lg"
+    >
       <CssBaseline />
-      {/* <div className={classes.paper}> */}
       <Grid container xs={12} spacing={2} direction="row">
-      <Grid
+        <Grid
           style={{
             display: "flex",
             flexDirection: "column",
@@ -168,177 +166,190 @@ export default function SignUp() {
           </h2>
           <CarouselForm />
         </Grid>
-        <Grid fullWidth style={{display:'flex', flexDirection:'column',marginLeft: "55px" , alignItems:'center'}} item xs={4}>
-        <img
-          alt="logo"
-          width="238.5"
-          height="200"
-          src="/images/hobbymaker-logo.png"
-        />
+        <Grid
+          fullWidth
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "55px",
+            alignItems: "center",
+          }}
+          item
+          xs={4}
+        >
+          <img
+            alt="logo"
+            width="238.5"
+            height="200"
+            src="/images/hobbymaker-logo.png"
+          />
 
-        {/* <Typography component="h1" variant="h5">
-          Sign up
-        </Typography> */}
-
-        <form onSubmit={registerAttempt} className={classes.form}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required={true}
-                fullWidth
-                value={firstName}
-                onChange={handleChangeFirstName}
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                required={true}
-                value={lastName}
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                onChange={handleChangeLastName}
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              {emailError !== "" ? (
+          <form onSubmit={registerAttempt} className={classes.form}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
                 <TextField
-                  error
-                  helperText={emailError}
+                  autoComplete="fname"
+                  name="firstName"
                   variant="outlined"
                   required={true}
                   fullWidth
-                  value={email}
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  onChange={handleChangeEmail}
-                  autoComplete="email"
-                />
-              ) : (
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  required={true}
-                  value={email}
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  onChange={handleChangeEmail}
-                  autoComplete="email"
-                />
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                required={true}
-                name="password"
-                label="Password"
-                value={password}
-                type="password"
-                id="password"
-                onChange={handleChangePassword}
-                autoComplete="current-password"
-              />
-            </Grid>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container display="flex" justify="center">
-                <KeyboardDatePicker
-                  margin="normal"
-                  id="date-picker-dialog"
-                  label="Birthday"
-                  format="MM/dd/yyyy"
-                  disableFuture={true}
-                  required={true}
-                  maxDate={new Date('2010-01-31')}
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
+                  value={firstName}
+                  onChange={handleChangeFirstName}
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
                 />
               </Grid>
-            </MuiPickersUtilsProvider>
-          </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  required={true}
+                  value={lastName}
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  onChange={handleChangeLastName}
+                  autoComplete="lname"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {emailError !== "" ? (
+                  <TextField
+                    error
+                    helperText={emailError}
+                    variant="outlined"
+                    required={true}
+                    fullWidth
+                    value={email}
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    onChange={handleChangeEmail}
+                    autoComplete="email"
+                  />
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    required={true}
+                    value={email}
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    onChange={handleChangeEmail}
+                    autoComplete="email"
+                  />
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  required={true}
+                  name="password"
+                  label="Password"
+                  value={password}
+                  type="password"
+                  id="password"
+                  onChange={handleChangePassword}
+                  autoComplete="current-password"
+                />
+              </Grid>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid container display="flex" justify="center">
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-dialog"
+                    label="Birthday"
+                    format="MM/dd/yyyy"
+                    disableFuture={true}
+                    required={true}
+                    maxDate={new Date("2010-01-31")}
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                  />
+                </Grid>
+              </MuiPickersUtilsProvider>
+            </Grid>
 
-          <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="gender"
-              name="gender"
-              value={gender}
-              onChange={handleGenderChange}
-            >
-              <div
-                style={{ width: "100%" }}
-                className="container ml-4 mt-2 justify-content-center"
+            <FormControl component="fieldset">
+              <RadioGroup
+                aria-label="gender"
+                name="gender"
+                value={gender}
+                onChange={handleGenderChange}
               >
-                <div className="row">
-                  <div style={{ marginTop: 12 }} className=" col">
-                    <FormLabel component="legend">Gender</FormLabel>
-                  </div>
-                  <div className="col">
-                    <FormControlLabel
-                      value="female"
-                      control={<Radio required={true} />}
-                      label="Female"
-                    />
-                  </div>
+                <div
+                  style={{ width: "100%" }}
+                  className="container ml-4 mt-2 justify-content-center"
+                >
+                  <div className="row">
+                    <div style={{ marginTop: 12 }} className=" col">
+                      <FormLabel component="legend">Gender</FormLabel>
+                    </div>
+                    <div className="col">
+                      <FormControlLabel
+                        value="female"
+                        control={<Radio required={true} />}
+                        label="Female"
+                      />
+                    </div>
 
-                  <div className="col">
-                    <FormControlLabel
-                      value="male"
-                      control={<Radio required={true} />}
-                      label="Male"
-                    />
+                    <div className="col">
+                      <FormControlLabel
+                        value="male"
+                        control={<Radio required={true} />}
+                        label="Male"
+                      />
+                    </div>
                   </div>
                 </div>
+              </RadioGroup>
+            </FormControl>
+
+            {isLoading === "" ? (
+              <Button
+                disabled={
+                  email &&
+                  password &&
+                  selectedDate &&
+                  gender &&
+                  firstName &&
+                  lastName
+                    ? false
+                    : true
+                }
+                type="submit"
+                style={{ width: "100%" }}
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+            ) : (
+              <div className={classes.root}>
+                <LinearProgress variant="query" />
+                <LinearProgress variant="query" color="secondary" />
               </div>
-            </RadioGroup>
-          </FormControl>
+            )}
 
-          {isLoading === "" ? (
-            <Button
-              disabled={(email && password && selectedDate && gender && firstName && lastName) ? false : true}
-              type="submit"
-              style={{ width: "100%" }}
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign Up
-            </Button>
-          ) : (
-            <div className={classes.root}>
-              <LinearProgress variant="query" />
-              <LinearProgress variant="query" color="secondary" />
-            </div>
-          )}
-
-          <Grid container justify="center">
-            <Grid item>
-              <Link to="/">Already have an account? Sign in</Link>
+            <Grid container justify="center">
+              <Grid item>
+                <Link to="/">Already have an account? Sign in</Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-        <Box mt={1}>
-        <Copyright />
-      </Box>
+          </form>
+          <Box mt={1}>
+            <Copyright />
+          </Box>
         </Grid>
         <Grid item xs={4}></Grid>
-        </Grid>
-      {/* </div> */}
-
+      </Grid>
     </Container>
   );
 }

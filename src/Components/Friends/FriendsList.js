@@ -49,7 +49,6 @@ const useStyles = makeStyles(({ spacing, palette }) => {
   };
 });
 
-
 const FriendsList = (props) => {
   const styles = useStyles();
 
@@ -122,10 +121,7 @@ const FriendsList = (props) => {
           </Link>
         </h3>
         <p className={styles.subheader}>{age + " years old"}</p>
-        <Box display={"flex"} alignItems={"center"}>
-          {/* <Slider classes={sliderStyles} defaultValue={30} /> */}
-          {/* <span className={styles.value}>3/10</span> */}
-        </Box>
+        <Box display={"flex"} alignItems={"center"}></Box>
       </Box>
       {parseInt(props.userAuthenticatedId) === props.friend.user_id ? (
         <form id={props.friend.friend_id} onSubmit={removeFriend}>

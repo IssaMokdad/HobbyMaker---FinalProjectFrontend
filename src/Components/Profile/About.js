@@ -1,24 +1,13 @@
+import React, { useState, useEffect } from "react";
 import "date-fns";
-import React, { useState, useRef, useEffect, Fragment } from "react";
-import Grid from "@material-ui/core/Grid";
-import DateFnsUtils from "@date-io/date-fns";
 import IconButton from "@material-ui/core/IconButton";
-import PhotoCameraTwoToneIcon from "@material-ui/icons/PhotoCameraTwoTone";
 import TextField from "@material-ui/core/TextField";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { fetchRequest, api, token } from "../Apis";
+import { fetchRequest, api } from "../Apis";
 import swal from "sweetalert";
-
-import moment from "moment";
 import EditIcon from "@material-ui/icons/Edit";
 import { Typography } from "@material-ui/core";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
-import VideoCall from "../Messenger/VideoCall/VideoCall";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+
 import Button from "@material-ui/core/Button";
 
 let divCss = {
@@ -30,21 +19,11 @@ let divCss = {
   borderWidth: "3px",
 };
 export default function About(props) {
-  // The first commit of Material-UI
-
   const [bio, setBio] = useState(props.user.bio);
+  // eslint-disable-next-line
   const [user, setUser] = useState(props.user);
   const [edit, setEdit] = useState("");
-  const constraints = { video: true };
-  const localVideoRef = useRef();
-  const remoteVideoRef = useRef();
-  const success = (stream) => {
-    localVideoRef.current.srcObject = stream;
-  };
 
-  const failure = (e) => {
-    console.log("getUserMediaError", e);
-  };
   const makeEditable = () => {
     setEdit(1);
   };
@@ -68,23 +47,8 @@ export default function About(props) {
       }
     });
   };
-  //using this component for creating and editing
 
-  // const getUserFriends = () => {
-  //   fetchRequest(
-  //     api + "api/friend/get-friends?user_id=" + props.userAuthenticated.userId,
-  //     "get"
-  //   ).then((response) => {
-  //     if (response.data) {
-  //       setFriends(response.data);
-  //     }
-  //   });
-  // };
-
-  useEffect(() => {
-    // getUserFriends();
-    // navigator.mediaDevices.getUserMedia(constraints).then(success).catch(failure)
-  }, [props.user]);
+  useEffect(() => {}, [props.user]);
 
   return (
     <div
@@ -109,23 +73,21 @@ export default function About(props) {
           <h1 style={{ textAlign: "center", display: "inline" }}>
             {user.hobbies &&
               user.hobbies.map((hobby) => (
-               
-                  <h3
-                    style={{
-                      marginRight: "20px",
-                      textAlign: "center",
-                      display: "inline",
-                      fontSize:'34px'
-                    }}
-                  >
-                    <strong>{hobby.hobby}</strong>
-                  </h3>
-                
+                <h3
+                  style={{
+                    marginRight: "20px",
+                    textAlign: "center",
+                    display: "inline",
+                    fontSize: "34px",
+                  }}
+                >
+                  <strong>{hobby.hobby}</strong>
+                </h3>
               ))}
           </h1>
         </Typography>
       </div>
-      {/* <Button>Hobbies</Button> */}
+
       <div style={{ marginTop: "20px", ...divCss }}>
         <div style={{ marginTop: "20px" }}>
           <h1 style={{ textAlign: "center" }}>
@@ -190,10 +152,6 @@ export default function About(props) {
           </Button>
         </div>
       )}
-      {/* <div><video ref={localVideoRef} autoPlay></video></div>
-    <div><video ref={remoteVideoRef} autoPlay></video></div> */}
-      {/* <VideoCall user={user} userId='38' /> */}
-      {/* <Test user={user} /> */}
     </div>
   );
 }

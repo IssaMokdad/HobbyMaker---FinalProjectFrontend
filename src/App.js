@@ -4,8 +4,7 @@ import Home from "./Components/Home";
 import Login from "./Components/Auth/Login";
 import SignUp from "./Components/Auth/SignUp";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
-import AppNavBar from './Components/AppNavBar';
-import NearbyEvents from './Components/Events/NearbyEvents'
+import AppNavBar from "./Components/AppNavBar";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -15,22 +14,20 @@ import {
 import PasswordReset from "./Components/Auth/PasswordReset";
 import ConfirmRegistration from "./Components/Auth/ConfirmRegistration";
 import ProfilePage from "./Components/Profile/ProfilePage";
-// import Map from './Components/Map'
 import { api } from "./Components/Apis";
 import Echo from "laravel-echo";
+// eslint-disable-next-line
 import Pusher from "pusher-js";
 import MessengerApp from "./Components/Messenger/App";
-import OneTimePage from './Components/OneTimePage'
-import SavedVideos from './Components/YoutubeVideos/SavedVideos';
-import SavedPosts from './Components/Posts/SavedPosts';
-// import CreateEvent from './Components/CreateEvent';
-import Events from './Components/Events/Events';
+import OneTimePage from "./Components/OneTimePage";
+import SavedVideos from "./Components/YoutubeVideos/SavedVideos";
+import SavedPosts from "./Components/Posts/SavedPosts";
+import Events from "./Components/Events/Events";
 function App() {
-
   const [userAuthenticated, setUserAuthenticated] = useState({
     userId: "",
   });
-  const [firstTimeLogin, setFirstTimeLogin] = useState()
+  const [firstTimeLogin, setFirstTimeLogin] = useState();
   const [rTNotification, setRTNotification] = useState();
   const [realTimeMessage, setRealTimeMessage] = useState();
   const [token, setToken] = useState("");
@@ -66,14 +63,14 @@ function App() {
         "my-channel." + userAuthenticated.userId
       );
 
-      channel.listen(".add-request", function (data) {
+      channel.listen(".add-request", function(data) {
         setRTNotification(data);
       });
-      channel.listen(".invitation-request", function (data) {
+      channel.listen(".invitation-request", function(data) {
         setRTNotification(data);
       });
-      channel.listen(".real-time-chat", function (data) {
-        console.log(data)
+      channel.listen(".real-time-chat", function(data) {
+        console.log(data);
         setRealTimeMessage({
           id: data.message.id,
           created_at: data.message.created_at,
@@ -83,37 +80,42 @@ function App() {
       });
     }
 
-    return ()=>{
-      if(window.Echo){
-        window.Echo.leave("my-channel." + userAuthenticated.userId)
+    return () => {
+      if (window.Echo) {
+        window.Echo.leave("my-channel." + userAuthenticated.userId);
       }
-      
-    }
+    };
+    // eslint-disable-next-line
   }, [token]); //render again to assign user data if login successful
 
   //this method is passed to login component called from it
   const handleChangeToken = (event) => {
     localStorage.setItem("token", event.access_token);
     localStorage.setItem("userId", event.user_id);
-    setFirstTimeLogin(event.first_time_login)
+    setFirstTimeLogin(event.first_time_login);
     setUserAuthenticated({
       userId: event.user_id,
     });
     setToken(1); //this renders the component, but let useEffect render again on token change to assign the data to the user and avoid writing it in a separate method to avoid repeated code it
   };
-  
-    //google calender api
-  console.log(userAuthenticated.userId)
+
+  console.log(userAuthenticated.userId);
   return (
     <div style={{ backgroundColor: "#F0F0F0" }}>
-      
       <Router>
-      {token !== "" && <AppNavBar setRTMEmpty={setRTMEmpty} realTimeMessage={realTimeMessage} rTNotification={rTNotification} userAuthenticatedId={userAuthenticated.userId} logout={logout} />}
+        {token !== "" && (
+          <AppNavBar
+            setRTMEmpty={setRTMEmpty}
+            realTimeMessage={realTimeMessage}
+            rTNotification={rTNotification}
+            userAuthenticatedId={userAuthenticated.userId}
+            logout={logout}
+          />
+        )}
         <Switch>
-        
-        <Route path="/onetimepage">
-        {/* && firstTimeLogin */}
-            {(token !== ""  ) ? (
+          <Route path="/onetimepage">
+            {/* && firstTimeLogin */}
+            {token !== "" ? (
               <OneTimePage userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />
@@ -154,30 +156,21 @@ function App() {
 
           <Route path="/saved-posts">
             {token !== "" ? (
-              <SavedPosts
-                
-                userAuthenticated={userAuthenticated}
-              />
+              <SavedPosts userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />
             )}
           </Route>
           <Route path="/events">
             {token !== "" ? (
-              <Events
-                
-                userAuthenticated={userAuthenticated}
-              />
+              <Events userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />
             )}
           </Route>
           <Route path="/saved-videos">
             {token !== "" ? (
-              <SavedVideos
-                
-                userAuthenticated={userAuthenticated}
-              />
+              <SavedVideos userAuthenticated={userAuthenticated} />
             ) : (
               <Redirect to="/" />
             )}
@@ -186,11 +179,12 @@ function App() {
             <ConfirmRegistration />
           </Route>
           <Route exact path="/">
-            {/* <Map /> */}
             {token === "" ? (
               <Login handleChangeToken={handleChangeToken} />
-            ) : (firstTimeLogin ?
-              <Redirect to="/onetimepage" /> : <Redirect to="/home" />
+            ) : firstTimeLogin ? (
+              <Redirect to="/onetimepage" />
+            ) : (
+              <Redirect to="/home" />
             )}
           </Route>
           <Route path="/password-reset-confirm/:token">

@@ -13,16 +13,16 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   underline: {
     "&&&:before": {
-      borderBottom: "none"
+      borderBottom: "none",
     },
     "&&:after": {
-      borderBottom: "none"
-    }
-  }
+      borderBottom: "none",
+    },
+  },
 });
 
 export default function Compose(props) {
-  const classes = useStyles()
+  const classes = useStyles();
   const [message, setMessage] = useState("");
   const [showEmojis, setShowEmojis] = useState("");
   const handleMessageInput = (event) => {
@@ -71,12 +71,12 @@ export default function Compose(props) {
       <div className="compose">
         <TextField
           variant="filled"
-          style={{width:'74%'}}
+          style={{ width: "74%" }}
           required={true}
           disableUnderline={true}
           multiline
           onKeyPress={(event) => {
-            if (event.key == "Enter") {
+            if (event.key === "Enter") {
               sendMessage(event);
             }
           }}
@@ -119,16 +119,9 @@ export default function Compose(props) {
             ),
           }}
         />
-        
-        {/* <input
-          type="text"
-          className="compose-input border-color-primary"
-          placeholder="Type a message, @name"
-        /> */}
-        {/* {props.rightItems} */}
       </div>
       {showEmojis && (
-        <span style={{position:'relative', left: "570px", top:'128px' }}>
+        <span style={{ position: "relative", left: "570px", top: "128px" }}>
           <Picker onSelect={addEmoji} />
         </span>
       )}

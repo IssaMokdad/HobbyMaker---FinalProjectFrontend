@@ -1,29 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Carousel,
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
-  CarouselCaption
-} from 'reactstrap';
+  CarouselCaption,
+} from "reactstrap";
 
 const items = [
-  // {
-  
-  //   src: 'images/oie_14203745LBANr3UL.png',
-
-  // },
   {
-
-    src: 'images/oie_14205913QLHh6ONR.jpg',
-
+    src: "images/oie_14205913QLHh6ONR.jpg",
   },
-  // // 416 644
-  // {
-
-  //   src: 'images/oie_142164710F8rJXI.jpg',
-
-  // }
 ];
 
 const CarouselForm = (props) => {
@@ -34,18 +21,18 @@ const CarouselForm = (props) => {
     if (animating) return;
     const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
     setActiveIndex(nextIndex);
-  }
+  };
 
   const previous = () => {
     if (animating) return;
     const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
     setActiveIndex(nextIndex);
-  }
+  };
 
   const goToIndex = (newIndex) => {
     if (animating) return;
     setActiveIndex(newIndex);
-  }
+  };
 
   const slides = items.map((item) => {
     return (
@@ -55,23 +42,26 @@ const CarouselForm = (props) => {
         key={item.src}
       >
         <img src={item.src} alt={item.altText} />
-        <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
+        <CarouselCaption
+          captionText={item.caption}
+          captionHeader={item.caption}
+        />
       </CarouselItem>
     );
   });
 
   return (
-    <Carousel
-      activeIndex={activeIndex}
-      next={next}
-      previous={previous}
-    >
-      <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
+    <Carousel activeIndex={activeIndex} next={next} previous={previous}>
+      <CarouselIndicators
+        items={items}
+        activeIndex={activeIndex}
+        onClickHandler={goToIndex}
+      />
       {slides}
-      <CarouselControl  onClickHandler={previous} />
-      <CarouselControl  onClickHandler={next} />
+      <CarouselControl onClickHandler={previous} />
+      <CarouselControl onClickHandler={next} />
     </Carousel>
   );
-}
+};
 
 export default CarouselForm;

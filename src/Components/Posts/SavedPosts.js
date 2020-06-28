@@ -1,21 +1,7 @@
-import React, { Fragment, useState, useEffect } from "react";
-import BottomScrollListener from "react-bottom-scroll-listener";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
 import swal from "sweetalert";
-import AppNavBar from "../AppNavBar";
 import PostCard from "./PostCard";
-import PostForm from "./PostForm";
-import { fetchRequest, api, token } from "../Apis";
-import Grid from "@material-ui/core/Grid";
-import FriendSuggestionCard from "../Friends/FriendSuggestionCard";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import IconButton from "@material-ui/core/IconButton";
-import YoutubeVideos from "../YoutubeVideos/YoutubeVideos";
-import ReactPlayer from "react-player";
+import { fetchRequest, api } from "../Apis";
 
 export default function SavedPosts(props) {
   const [savedPosts, setSavedPosts] = useState("");
@@ -34,22 +20,27 @@ export default function SavedPosts(props) {
   };
   useEffect(() => {
     getSavedPosts();
+    // eslint-disable-next-line
   }, []);
   return (
     <div className="container">
-      <h1 style={{ textAlign: "center", marginBottom:'30px' }}>
+      <h1 style={{ textAlign: "center", marginBottom: "30px" }}>
         <strong>Posts you have saved</strong>
       </h1>
       <div className="row">
         <div className="col-12 d-flex justify-content-center flex-wrap ">
           {Array.from(savedPosts).map((post) => (
-            //   <div className='mr-auto'><ReactPlayer width='500px' controls={true} url={'https://www.youtube.com/watch?v=' + id}  /></div>
-            // {/* // <ReactPlayer controls={true} url={'https://www.youtube.com/watch?v=' + id}  />)} */}
-            <div style={{marginRight:'20px',marginBottom:'20px', width:'490px'}}>
+            <div
+              style={{
+                marginRight: "20px",
+                marginBottom: "20px",
+                width: "490px",
+              }}
+            >
               <PostCard
                 key={post.id}
                 post={post}
-                fromSavedPostsComponent='1'
+                fromSavedPostsComponent="1"
                 buttonSaveText={"Unsave Post"}
                 getPosts={getSavedPosts}
                 userAuthenticatedId={props.userAuthenticated.userId}

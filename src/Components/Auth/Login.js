@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
     },
     marginBottom: "20px",
-    marginTop:'20px'
+    marginTop: "20px",
   },
   imageCard: {
     width: "100%",
@@ -153,9 +153,6 @@ export default function SignIn(props) {
           </h2>
           <CarouselForm />
         </Grid>
-        {/* <Grid item xs={4}> */}
-        {/* <CarouselForm /> */}
-        {/* </Grid> */}
         <Grid
           item
           xs={4}
@@ -193,7 +190,6 @@ export default function SignIn(props) {
                 <TextField
                   style={{ borderRadius: "30px" }}
                   variant="outlined"
-                  // size='small'
                   margin="normal"
                   fullWidth
                   id="email"
@@ -209,9 +205,7 @@ export default function SignIn(props) {
 
               <TextField
                 variant="outlined"
-                // margin="normal"
                 fullWidth
-                // size='small'
                 value={password}
                 onChange={handleChangePassword}
                 name="password"
@@ -252,11 +246,7 @@ export default function SignIn(props) {
                   <LinearProgress variant="query" color="secondary" />
                 </div>
               )}
-              {/* <Grid
-                container
-                item
-                style={{ justifyContent: "center", alignContent: "center" }}
-              ><strong style={{fontSize:'20px', marginBottom:'10px'}}>or</strong></Grid> */}
+
               <Grid fullWidth container item>
                 <Grid item xs={6}>
                   <SocialButton

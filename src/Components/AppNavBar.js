@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
-import { fetchRequest, api, token } from "./Apis";
+import { fetchRequest, api } from "./Apis";
 import FriendsList from "./Friends/FriendsList";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -10,7 +10,6 @@ import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
@@ -65,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -94,8 +92,8 @@ export default function AppNavBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [searchValue, setSearchValue] = useState(null)
-  const [searchResults, setSearchResults] = useState(null)
+  const [searchValue, setSearchValue] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [anchorElPopoverMessage, setAnchorElPopoverMessage] = React.useState(
@@ -116,7 +114,7 @@ export default function AppNavBar(props) {
     setAnchorElPopoverMessage(event.currentTarget);
   };
   const handleSearchValue = (event) => {
-    setSearchValue(event.target.value)
+    setSearchValue(event.target.value);
     fetchRequest(
       api + "api/search?search_value=" + event.target.value,
       "get"
@@ -188,7 +186,6 @@ export default function AppNavBar(props) {
     >
       <MenuItem>
         <IconButton
-          // onClick={markNotificationsAsRead}
           aria-describedby={id2}
           aria-label="show 17 new notifications"
           color="inherit"
@@ -200,14 +197,7 @@ export default function AppNavBar(props) {
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
-        {/* <Button
-              aria-describedby={id}
-              variant="contained"
-              color="primary"
-              onClick={handleClickPopoverNotification}
-            > */}
         <IconButton
-          // onClick={markNotificationsAsRead}
           aria-describedby={id}
           aria-label="show 17 new notifications"
           color="inherit"
@@ -216,7 +206,6 @@ export default function AppNavBar(props) {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        {/* </Button> */}
         <p>Notifications</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
@@ -234,24 +223,10 @@ export default function AppNavBar(props) {
   );
   const realTimeNotifications = () => {
     getNotifications();
-    // setNotifications([...notifications, props.rTNotification]);
-    // setNotificationsLength(parseInt(notificationsLength + 1));
   };
 
   const realTimeMessages = () => {
     getUnreadMessages();
-    // let index;
-    // messages.map((message, i)=>{
-    //   if(parseInt(props.realTimeMessage.from)===parseInt(message.id)){
-    //     index=i
-    //   }
-    // })
-    // if(index && messagesLength!==0){
-
-    // }
-    // setMessages([...messages, props.realTimeMessage]);
-    // props.setRTMEmpty()
-    // setMessagesLength(parseInt(messagesLength + 1));
   };
 
   const getNotifications = () => {
@@ -327,11 +302,27 @@ export default function AppNavBar(props) {
     if (props.realTimeMessage && doneLoading) {
       realTimeMessages();
     }
+    // eslint-disable-next-line
   }, [props.rTNotification, props.realTimeMessage]);
 
   return (
     <Fragment>
-      {(searchValue && searchResults) && <div style={{zIndex:1,backgroundColor:'white',position:'absolute',top:'45px',width:'150px !important', left:'130px'}}>{searchResults.map(user=><FriendsList key={user.id} friend={user}/>)}</div>}
+      {searchValue && searchResults && (
+        <div
+          style={{
+            zIndex: 1,
+            backgroundColor: "white",
+            position: "absolute",
+            top: "45px",
+            width: "150px !important",
+            left: "130px",
+          }}
+        >
+          {searchResults.map((user) => (
+            <FriendsList key={user.id} friend={user} />
+          ))}
+        </div>
+      )}
       <div className={classes.grow}>
         <AppBar position="fixed">
           <Toolbar variant="dense">
@@ -340,23 +331,14 @@ export default function AppNavBar(props) {
               className={classes.menuButton}
               color="inherit"
               aria-label="open drawer"
-            >
-              {/* <MenuIcon /> */}
-            </IconButton>
+            ></IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
               <SideDrawer />
-
-              {/* <Link style={{ color: "#FFF" }} to="/messenger">
-              Messenger
-            </Link> */}
             </Typography>
             <Typography className={classes.title} variant="h6" noWrap>
               <Link style={{ color: "#FFF" }} to="/home">
                 <HomeIcon />
               </Link>
-              {/* <Link style={{ color: "#FFF" }} to="/messenger">
-              Messenger
-            </Link> */}
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -371,10 +353,8 @@ export default function AppNavBar(props) {
                 }}
                 inputProps={{ "aria-label": "search" }}
               />
-              
             </div>
-            
-            
+
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton
@@ -387,16 +367,9 @@ export default function AppNavBar(props) {
                   <MailIcon />
                 </Badge>
               </IconButton>
-              {/* <Button
-              aria-describedby={id}
-              variant="contained"
-              color="primary"
-              onClick={handleClickPopoverNotification}
-            > */}
-              {/* <IconButton aria-label="show 17 new notifications" color="inherit"> */}
+
               <IconButton
                 onClick={markNotificationsAsRead}
-                // onClick={handleClickPopoverNotification}
                 aria-describedby={id}
                 aria-label="show 17 new notifications"
                 color="inherit"
@@ -405,7 +378,7 @@ export default function AppNavBar(props) {
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              {/* </Button> */}
+
               <IconButton
                 edge="end"
                 aria-label="account of current user"
@@ -498,54 +471,45 @@ export default function AppNavBar(props) {
             >
               {/* show every notification depending on its type */}
               {notifications.length !== 0 &&
-                Array.from(notifications).map(
-                  (notification, i) => {
-                    {
-                      return notification.type ===
-                        "App\\Notifications\\AddRequest" ? (
-                        <Paper key={i} variant="outlined" elevation={3}>
-                          <FriendRequests
-                            index={i}
-                            removeNotification={removeNotification}
-                            friend={notification.data.user}
-                            userAuthenticatedId={props.userAuthenticatedId}
-                            showAcceptButton={1}
-                          />
-                        </Paper>
-                      ) : (
-                        <Paper variant="outlined" elevation={3}>
-                          <Typography
-                            noWrap={true}
-                            style={{ marginBottom: "10px" }}
-                            variant="body1"
-                            className={classes.typography}
-                          >
-                            <div onClick={handleClosePopoverNotification}>
-                              <Link
-                                to={
-                                  notification.type ===
-                                  "App\\Notifications\\AcceptFriendRequest"
-                                    ? "/profile/" + notification.data.user.id
-                                    : "/events"
-                                }
-                              >
-                                {notification.data.message}{" "}
-                              </Link>
-                            </div>
-                          </Typography>
-                        </Paper>
-                      );
-                    }
+                Array.from(notifications).map((notification, i) => {
+                  // eslint-disable-next-line
+                  {
+                    return notification.type ===
+                      "App\\Notifications\\AddRequest" ? (
+                      <Paper key={i} variant="outlined" elevation={3}>
+                        <FriendRequests
+                          index={i}
+                          removeNotification={removeNotification}
+                          friend={notification.data.user}
+                          userAuthenticatedId={props.userAuthenticatedId}
+                          showAcceptButton={1}
+                        />
+                      </Paper>
+                    ) : (
+                      <Paper variant="outlined" elevation={3}>
+                        <Typography
+                          noWrap={true}
+                          style={{ marginBottom: "10px" }}
+                          variant="body1"
+                          className={classes.typography}
+                        >
+                          <div onClick={handleClosePopoverNotification}>
+                            <Link
+                              to={
+                                notification.type ===
+                                "App\\Notifications\\AcceptFriendRequest"
+                                  ? "/profile/" + notification.data.user.id
+                                  : "/events"
+                              }
+                            >
+                              {notification.data.message}{" "}
+                            </Link>
+                          </div>
+                        </Typography>
+                      </Paper>
+                    );
                   }
-                  // <Paper elevation={3}>
-                  //   <Typography
-                  //     style={{ marginBottom: "10px" }}
-                  //     className={classes.typography}
-                  //   >
-                  //   <pre>{notification.data.message}</pre>
-                  //   </Typography>
-                  // </Paper>
-                )}
+                })}
               {/* if there are no notifications, show this */}
               {notifications.length === 0 && (
                 <Paper variant="outlined" elevation={3}>

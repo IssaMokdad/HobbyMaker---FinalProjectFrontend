@@ -20,17 +20,15 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     display: "flex",
     padding: spacing(2),
     borderRadius: 16,
-
   },
   media: {
-
     minWidth: "25%",
     maxWidth: "25%",
-    maxHeight:'80%',
-    minHeight:'80%',
+    maxHeight: "80%",
+    minHeight: "80%",
     flexShrink: 0,
     backgroundColor: palette.grey[200],
-    borderRadius: '50%',
+    borderRadius: "50%",
     boxShadow: "0 2px 8px 0 #c1c9d7, 0 -2px 8px 0 #cce1e9",
   },
   rating: {
@@ -39,8 +37,8 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   content: {
     padding: spacing(0, 2, 0, 0),
     overflow: "scroll",
-    overflowX:'hidden',
-    overflowY:'hidden',
+    overflowX: "hidden",
+    overflowY: "hidden",
   },
   heading: {
     fontSize: 17,
@@ -52,7 +50,6 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   },
   body: {
     fontSize: 14,
-    // color: 'grey',
   },
   divider: {
     margin: spacing(1, 0),
@@ -66,12 +63,12 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   },
 }));
 
-const Card2 = (props) => {
+const CommentCard = (props) => {
   const styles = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [comment, setComment] = useState('')
+  const [comment, setComment] = useState("");
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -81,32 +78,29 @@ const Card2 = (props) => {
 
   const makeTheCommentEditable = () => {
     setAnchorEl(null);
-    setComment(props.content.comment)
+    setComment(props.content.comment);
     setEditComment(1);
   };
-  const handleCommentChange = (event)=>{
-    setComment(event.target.value)
-  }
-  const handleEditComment = ()=>{
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+  const handleEditComment = () => {
     let data = {
-      id:props.content.id,
-      post_id:props.content.post_id,
-      'comment':comment,
+      id: props.content.id,
+      post_id: props.content.post_id,
+      comment: comment,
       user_id: props.userAuthenticatedId,
+    };
 
-    }
-
-    fetchRequest(api + "api/comment/edit", "POST", data).then(
-      (response) => {
-        if(response.data){
-          setEditComment('')
-          props.getPostAfterDeleteComment(props.content.post_id);//here this method is used after a delete or edit has happened to the comment
-        }
-        else{
-          swal('something went wrong!')
-        }
-
-  })}
+    fetchRequest(api + "api/comment/edit", "POST", data).then((response) => {
+      if (response.data) {
+        setEditComment("");
+        props.getPostAfterDeleteComment(props.content.post_id); //here this method is used after a delete or edit has happened to the comment
+      } else {
+        swal("something went wrong!");
+      }
+    });
+  };
   const handleCommentDelete = (event) => {
     setAnchorEl(null);
     let id = event.target.id;
@@ -164,26 +158,27 @@ const Card2 = (props) => {
                   </h3>
                 </Grid>
                 <Grid xs={2} item>
-                {parseInt(props.userAuthenticatedId)===props.content.user_id ? <IconButton
-                    color="primary"
-                    onClick={handleClick}
-                    aria-label="add to favorites"
-                  >
-                    <MoreVertIcon />
-                  </IconButton> : ""}
+                  {parseInt(props.userAuthenticatedId) ===
+                  props.content.user_id ? (
+                    <IconButton
+                      color="primary"
+                      onClick={handleClick}
+                      aria-label="add to favorites"
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  ) : (
+                    ""
+                  )}
                 </Grid>
               </Grid>
               <Grid />
-              {/* <Rating
-            name={'rating'}
-            value={2}
-            className={styles.rating}
-            size={'small'}
-          /> */}
             </Box>
 
             {editComment === "" ? (
-              <p style={{color:'grey'}}><strong>{props.content.comment}</strong></p>
+              <p style={{ color: "grey" }}>
+                <strong>{props.content.comment}</strong>
+              </p>
             ) : (
               <Grid container>
                 <Grid xs={11} item>
@@ -197,63 +192,41 @@ const Card2 = (props) => {
                   />
                 </Grid>
                 <Grid xs={1} item>
-                  <IconButton onClick={handleEditComment}><EditIcon style={{ marginTop: "20px" }} color="primary" /></IconButton>
+                  <IconButton onClick={handleEditComment}>
+                    <EditIcon style={{ marginTop: "20px" }} color="primary" />
+                  </IconButton>
                 </Grid>
               </Grid>
             )}
 
             <Divider className={styles.divider} light />
-
-            {/* <div className={flexStyles.parent}> */}
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            {/* <Link
-            className={cx(labelStyles.primaryLink, styles.textFooter)}
-            component={'button'}
-          >
-            Read more <ArrowForwardIos className={labelStyles.icon} />
-          </Link> */}
-            {/* <div
-            className={cx(
-              flexStyles.rightChild,
-              flexStyles.parent,
-              gutterStyles.parent
-            )}
-          >
-            <button type={'button'} className={labelStyles.link}>
-              <ModeComment className={labelStyles.icon} /> 135
-            </button>
-            <button type={'button'} className={labelStyles.link}>
-              <Favorite className={labelStyles.icon} /> 12
-            </button>
-          </div> */}
-            {/* </div> */}
           </CardContent>
         </Grid>
-        {/* <Grid item xs={3}> */}
 
         <CardMedia
           className={styles.media}
-          image={
-            api + 'images/' + props.content.user.image
-          }
+          image={api + "images/" + props.content.user.image}
         />
-        {/* </Grid> */}
       </Grid>
-      {parseInt(props.userAuthenticatedId)===props.content.user_id ? <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleCommentDelete} id={props.content.id}>
-          Delete
-        </MenuItem>
+      {parseInt(props.userAuthenticatedId) === props.content.user_id ? (
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleCommentDelete} id={props.content.id}>
+            Delete
+          </MenuItem>
 
-        <MenuItem onClick={makeTheCommentEditable}>Edit</MenuItem>
-      </Menu> : ""}
+          <MenuItem onClick={makeTheCommentEditable}>Edit</MenuItem>
+        </Menu>
+      ) : (
+        ""
+      )}
     </Card>
   );
 };
 
-export default Card2;
+export default CommentCard;

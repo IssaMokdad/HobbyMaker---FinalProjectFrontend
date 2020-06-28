@@ -7,9 +7,6 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import { Link } from "react-router-dom";
 import Check from "@material-ui/icons/Check";
-import SettingsIcon from "@material-ui/icons/Settings";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import VideoLabelIcon from "@material-ui/icons/VideoLabel";
 import StepConnector from "@material-ui/core/StepConnector";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -23,28 +20,7 @@ import swal from "sweetalert";
 import SportsHandballIcon from '@material-ui/icons/SportsHandball';
 import SportsKabaddiIcon from '@material-ui/icons/SportsKabaddi';
 
-const QontoConnector = withStyles({
-  alternativeLabel: {
-    top: 10,
-    left: "calc(-50% + 16px)",
-    right: "calc(50% + 16px)",
-  },
-  active: {
-    "& $line": {
-      borderColor: "#784af4",
-    },
-  },
-  completed: {
-    "& $line": {
-      borderColor: "#784af4",
-    },
-  },
-  line: {
-    borderColor: "#eaeaf0",
-    borderTopWidth: 3,
-    borderRadius: 1,
-  },
-})(StepConnector);
+
 
 const useQontoStepIconStyles = makeStyles({
   root: {
@@ -300,6 +276,7 @@ export default function CustomizedSteppers(props) {
   useEffect(()=>{
       getUserInfo()
       setFirstTimeLoginToFalse()
+      // eslint-disable-next-line
   }, [])
   return (
     <div className={classes.root}>
@@ -343,8 +320,8 @@ export default function CustomizedSteppers(props) {
                 <Button
                   variant="contained"
                   color="primary"
+                  // eslint-disable-next-line
                   disabled={(activeStep===0 && (!country || !city) || (activeStep===1 && !hobbies))}
-                  // disabled={(activeStep===1 && (!hobbies))}
                   onClick={handleNext}
                   className={classes.button}
                 >

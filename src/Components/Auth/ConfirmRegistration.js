@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", 
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -36,13 +36,12 @@ export default function ConfirmRegistration() {
       (response) => {
         if (response.email) {
           setRegisterConfirm(true);
-        }
-        else{
+        } else {
           setRegisterConfirm(false);
         }
       }
     );
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
   if (registerConfirm === null) {
     return (

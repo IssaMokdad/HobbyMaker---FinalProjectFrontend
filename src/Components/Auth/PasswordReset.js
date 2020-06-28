@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function PasswordReset() {
   const classes = useStyles();
-  //getting the token from the query string
   const { token } = useParams();
   const [isTokenRight, setIsTokenRight] = useState("");
   const [password, setPassword] = useState("");
@@ -51,7 +50,7 @@ export default function PasswordReset() {
     setPasswordError("");
     setPassword(event.target.value);
   };
-  
+
   const passwordResetAttempt = (event) => {
     event.preventDefault();
     setIsLoading(1);
