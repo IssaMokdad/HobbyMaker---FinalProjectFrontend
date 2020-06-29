@@ -115,7 +115,7 @@ const FriendsList = (props) => {
 
       <Box>
         <h3 className={styles.heading}>
-          <Link to={"/profile/" + props.friend.friend_id}>
+          <Link to={"/profile/" + (props.friend.friend_id || props.friend.id)}>
             {" "}
             {props.friend.first_name + " " + props.friend.last_name}
           </Link>

@@ -217,7 +217,7 @@ function Home(props) {
             item
           >
             {Array.from(hobbyVideos).map((item) => (
-              <Fragment>
+              <Fragment key={item.id.videoId}>
                 <YoutubeVideos
                   key={item.id.videoId}
                   buttonText={

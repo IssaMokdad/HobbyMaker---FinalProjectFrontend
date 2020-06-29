@@ -64,7 +64,6 @@ export default function SignIn(props) {
 
   const handleSocialLogin = (user) => {
     setLoading(true);
-    console.log(user);
     let data = {
       email: user.profile.email,
       first_name: user.profile.firstName,
@@ -247,7 +246,7 @@ export default function SignIn(props) {
                 </div>
               )}
 
-              <Grid fullWidth container item>
+              <Grid container item>
                 <Grid item xs={6}>
                   <SocialButton
                     provider="facebook"

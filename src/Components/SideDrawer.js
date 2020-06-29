@@ -90,7 +90,7 @@ export default function TemporaryDrawer() {
     <div>
       <React.Fragment key={"left"}>
         <Button onClick={toggleDrawer("left", true)}>
-          <Link style={{ color: "#FFF" }}>
+          <Link to='' style={{ color: "#FFF" }}>
             <MenuIcon />
           </Link>
         </Button>

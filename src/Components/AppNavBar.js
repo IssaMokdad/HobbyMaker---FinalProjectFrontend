@@ -311,8 +311,10 @@ export default function AppNavBar(props) {
         <div
           style={{
             zIndex: 1,
+            maxHeight:'400px',
             backgroundColor: "white",
             position: "absolute",
+            overflowY:'scroll',
             top: "45px",
             width: "150px !important",
             left: "130px",

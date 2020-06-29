@@ -10,6 +10,7 @@ import {
 const items = [
   {
     src: "images/oie_14205913QLHh6ONR.jpg",
+    caption:'tree'
   },
 ];
 
@@ -58,8 +59,8 @@ const CarouselForm = (props) => {
         onClickHandler={goToIndex}
       />
       {slides}
-      <CarouselControl onClickHandler={previous} />
-      <CarouselControl onClickHandler={next} />
+      <CarouselControl direction='prev' onClickHandler={previous} />
+      <CarouselControl direction='next' onClickHandler={next} />
     </Carousel>
   );
 };

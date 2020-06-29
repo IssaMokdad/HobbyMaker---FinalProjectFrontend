@@ -99,7 +99,7 @@ function App() {
     setToken(1); //this renders the component, but let useEffect render again on token change to assign the data to the user and avoid writing it in a separate method to avoid repeated code it
   };
 
-  console.log(userAuthenticated.userId);
+  
   return (
     <div style={{ backgroundColor: "#F0F0F0" }}>
       <Router>

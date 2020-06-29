@@ -146,7 +146,7 @@ export default function SignUp() {
       maxWidth="lg"
     >
       <CssBaseline />
-      <Grid container xs={12} spacing={2} direction="row">
+      <Grid container spacing={2} direction="row">
         <Grid
           style={{
             display: "flex",
@@ -167,7 +167,6 @@ export default function SignUp() {
           <CarouselForm />
         </Grid>
         <Grid
-          fullWidth
           style={{
             display: "flex",
             flexDirection: "column",
